@@ -1,21 +1,19 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
-import type { MysqlConnectionCredentialsOptions } from 'typeorm/driver/mysql/MysqlConnectionCredentialsOptions';
-
+import { DataSource, DataSourceOptions } from 'typeorm'
+import type { MysqlConnectionCredentialsOptions } from 'typeorm/driver/mysql/MysqlConnectionCredentialsOptions'
 
 function parsedbUrl(url = ''): MysqlConnectionCredentialsOptions | null {
-  if (!url) return null;
-  const [, url1] = url.split('://');
-  const [url2, database] = url1.split('/');
-  const [auth, server] = url2.split('@');
-  const [[username, password], [host, port]] = [auth.split(':'), server.split(':')];
+  if (!url) return null
+  const [, url1] = url.split('://')
+  const [url2, database] = url1.split('/')
+  const [auth, server] = url2.split('@')
+  const [[username, password], [host, port]] = [auth.split(':'), server.split(':')]
 
-  return { database, username, password, host, port: Number(port) };
+  return { database, username, password, host, port: Number(port) }
 }
-
 
 export class DataSourceService extends DataSource {
   constructor(dbOptions: DataSourceOptions) {
-    super(dbOptions);
+    super(dbOptions)
   }
 
   // FIXME: melhorar tratamento de erros
@@ -24,8 +22,8 @@ export class DataSourceService extends DataSource {
       if (o?.replication) {
         return {
           master: o?.replication?.master as MysqlConnectionCredentialsOptions,
-          slave: o?.replication?.slaves as MysqlConnectionCredentialsOptions[],
-        };
+          slave: o?.replication?.slaves as MysqlConnectionCredentialsOptions[]
+        }
       }
       return {
         master: {
@@ -34,17 +32,17 @@ export class DataSourceService extends DataSource {
           username: o?.username,
           password: o?.password,
           host: o?.host,
-          port: o?.port,
+          port: o?.port
         },
-        slave: [],
-      };
-    };
-    const replication = getReplication(this.options);
-    const master = replication.master?.url ? parsedbUrl(replication.master?.url) : replication.master;
+        slave: []
+      }
+    }
+    const replication = getReplication(this.options)
+    const master = replication.master?.url ? parsedbUrl(replication.master?.url) : replication.master
     const [slave] = replication.slave.map(s => {
-      return s?.url ? parsedbUrl(s.url) : s;
-    });
+      return s?.url ? parsedbUrl(s.url) : s
+    })
 
-    return { master, slave };
+    return { master, slave }
   }
 }
