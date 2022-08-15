@@ -2,6 +2,8 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 
 import type { Arena } from '~/server-side/useCases/arena/arena.entity'
 import { Category } from '~/server-side/useCases/category/category.entity'
+import { Pair } from '~/server-side/useCases/pair/pair.entity'
+import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
 @Entity('tournaments')
@@ -39,6 +41,12 @@ export class Tournament {
   // relations
   @OneToMany(() => Category, category => category.tournament)
   categories?: Category[]
+
+  @OneToMany(() => Ranking, ranking => ranking.tournament)
+  rankings?: Ranking[]
+
+  @OneToMany(() => Pair, pair => pair.tournament)
+  pairs?: Pair[]
 
   @ManyToOne('Arena', 'tournaments', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'arenaId', referencedColumnName: 'id', foreignKeyConstraintName: 'tournaments_arenaId_fkey' })

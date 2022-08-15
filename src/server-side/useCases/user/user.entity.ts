@@ -4,6 +4,7 @@ import { Account } from '~/server-side/useCases/account/account.entity'
 import { Arena } from '~/server-side/useCases/arena/arena.entity'
 import { Category } from '~/server-side/useCases/category/category.entity'
 import { Config } from '~/server-side/useCases/config/config.entity'
+import { Pair } from '~/server-side/useCases/pair/pair.entity'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import { Session } from '~/server-side/useCases/session/session.entity'
@@ -110,6 +111,16 @@ export class User {
 
   @OneToMany(() => Ranking, ranking => ranking.updatedUser)
   updatedRankings?: Ranking[]
+
+  // relations pairs
+  @OneToMany(() => Pair, pair => pair.user)
+  userPairs?: Pair[]
+
+  @OneToMany(() => Pair, pair => pair.partner)
+  partnerPairs?: Pair[]
+
+  @OneToMany(() => Pair, pair => pair.createdUser)
+  createdPairs?: Pair[]
 
   // relations Categories
   @OneToMany(() => Category, category => category.createdUser)

@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm'
 
 import type { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
+@Unique('rankings_tournamentId_userId_key', ['tournamentId', 'userId'])
 @Entity('rankings')
 export class Ranking {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
@@ -30,7 +31,7 @@ export class Ranking {
   updatedAt?: Date
 
   // relations
-  @ManyToOne('Arena', 'rankings', { onDelete: 'CASCADE' })
+  @ManyToOne('Tournament', 'rankings', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'tournamentId', referencedColumnName: 'id', foreignKeyConstraintName: 'rankings_tournamentId_fkey' })
   tournament: Tournament
 
