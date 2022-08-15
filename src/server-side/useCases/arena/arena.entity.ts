@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
 import { Config } from '~/server-side/useCases/config/config.entity'
-import { Tournament } from '~/server-side/useCases/tournaments/tournaments.entity'
+import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
 @Entity('arenas')

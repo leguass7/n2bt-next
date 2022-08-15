@@ -5,9 +5,10 @@ import { Arena } from '~/server-side/useCases/arena/arena.entity'
 import { Category } from '~/server-side/useCases/category/category.entity'
 import { Config } from '~/server-side/useCases/config/config.entity'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
+import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import { Session } from '~/server-side/useCases/session/session.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
-import { Tournament } from '~/server-side/useCases/tournaments/tournaments.entity'
+import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
 enum UserGender {
   F = 'F',
@@ -99,6 +100,16 @@ export class User {
 
   @OneToMany(() => Tournament, tournament => tournament.updatedUser)
   updatedTournaments?: Tournament[]
+
+  // relations rankings
+  @OneToMany(() => Ranking, ranking => ranking.user)
+  rankings?: Ranking[]
+
+  @OneToMany(() => Ranking, ranking => ranking.createdUser)
+  createdRankings?: Ranking[]
+
+  @OneToMany(() => Ranking, ranking => ranking.updatedUser)
+  updatedRankings?: Ranking[]
 
   // relations Categories
   @OneToMany(() => Category, category => category.createdUser)

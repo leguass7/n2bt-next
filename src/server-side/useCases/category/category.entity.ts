@@ -1,9 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
-import type { Tournament } from '~/server-side/useCases/tournaments/tournaments.entity'
+import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
+import type { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
-
-import { Subscription } from '../subscriptions/subscriptions.entity'
 
 @Entity('categories')
 export class Category {
