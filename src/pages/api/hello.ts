@@ -3,7 +3,7 @@ import { instanceToPlain } from 'class-transformer'
 import type { NextApiRequest } from 'next'
 
 import { prepareDataSource } from '../../server-side/database'
-import { User } from '../../server-side/userCases/user/user.entity'
+import { User } from '../../server-side/useCases/user/user.entity'
 
 class UserHandler {
   @Get()

@@ -15,11 +15,11 @@ const nextConfig = {
   swcMinify: true,
   optimizeFonts: false,
   compiler: {
-    styledComponents: true,
-  },
-};
+    styledComponents: true
+  }
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
 // module.exports = withPlugins(
 //   [
 //     [withFonts],

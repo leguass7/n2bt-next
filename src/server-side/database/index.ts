@@ -1,3 +1,4 @@
+import { databaseUrl } from '../config'
 import { DataSourceService } from './DataSourceService'
 import { entities } from './entities'
 
@@ -13,7 +14,7 @@ const close = async () => {
   }
 }
 
-const handleExit = async (code: number, sig = 'UNKNOW', timeout = 500): Promise<void> => {
+export const handleExit = async (code: number, sig = 'UNKNOW', timeout = 500): Promise<void> => {
   const isTesting = ['test', 'testing'].includes(nodeEnv)
 
   // eslint-disable-next-line no-console
@@ -35,7 +36,7 @@ const handleExit = async (code: number, sig = 'UNKNOW', timeout = 500): Promise<
   }
 }
 
-export async function prepareDataSource() {
+export async function prepareDataSource(sync?: boolean) {
   const create = async () => {
     console.log('CREATE DATABASE')
     process.on('SIGTERM', () => {
@@ -48,11 +49,11 @@ export async function prepareDataSource() {
 
     dataSource = new DataSourceService({
       type: 'mysql',
-      entities,
-      url: process.env.DATABASE_URL,
-      synchronize: false,
+      url: databaseUrl,
+      synchronize: !!sync,
       // logging: ['error'],
-      logging: ['error', 'query']
+      logging: ['error', 'query'],
+      entities
     })
 
     await dataSource.initialize()
@@ -64,7 +65,8 @@ export async function prepareDataSource() {
     return create()
   } else if (!!dataSource?.isInitialized) {
     await close()
-    return create()
+    dataSource = await create()
+    return dataSource
   }
 
   await dataSource?.initialize()

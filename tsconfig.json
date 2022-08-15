@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -21,6 +21,6 @@
       "~/*": [ "src/*" ],
     },
   },
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", "package.json"],
+  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", "package.json", "./src/server-side/database/*.ts", "src/**/*"],
   "exclude": ["node_modules"]
 }
