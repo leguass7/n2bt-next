@@ -1,42 +1,49 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
-import { useSession } from 'next-auth/react'
-import { signOut } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
+import { signOut, SignInResponse } from 'next-auth/react'
 
 import { getMe } from '~/services/api/user'
 import { AppStoreState } from '~/store'
 import { clearAuth, setAuth } from '~/store/reducers/auth'
 
+export interface PayloadSignin {
+  email: string
+  password: string
+}
+
+export type { SignInResponse }
+
 export function useAppAuth() {
   const dispatch = useDispatch()
   const { status, data } = useSession()
-  const [userError, setUserError] = useState('')
-  const userName = useSelector<AppStoreState, string>(state => state?.auth?.userName || '')
-  const userLevel = useSelector<AppStoreState, number>(state => state?.auth?.level || 0)
+  const nick = useSelector<AppStoreState, string>(state => state?.auth?.nick || '')
+  const level = useSelector<AppStoreState, number>(state => state?.auth?.level || 0)
   const loadingUser = useSelector<AppStoreState, boolean>(state => !!state?.auth?.loading)
 
   const userData = useMemo(() => {
-    return data ? { ...data, userName, userLevel } : null
-  }, [data, userName, userLevel])
+    const { user = {}, ...rest } = data || {}
+    return data && nick && level ? { ...user, ...rest, nick, level } : null
+  }, [data, nick, level])
 
   const [loading, authenticated] = useMemo(() => {
     return [!!(loadingUser || status === 'loading'), !!(status === 'authenticated')]
   }, [loadingUser, status])
 
   const completedAuth = useMemo(() => {
-    return !!(authenticated && userName && !loading)
-  }, [authenticated, userName, loading])
+    return !!(authenticated && !loading && userData)
+  }, [authenticated, userData, loading])
 
   const updateAppAuth = useCallback(
     async (data: Partial<AppStoreState['auth']> = {}) => {
-      dispatch(setAuth({ ...data }))
+      dispatch(setAuth(data))
     },
     [dispatch]
   )
 
-  const lougOut = useCallback(async () => {
+  const logOut = useCallback(async () => {
     dispatch(clearAuth())
     signOut()
   }, [dispatch])
@@ -44,27 +51,37 @@ export function useAppAuth() {
   const requestMe = useCallback(async () => {
     updateAppAuth({ loading: true })
     const response = await getMe()
-    updateAppAuth({
-      loading: false,
-      level: response?.user?.level,
-      userName: response?.user?.name
-    })
-    if (!response?.success) {
-      toast.error(response?.message || 'Erro de autenticação')
-      setUserError(`${response?.message}`)
+    let uData = {}
+    if (response?.success) {
+      uData = {
+        loading: false,
+        level: response?.user?.level,
+        nick: response?.user?.name,
+        error: null
+      }
     } else {
-      setUserError(null)
+      toast.error(response?.message || 'Erro de autenticação')
+      uData = { error: `${response?.message}` }
     }
+    updateAppAuth({ loading: false, ...uData })
+
     return response
   }, [updateAppAuth])
 
-  useEffect(() => {
-    if (!loading && authenticated && !userData && !userError) {
-      requestMe().then(res => {
-        if (res && !res?.success) toast.warn(data?.user?.name || 'no user')
-      })
-    }
-  }, [requestMe, authenticated, userData, loading, data, userError])
+  const authorize = useCallback(
+    async ({ email, password }: PayloadSignin) => {
+      updateAppAuth({ loading: true })
+      const response = await signIn('custom', { email, password, redirect: false })
+      if (response?.status === 401) {
+        updateAppAuth({ loading: false })
+        toast.error('E-mail/senha não autorizados')
+      } else {
+        await requestMe()
+      }
+      return response
+    },
+    [requestMe, updateAppAuth]
+  )
 
-  return { loading, lougOut, completedAuth, updateAppAuth, requestMe, authenticated, data }
+  return { loading, logOut, completedAuth, updateAppAuth, requestMe, authenticated, userData, authorize }
 }

@@ -10,6 +10,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 
 import { StorageLoading } from '~/components/app/StorageLoading'
 import { AppThemeProvider } from '~/components/AppThemeProvider'
+import { PassRollProvider } from '~/components/PassRollLayout'
 import { UserProvider } from '~/components/UserProvider'
 import { store, persistor } from '~/store'
 
@@ -24,17 +25,19 @@ function MyApp({ Component, pageProps }: AppProps) {
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBr}>
             <UserProvider>
               <AppThemeProvider themeName="common">
-                <Component {...pageProps} />
-                <ToastContainer
-                  theme="colored"
-                  position="top-right"
-                  autoClose={3000}
-                  hideProgressBar={false}
-                  newestOnTop={false}
-                  closeOnClick
-                  draggable
-                  pauseOnHover
-                />
+                <PassRollProvider>
+                  <Component {...pageProps} />
+                  <ToastContainer
+                    theme="colored"
+                    position="top-right"
+                    autoClose={3000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    draggable
+                    pauseOnHover
+                  />
+                </PassRollProvider>
               </AppThemeProvider>
             </UserProvider>
           </LocalizationProvider>

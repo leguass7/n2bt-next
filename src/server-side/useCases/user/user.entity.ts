@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer'
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm'
 
 import { Account } from '~/server-side/useCases/account/account.entity'
@@ -34,6 +35,7 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   image?: string | null
 
+  @Exclude()
   @Column({ type: 'varchar', length: 191, nullable: true })
   password?: string | null
 

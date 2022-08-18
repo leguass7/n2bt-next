@@ -15,12 +15,15 @@ type LayoutAdminProps = {
 }
 
 export const LayoutAdmin: React.FC<LayoutAdminProps> = ({ children }) => {
-  const { lougOut, completedAuth } = useAppAuth()
+  const { logOut, completedAuth, userData, loading } = useAppAuth()
   const { push } = useRouter()
 
   useEffect(() => {
-    if (!completedAuth) push('/')
-  }, [push, completedAuth])
+    if (!completedAuth && !loading) push('/')
+    else if (userData?.level < 8) {
+      logOut()
+    }
+  }, [push, completedAuth, logOut, userData, loading])
 
   return (
     <>
@@ -32,7 +35,7 @@ export const LayoutAdmin: React.FC<LayoutAdminProps> = ({ children }) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Admin
           </Typography>
-          <Button color="inherit" onClick={() => lougOut()}>
+          <Button color="inherit" onClick={() => logOut()}>
             Sair
           </Button>
         </Toolbar>

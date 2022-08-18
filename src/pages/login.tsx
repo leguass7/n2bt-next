@@ -1,37 +1,44 @@
 import { useCallback, useEffect } from 'react'
 
-import { Stack } from '@mui/material'
 import { GetServerSideProps, NextPage } from 'next'
-import { useSession } from 'next-auth/react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { FormLogin } from '~/components/FormLogin'
+import { Layout } from '~/components/app/Layout'
+import { SiginSlider } from '~/components/SiginSlider'
+import { useAppAuth } from '~/hooks/useAppAuth'
 
 interface LoginPageProps {
   csrfToken?: string
   uaString?: string
 }
 
-const Login: NextPage<LoginPageProps> = ({ uaString }) => {
+const Login: NextPage<LoginPageProps> = ({}) => {
   const { replace } = useRouter()
-  const { status } = useSession()
+  const { authenticated, userData, loading } = useAppAuth()
 
   const checkLogged = useCallback(() => {
-    if (status === 'authenticated') replace('/')
-  }, [status, replace])
+    if (!!authenticated && !loading) {
+      if (userData?.level >= 8) {
+        replace('/admin')
+      } else {
+        replace('/')
+      }
+    }
+  }, [userData, replace, authenticated, loading])
 
   useEffect(() => {
     checkLogged()
   }, [checkLogged])
 
   return (
-    <>
-      <Stack direction={'row'} justifyContent="center" spacing={1} sx={{ marginTop: 2, marginBottom: 2 }}>
-        a
-      </Stack>
-      <p>{uaString}</p>
-      <FormLogin />
-    </>
+    <Layout>
+      <Head>
+        <title>N2BT Beach Tennis - Login</title>
+        <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
+      </Head>
+      <SiginSlider />
+    </Layout>
   )
 }
 

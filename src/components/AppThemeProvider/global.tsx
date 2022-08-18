@@ -3,6 +3,8 @@ import { memo } from 'react'
 
 import { createGlobalStyle, css } from 'styled-components'
 
+import { brighten } from '~/helpers/colors'
+
 const globCss = css`
   h2 {
     font-size: 20px;
@@ -40,6 +42,7 @@ const GlobalStyle = createGlobalStyle`
     min-height: 100vh;
     height: 100%;
     box-sizing: border-box;
+    /* background-color: ${({ theme }) => brighten(theme.colors.background, 1.1)}; */
     background-color: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text};
     font-family: Gilroy, Tahoma, Geneva, Verdana, sans-serif;
@@ -54,7 +57,6 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     overflow-x: hidden !important;
     box-sizing: border-box !important;
-    background-color: ${({ theme }) => theme.colors.background};
     border: 0;
     ${globCss}
   }

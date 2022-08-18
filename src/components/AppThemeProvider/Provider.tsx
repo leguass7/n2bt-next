@@ -10,6 +10,22 @@ import type { IAppTheme, MatchingRules, ThemeProviderProps } from './types'
 
 const createMuiTheme = (theme: IAppTheme) => {
   return createTheme({
+    components: {
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            position: 'relative'
+          }
+        }
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundColor: theme.colors.background
+          }
+        }
+      }
+    },
     palette: {
       mode: 'dark',
       primary: { main: theme.colors.primary },

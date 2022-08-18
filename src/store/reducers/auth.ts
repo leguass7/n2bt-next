@@ -4,16 +4,18 @@ export interface IAuthAppState {
   readonly loading: boolean
   readonly token: string
   readonly expiration?: Date | null
-  readonly userName?: string | null
+  readonly nick?: string | null
   readonly level?: number
+  readonly error?: string | null
 }
 
 const initialState: IAuthAppState = {
   loading: false,
   token: '',
   expiration: null,
-  userName: null,
-  level: 0
+  nick: null,
+  level: 0,
+  error: null
 }
 
 export const slice = createSlice({
