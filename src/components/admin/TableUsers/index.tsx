@@ -9,7 +9,7 @@ import { columns } from './columns'
 const pageSize = 12
 
 export const TableUsers: React.FC = () => {
-  const [loading, setLoading] = useState(false)
+  const [, setLoading] = useState(false)
   const [records, setRecords] = useState([])
   const [total, setTotal] = useState(0)
 
