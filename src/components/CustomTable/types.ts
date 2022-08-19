@@ -39,6 +39,7 @@ export interface IColumnTable<T = unknown> {
 
 export interface TableFetchParams {
   fetchId?: number
+  size?: number
   page?: number
   orderby?: string
   order?: 'asc' | 'desc'

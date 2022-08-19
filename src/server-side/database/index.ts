@@ -50,6 +50,9 @@ export async function prepareDataSource(sync?: boolean) {
     dataSource = new DataSourceService({
       type: 'mysql',
       url: databaseUrl,
+      extra: {
+        connectionLimit: 5
+      },
       synchronize: !!sync,
       // logging: ['error'],
       logging: ['error', 'query'],

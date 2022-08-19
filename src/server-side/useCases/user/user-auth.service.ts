@@ -17,6 +17,7 @@ export async function checkCredentials(email: string, password: string) {
       name: user?.name
     }
 
+    db?.destroy()
     return compareSync(password, user?.password) && data
   } catch (err) {
     return null

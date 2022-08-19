@@ -49,7 +49,7 @@ export class User {
   phone?: string | null
 
   @Column({ type: 'date', nullable: true })
-  birday?: Date | null
+  birday?: Date | string | null
 
   @Column({ nullable: true, default: false })
   completed?: boolean

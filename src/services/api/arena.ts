@@ -1,5 +1,5 @@
 import type { IResponsePaginated, QueryPagination } from '~/server-side/api.interface'
-import type { IResponseArena, IResponseArenas } from '~/server-side/useCases/arena/arena.dto'
+import type { IArena, IResponseArena, IResponseArenas } from '~/server-side/useCases/arena/arena.dto'
 import { apiService } from '~/services/api/api.service'
 
 export async function getArena(arenaId: number): Promise<IResponseArena> {
@@ -12,7 +12,7 @@ export async function listArenas(): Promise<IResponseArenas> {
   return response
 }
 
-export async function paginateArenas(params: QueryPagination = {}): Promise<IResponsePaginated<any>> {
+export async function paginateArenas(params: QueryPagination = {}): Promise<IResponsePaginated<IArena>> {
   const response = await apiService.get(`/arena/list`, { params })
   return response
 }

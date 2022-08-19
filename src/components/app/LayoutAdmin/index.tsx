@@ -7,6 +7,7 @@ import { useAppAuth } from '~/hooks/useAppAuth'
 import { AdminAppBar } from './AdminAppBar'
 import { DrawerMenu } from './DrawerMenu'
 import { LayoutAdminProvider } from './LayoutAdminProvider'
+import { LayoutContainer } from './styles'
 
 type LayoutAdminProps = {
   children?: React.ReactNode
@@ -26,7 +27,7 @@ export const LayoutAdmin: React.FC<LayoutAdminProps> = ({ children }) => {
   return (
     <LayoutAdminProvider>
       <AdminAppBar />
-      {children}
+      <LayoutContainer>{children}</LayoutContainer>
       <DrawerMenu />
     </LayoutAdminProvider>
   )

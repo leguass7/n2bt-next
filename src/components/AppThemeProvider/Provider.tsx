@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
 
 import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material'
+import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
 
 import GlobalStyle from './global'
@@ -32,7 +33,10 @@ const createMuiTheme = (theme: IAppTheme) => {
       secondary: { main: theme.colors.secondary },
       success: { main: theme.colors.success },
       contrastThreshold: 3,
-      tonalOffset: 0.2
+      tonalOffset: 0.2,
+      background: {
+        default: theme.colors.background
+      }
     }
   })
 }
@@ -72,6 +76,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, themeNam
     >
       <SCThemeProvider theme={theme}>
         <MuiThemeProvider theme={createMuiTheme(theme)}>
+          <CssBaseline />
           <GlobalStyle />
           {children}
         </MuiThemeProvider>

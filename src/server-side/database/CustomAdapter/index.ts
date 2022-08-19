@@ -22,6 +22,7 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
     }
     return dsLocal
   }
+
   //
   const userDto = (data: Partial<User>): AdapterUser => {
     if (data) {
@@ -71,109 +72,110 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
 
   return {
     async createUser(user) {
-      console.log('CustomAdapter createUser')
       const ds = await getDS()
       const repo = ds.getRepository(User)
       const saveData = repo.create(user)
       const data = await repo.save(saveData)
+      // ds.destroy()
       return userDto(data)
     },
     async getUser(id) {
-      console.log('CustomAdapter getUser')
       const ds = await getDS()
       const repo = ds.getRepository(User)
       const result = await repo.findOne({ where: { id } })
+      // ds.destroy()
       return userDto(result)
     },
     async getUserByEmail(email) {
-      console.log('CustomAdapter getUserByEmail')
       const ds = await getDS()
       const repo = ds.getRepository(User)
       const result = await repo.findOne({ where: { email } })
+      // ds.destroy()
       return userDto(result)
     },
     async getUserByAccount({ providerAccountId, provider }) {
-      console.log('CustomAdapter getUserByAccount')
       const ds = await getDS()
       const repo = ds.getRepository(Account)
       const result = await repo.findOne({ where: { providerAccountId, provider }, relations: { user: true } })
+      // ds.destroy()
       return userDto(result?.user)
     },
     async updateUser(user) {
-      console.log('CustomAdapter updateUser')
       const ds = await getDS()
       const repo = ds.getRepository(User)
       const saveData = repo.create(user)
       const data = await repo.save(saveData)
+      // ds.destroy()
       return userDto(data)
     },
     async deleteUser(userId) {
-      console.log('CustomAdapter deleteUser')
       const ds = await getDS()
       const repo = ds.getRepository(User)
       await repo.delete(userId)
+      // ds.destroy()
     },
     async linkAccount(account) {
-      console.log('CustomAdapter linkAccount')
       const ds = await getDS()
       const repo = ds.getRepository(Account)
       const saveData = repo.create(account)
       const result = await repo.save(saveData)
+      // ds.destroy()
       return accDto(result)
     },
     async unlinkAccount({ providerAccountId, provider }) {
-      console.log('CustomAdapter unlinkAccount')
       const ds = await getDS()
       const repo = ds.getRepository(Account)
       await repo.delete({ provider, providerAccountId })
+      // ds.destroy()
     },
     async createSession({ sessionToken, userId, expires }) {
-      console.log('CustomAdapter createSession')
       const ds = await getDS()
       const repo = ds.getRepository(Session)
       const saveData = repo.create({ sessionToken, userId, expires })
       const result = await repo.save(saveData)
+      // ds.destroy()
       return result
     },
     async getSessionAndUser(sessionToken) {
-      console.log('CustomAdapter getSessionAndUser')
       const ds = await getDS()
       const repo = ds.getRepository(Session)
       const { user, ...session } = await repo.findOne({ where: { sessionToken }, relations: { user: true } })
       const result: { session: AdapterSession; user: AdapterUser } = { user: userDto(user), session }
+      // ds.destroy()
       return result
     },
     async updateSession({ sessionToken }) {
-      console.log('CustomAdapter updateSession')
       const ds = await getDS()
       const repo = ds.getRepository(Session)
       const session = await repo.findOne({ where: { sessionToken } })
       if (session) {
         const saveData = repo.create(session)
         const result = await repo.save({ ...saveData, sessionToken })
+        // ds.destroy()
         return result
       }
+      // ds.destroy()
       return null
     },
     async deleteSession(sessionToken) {
-      console.log('CustomAdapter deleteSession')
       const ds = await getDS()
       const repo = ds.getRepository(Session)
       await repo.delete({ sessionToken })
+      // ds.destroy()
     },
     async createVerificationToken({ identifier, expires, token }) {
-      console.log('CustomAdapter createVerificationToken')
       const ds = await getDS()
       const repo = ds.getRepository(VerificationToken)
       const saveData = repo.create({ identifier, expires, token })
       const result = await repo.save(saveData)
+      // ds.destroy()
       return result
     },
     async useVerificationToken({ identifier, token }) {
-      console.log('CustomAdapter useVerificationToken')
       const ds = await getDS()
       const repo = ds.getRepository(VerificationToken)
       const result = await repo.findOne({ where: { identifier, token } })
+      // ds.destroy()
       return result
     }
   }
