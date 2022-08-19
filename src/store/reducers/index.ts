@@ -3,11 +3,13 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage'
 
 import { appName, appVersion } from '~/config'
 
+import arena from './arena'
 import auth from './auth'
 
 const isServer = typeof window === 'undefined'
 
 export const rootReducer = combineReducers({
+  arena,
   auth
 })
 
@@ -33,5 +35,5 @@ function createStorage() {
 export const persistConfig = {
   key: `store-${appName}-${appVersion}`,
   storage: createStorage(),
-  whitelist: ['user', 'auth', 'app', 'arch', 'notifications']
+  whitelist: ['arena', 'auth']
 }

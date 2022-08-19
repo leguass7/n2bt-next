@@ -1,23 +1,34 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { createContext, useContextSelector } from 'use-context-selector'
 
+import { useAppArena } from '~/hooks/useAppArena'
+import type { AppStoreState } from '~/store'
+import type { IArenaAppState } from '~/store/reducers/arena'
+
 export interface ILayoutAdminContext {
   arenaId?: number
-  setArenaId: React.Dispatch<React.SetStateAction<number>>
+  setArenaId: (id?: number) => void
   menuOpen: boolean
   setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const LayoutAdminContext = createContext({} as ILayoutAdminContext)
 
-// import { Container } from './styles';
 type Props = {
   children?: React.ReactNode
 }
 export const LayoutAdminProvider: React.FC<Props> = ({ children }) => {
-  const [arenaId, setArenaId] = useState(0)
+  const { updateAppArena, arenaId } = useAppArena()
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const setArenaId = useCallback(
+    (id = 0) => {
+      updateAppArena({ arenaId: id })
+    },
+    [updateAppArena]
+  )
   return <LayoutAdminContext.Provider value={{ arenaId, setArenaId, menuOpen, setMenuOpen }}>{children}</LayoutAdminContext.Provider>
 }
 
@@ -25,4 +36,12 @@ export function useAdminMenu(): [ILayoutAdminContext['menuOpen'], ILayoutAdminCo
   const menuOpen = useContextSelector(LayoutAdminContext, ({ menuOpen }) => !!menuOpen)
   const setMenuOpen = useContextSelector(LayoutAdminContext, ({ setMenuOpen }) => setMenuOpen)
   return [menuOpen, setMenuOpen]
+}
+
+export function useAdminArena(): [ILayoutAdminContext['arenaId'], ILayoutAdminContext['setArenaId'], IArenaAppState['options']] {
+  const arenas = useSelector<AppStoreState, IArenaAppState['options']>(state => state?.arena?.options || [])
+  const arenaId = useContextSelector(LayoutAdminContext, ({ arenaId }) => arenaId)
+  const setArenaId = useContextSelector(LayoutAdminContext, ({ setArenaId }) => setArenaId)
+
+  return [arenaId, setArenaId, arenas]
 }
