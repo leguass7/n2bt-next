@@ -70,7 +70,7 @@ export const FormSignin: React.FC<FormSigninProps> = ({ onInvalid, onSuccess, on
           </Button>
         </Stack>
       </Form>
-      {loading ? <CircleLoading color="#f00" /> : null}
+      {loading ? <CircleLoading /> : null}
     </>
   )
 }

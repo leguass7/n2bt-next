@@ -5,13 +5,14 @@ import styled, { css } from 'styled-components'
 
 import { FlexProps, TextProps } from '~/styles/types'
 
-export const Text = styled.span<TextProps>`
+export const Text = styled.span<TextProps & { verticalPad?: number; horizontalPad?: number }>`
   font-weight: ${({ bold }) => (bold ? 'bold' : 'normal')};
   font-size: ${({ textSize = 14 }) => textSize}px;
   color: ${({ textColor = 'inherit' }) => textColor};
   text-align: ${({ align = 'inherit' }) => align};
   text-transform: ${({ transform = 'none' }) => transform};
   font-style: ${({ textStyle = 'normal' }) => textStyle};
+  padding: ${({ horizontalPad = 0, verticalPad = 0 }) => `${verticalPad}px ${horizontalPad}px`};
 `
 
 export const TextCell = styled(Text)`

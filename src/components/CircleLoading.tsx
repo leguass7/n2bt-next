@@ -46,7 +46,7 @@ const LoadContainer = styled.div<{
       display: block;
       border-radius: 50%;
       border: ${({ stroke }) => stroke}px solid #f1f1f1;
-      border-top-color: ${({ bColor }) => bColor};
+      border-top-color: ${({ bColor, theme }) => bColor || theme.colors.primary};
       animation: ${rotate} 200ms linear infinite;
       animation-duration: ${({ speed }) => `${speed}ms`};
       width: ${({ size }) => `${size}px`};
@@ -71,7 +71,7 @@ type CircleLoadingProps = {
 
 export const CircleLoading: React.FC<CircleLoadingProps> = ({
   size = 32,
-  color = '#000',
+  color,
   hidden,
   speed = 300,
   stroke = 3,

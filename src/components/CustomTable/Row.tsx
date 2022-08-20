@@ -1,6 +1,7 @@
 import React, { useContext, memo, useCallback, useMemo } from 'react'
 
-import { TableRow, TableCell } from '@mui/material'
+import TableCell from '@mui/material/TableCell'
+import TableRow from '@mui/material/TableRow'
 import cx from 'classnames'
 
 import CustomTableContext from './CustomTableContext'

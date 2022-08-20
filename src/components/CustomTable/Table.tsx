@@ -30,10 +30,15 @@ const TableContainer = styled.div`
   table tr th,
   table tr th.MuiTableCell-root {
     font-weight: bold;
+    /* font-weight: bold;
     color: ${({ theme }) => theme.colors.primary};
     .Mui-active {
       color: ${({ theme }) => theme.colors.secondary};
-    }
+    } */
+  }
+
+  table tr .MuiTableCell-root {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   table tr.selected {
