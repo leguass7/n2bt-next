@@ -4,7 +4,6 @@ import { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { Layout } from '~/components/app/Layout'
 import { LayoutSigin } from '~/components/app/LayoutSigin'
 import { SiginSlider } from '~/components/SiginSlider'
 import { useAppAuth } from '~/hooks/useAppAuth'
