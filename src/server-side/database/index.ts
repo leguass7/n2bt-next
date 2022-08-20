@@ -14,6 +14,14 @@ const close = async () => {
   }
 }
 
+process.on('SIGTERM', () => {
+  handleExit(0, 'SIGTERM')
+})
+
+process.on('SIGINT', () => {
+  handleExit(0, 'SIGINT')
+})
+
 export const handleExit = async (code: number, sig = 'UNKNOW', timeout = 500): Promise<void> => {
   const isTesting = ['test', 'testing'].includes(nodeEnv)
 
@@ -39,20 +47,10 @@ export const handleExit = async (code: number, sig = 'UNKNOW', timeout = 500): P
 export async function prepareDataSource(sync?: boolean) {
   const create = async () => {
     console.log('CREATE DATABASE')
-    process.on('SIGTERM', () => {
-      handleExit(0, 'SIGTERM')
-    })
-
-    process.on('SIGINT', () => {
-      handleExit(0, 'SIGINT')
-    })
-
     dataSource = new DataSourceService({
       type: 'mysql',
       url: databaseUrl,
-      extra: {
-        connectionLimit: 5
-      },
+      extra: { connectionLimit: 6 },
       synchronize: !!sync,
       // logging: ['error'],
       logging: ['error', 'query'],
@@ -72,6 +70,7 @@ export async function prepareDataSource(sync?: boolean) {
     return dataSource
   }
 
+  console.log('JÁ INICIALIZADO', dataSource?.isInitialized)
   await dataSource?.initialize()
   return dataSource
 }
