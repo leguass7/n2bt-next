@@ -14,6 +14,11 @@ import { apiService } from './api.service'
 //   return response
 // }
 
+export async function sendForgot(email?: string): Promise<IResponseUser> {
+  const response = await apiService.post('/user/forgot', { email })
+  return response
+}
+
 export async function getMe(): Promise<IResponseUser> {
   const response = await apiService.get('/user/me')
   return response

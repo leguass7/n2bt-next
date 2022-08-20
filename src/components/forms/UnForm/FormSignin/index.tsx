@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 
-import { Divider } from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { Form } from '@unform/web'
@@ -60,7 +59,7 @@ export const FormSignin: React.FC<FormSigninProps> = ({ onInvalid, onSuccess, on
         <Input placeholder="e-mail" type="email" name="email" />
         <br />
         <Input placeholder={'senha'} type="password" name="password" />
-        <Divider sx={{ mt: 2 }} />
+
         <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
           {onForgot ? (
             <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onForgot}>
