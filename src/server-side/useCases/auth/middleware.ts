@@ -38,3 +38,17 @@ export const JwtAuthGuard = createMiddlewareDecorator(async (req: AuthorizedApiR
     return unauthorize()
   }
 })
+
+export const IfAuth = createMiddlewareDecorator(async (req: AuthorizedApiRequest, res: NextApiResponse, next: NextFunction) => {
+  try {
+    let session = await getToken({ req, secret })
+    if (!session) session = await getSession()
+
+    req.auth = session ? authorizedDto(session) : null
+    req.ua = req?.headers['user-agent'] ? parse(req.headers['user-agent']) : null
+
+    next()
+  } catch (error) {
+    next()
+  }
+})

@@ -1,8 +1,10 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
+import { Layout } from '~/components/app/Layout'
 import { useAppAuth } from '~/hooks/useAppAuth'
 
 interface HomePageProps {
@@ -21,7 +23,11 @@ const Home: NextPage<HomePageProps> = ({ uaString }) => {
   }
 
   return (
-    <div>
+    <Layout>
+      <Head>
+        <title>N2BT Beach Tennis</title>
+        <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
+      </Head>
       HOME: {status}
       <p>
         <code>{JSON.stringify(userData)}</code>
@@ -36,7 +42,7 @@ const Home: NextPage<HomePageProps> = ({ uaString }) => {
       ) : (
         <Link href={'/login'}>Login</Link>
       )}
-    </div>
+    </Layout>
   )
 }
 

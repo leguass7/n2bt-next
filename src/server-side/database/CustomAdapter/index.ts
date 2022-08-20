@@ -26,8 +26,8 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
   //
   const userDto = (data: Partial<User>): AdapterUser => {
     if (data) {
-      const { id, emailVerified, email, image, name } = data
-      return { id, emailVerified, email, image, name }
+      const { id, emailVerified, email, image, name, level } = data
+      return { id, emailVerified, email, image, name, level }
     }
     return null
   }

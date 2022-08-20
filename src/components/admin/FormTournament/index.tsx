@@ -9,43 +9,44 @@ import { CircleLoading } from '~/components/CircleLoading'
 import { Input } from '~/components/forms/UnForm/Input'
 import { validateFormData } from '~/helpers/validation'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import type { IArena, IResponseArena } from '~/server-side/useCases/arena/arena.dto'
-import { getArena, storeArena } from '~/services/api/arena'
+import type { IResponseTournament, ITournament } from '~/server-side/useCases/tournament/tournament.dto'
+import { getTournament, storeTournament } from '~/services/api/tournament'
 
-type FormData = Partial<IArena> & {}
+type FormData = Partial<ITournament> & {}
 
 type SuccessReason = 'edit' | 'create'
 
-export type SuccessHandler = (reason: SuccessReason, response?: IResponseArena) => void
+export type SuccessHandler = (reason: SuccessReason, response?: IResponseTournament) => void
 
 const schema = object().shape({
   title: string().required('titulo da arena requerido'),
   description: string()
 })
 
-export type FormArenaProps = {
+export type FormTournamentProps = {
   arenaId?: number
+  tournamentId?: number
   onCancel?: () => void
   onSuccess?: SuccessHandler
   onFailed?: (message: string) => void
   onInvalid?: (data: Record<keyof FormData, string>) => void
 }
 
-export const FormArena: React.FC<FormArenaProps> = ({ onInvalid, onSuccess, onFailed, onCancel, arenaId }) => {
+export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuccess, onFailed, onCancel, tournamentId, arenaId }) => {
   const formRef = useRef()
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<Partial<IArena>>(null)
+  const [data, setData] = useState<Partial<ITournament>>(null)
 
   const fetchData = useCallback(async () => {
-    if (arenaId && arenaId > 0) {
+    if (tournamentId && tournamentId > 0) {
       setLoading(true)
-      const response = await getArena(arenaId)
+      const response = await getTournament(tournamentId)
       setLoading(false)
       if (response?.success) {
-        setData(response?.arena)
+        setData(response?.tournament)
       }
     }
-  }, [arenaId])
+  }, [tournamentId])
 
   const handleSubmit = useCallback(
     async (formData: FormData) => {
@@ -55,16 +56,16 @@ export const FormArena: React.FC<FormArenaProps> = ({ onInvalid, onSuccess, onFa
         return null
       }
       setLoading(true)
-      const response = await storeArena({ id: arenaId, ...formData })
+      const response = await storeTournament({ id: tournamentId, arenaId, ...formData })
       setLoading(false)
       if (response?.success) {
-        const reason: SuccessReason = arenaId > 0 ? 'edit' : 'create'
+        const reason: SuccessReason = tournamentId > 0 ? 'edit' : 'create'
         if (onSuccess) onSuccess(reason, response)
       } else {
         if (onFailed) onFailed(`${response?.message}`)
       }
     },
-    [onInvalid, onSuccess, onFailed, arenaId]
+    [onInvalid, onSuccess, onFailed, tournamentId, arenaId]
   )
 
   useOnceCall(() => {

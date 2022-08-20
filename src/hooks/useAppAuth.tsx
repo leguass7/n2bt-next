@@ -21,12 +21,13 @@ export function useAppAuth() {
   const { status, data } = useSession()
   const nick = useSelector<AppStoreState, string>(state => state?.auth?.nick || '')
   const level = useSelector<AppStoreState, number>(state => state?.auth?.level || 0)
+  const completed = useSelector<AppStoreState, boolean>(state => !!state?.auth?.completed)
   const loadingUser = useSelector<AppStoreState, boolean>(state => !!state?.auth?.loading)
 
   const userData = useMemo(() => {
     const { user = {}, ...rest } = data || {}
-    return data && nick && level ? { ...user, ...rest, nick, level } : null
-  }, [data, nick, level])
+    return data && nick && level ? { ...user, ...rest, nick, level, completed } : null
+  }, [data, nick, level, completed])
 
   const [loading, authenticated] = useMemo(() => {
     return [!!(loadingUser || status === 'loading'), !!(status === 'authenticated')]
@@ -57,6 +58,7 @@ export function useAppAuth() {
         loading: false,
         level: response?.user?.level,
         nick: response?.user?.name,
+        completed: response?.user?.completed,
         error: null
       }
     } else {

@@ -59,9 +59,9 @@ export const FormSignin: React.FC<FormSigninProps> = ({ onInvalid, onSuccess, on
         <Input placeholder="e-mail" type="email" name="email" />
         <Input placeholder={'senha'} type="password" name="password" />
 
-        <Stack direction="row" justifyContent="center" spacing={1}>
+        <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
           {onForgot ? (
-            <Button color="primary" variant="text" type="button" disabled={!!loading} onClick={onForgot}>
+            <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onForgot}>
               {'Esqueci a senha'}
             </Button>
           ) : null}

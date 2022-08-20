@@ -6,6 +6,7 @@ export interface IAuthAppState {
   readonly expiration?: Date | null
   readonly nick?: string | null
   readonly level?: number
+  readonly completed?: boolean
   readonly error?: string | null
 }
 
@@ -15,6 +16,7 @@ const initialState: IAuthAppState = {
   expiration: null,
   nick: null,
   level: 0,
+  completed: false,
   error: null
 }
 
