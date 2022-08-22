@@ -17,8 +17,6 @@ export async function checkCredentials(email: string, password: string) {
       name: user?.name,
       level: user?.level
     }
-
-    db?.destroy()
     return compareSync(password, user?.password) && data
   } catch (err) {
     return null
@@ -38,8 +36,6 @@ export async function getUserCredentials(id: string) {
       name: user?.name,
       level: user?.level
     }
-
-    db?.destroy()
     return data
   } catch (err) {
     return null
