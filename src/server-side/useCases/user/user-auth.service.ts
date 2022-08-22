@@ -1,12 +1,12 @@
 import { compareSync } from 'bcrypt'
 
-import { prepareDataSource } from '~/server-side/database'
+import { prepareConnection } from '~/server-side/database/conn'
 
 import { User } from './user.entity'
 
 export async function checkCredentials(email: string, password: string) {
   try {
-    const db = await prepareDataSource()
+    const db = await prepareConnection()
     const repo = db.getRepository(User)
     const user = await repo.findOneBy({ email })
 
@@ -27,7 +27,7 @@ export async function checkCredentials(email: string, password: string) {
 
 export async function getUserCredentials(id: string) {
   try {
-    const db = await prepareDataSource()
+    const db = await prepareConnection()
     const repo = db.getRepository(User)
     const user = await repo.findOneBy({ id })
 

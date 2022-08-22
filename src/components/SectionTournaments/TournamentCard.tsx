@@ -6,25 +6,50 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
+import { differenceInDays, parseJSON } from 'date-fns'
+import { useRouter } from 'next/router'
 
-type Props = {
-  image?: string
+import img02 from '~/assets/paella.jpg'
+import img01 from '~/assets/reptile.jpg'
+import { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
+
+const images = [
+  { id: 1, image: img01 },
+  { id: 2, image: img02 }
+  //
+]
+
+const getImage = (id: number) => {
+  return images.find(f => f.id === id)?.image?.src || img01?.src
 }
-export const TournamentCard: React.FC<Props> = ({ image }) => {
+
+type Props = Partial<ITournament> & {}
+
+export const TournamentCard: React.FC<Props> = ({ id, title, description, expires }) => {
+  const { push } = useRouter()
+  const expiresDate = (typeof expires === 'string' ? parseJSON(expires) : expires) as Date
+  const expired = differenceInDays(new Date(), expiresDate)
+
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardMedia component="img" height="140" image={image} alt="green iguana" />
+    <Card sx={{ maxWidth: '100%', minWidth: 320 }}>
+      <CardMedia component="img" height="140" image={getImage(id)} alt="green iguana" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Lizard
+          {title} {id}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica
+          {description}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
+        {expired < 0 ? (
+          <Button size="small" variant="outlined">
+            Inscrição
+          </Button>
+        ) : null}
+        <Button size="small" onClick={() => push(`/tournament/${id}`)}>
+          Saiba mais
+        </Button>
       </CardActions>
     </Card>
   )

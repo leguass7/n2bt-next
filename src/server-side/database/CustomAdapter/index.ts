@@ -1,19 +1,18 @@
 import { Account as AuthAccount } from 'next-auth'
 import { Adapter, AdapterSession, AdapterUser } from 'next-auth/adapters'
 import { ProviderType } from 'next-auth/providers'
+import { DataSource } from 'typeorm'
 
 import { Account } from '~/server-side/useCases/account/account.entity'
 import { Session } from '~/server-side/useCases/session/session.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
 import { VerificationToken } from '~/server-side/useCases/verification-token/verification-token.entity'
 
-import { DataSourceService } from '../DataSourceService'
-
-export type FactoryDatasource = () => Promise<DataSourceService>
-export type CreateAdapter = (datasource: DataSourceService, factoryDS: FactoryDatasource) => Adapter
+export type FactoryDatasource = () => Promise<DataSource>
+export type CreateAdapter = (datasource: DataSource, factoryDS: FactoryDatasource) => Adapter
 
 export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
-  let dsLocal: DataSourceService = datasource
+  let dsLocal: DataSource = datasource
 
   const getDS = async () => {
     if (!dsLocal || !dsLocal?.isInitialized) {

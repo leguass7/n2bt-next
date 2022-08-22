@@ -1,26 +1,19 @@
+import { DataSource } from 'typeorm'
+
 import { databaseUrl } from '../config'
-import { DataSourceService } from './DataSourceService'
 import { entities } from './entities'
 
-let dataSource: DataSourceService | null = null
+let dataSource: DataSource | null = null
 
 const nodeEnv = process.env.NODE_ENV
 
-const close = async () => {
+export const close = async () => {
   if (dataSource) {
     console.log('DATABASE CLOSING')
     await dataSource?.destroy()
     dataSource = null
   }
 }
-
-process.on('SIGTERM', () => {
-  handleExit(0, 'SIGTERM')
-})
-
-process.on('SIGINT', () => {
-  handleExit(0, 'SIGINT')
-})
 
 export const handleExit = async (code: number, sig = 'UNKNOW', timeout = 500): Promise<void> => {
   const isTesting = ['test', 'testing'].includes(nodeEnv)
@@ -47,7 +40,7 @@ export const handleExit = async (code: number, sig = 'UNKNOW', timeout = 500): P
 export async function prepareDataSource(sync?: boolean) {
   const create = async () => {
     console.log('CREATE DATABASE')
-    dataSource = new DataSourceService({
+    dataSource = new DataSource({
       type: 'mysql',
       url: databaseUrl,
       extra: { connectionLimit: 6 },
@@ -66,11 +59,18 @@ export async function prepareDataSource(sync?: boolean) {
     return create()
   } else if (!!dataSource?.isInitialized) {
     await close()
-    dataSource = await create()
-    return dataSource
+    return create()
   }
 
   console.log('JÁ INICIALIZADO', dataSource?.isInitialized)
   await dataSource?.initialize()
   return dataSource
 }
+
+process.on('SIGTERM', () => {
+  handleExit(0, 'SIGTERM')
+})
+
+process.on('SIGINT', () => {
+  handleExit(0, 'SIGINT')
+})

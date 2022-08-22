@@ -1,8 +1,7 @@
 import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from '@storyofams/next-api-decorators'
-import type { NextApiRequest } from 'next'
 import { FindOptionsWhere } from 'typeorm'
 
-import { prepareDataSource } from '~/server-side/database'
+import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
 import { PaginateService } from '~/server-side/services/PaginateService'
 import { Pagination } from '~/server-side/services/PaginateService/paginate.middleware'
@@ -20,11 +19,25 @@ const orderFields = [
 
 class TournamentHandler {
   @Get('/list')
+  @Pagination()
   @HttpCode(200)
-  async list(@Req() _req: NextApiRequest) {
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Tournament)
-    const tournaments = await repo.find({ select: { id: true, title: true }, where: { published: true } })
+  async list(@Req() req: AuthorizedPaginationApiRequest) {
+    const { order, size = 1000 } = req?.pagination
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Tournament)
+
+    const queryDb = repo
+      .createQueryBuilder('Tournament')
+      .select()
+      .addSelect(['Arena.id', 'Arena.title'])
+      .innerJoin('Tournament.arena', 'Arena')
+      .where({ published: true })
+      .take(size)
+
+    parseOrderDto({ order, table: 'Tournament', orderFields }).querySetup(queryDb)
+
+    const tournaments = await queryDb.getMany()
+
     return { success: true, tournaments }
   }
 
@@ -35,8 +48,8 @@ class TournamentHandler {
     const { auth, query } = req
     const tournamentId = +query?.params[0] || 0
 
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Tournament)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Tournament)
     const where: FindOptionsWhere<Tournament> = { id: tournamentId }
     if (auth?.level <= 8) where.published = true
 
@@ -54,8 +67,8 @@ class TournamentHandler {
     const tournamentId = +query?.params[0] || 0
     if (!tournamentId) throw new BadRequestException()
 
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Tournament)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Tournament)
     const tournament = await repo.update(tournamentId, { ...body, updatedAt: new Date(), updatedBy: auth.userId })
     if (!tournament) throw new BadRequestException()
 
@@ -70,8 +83,8 @@ class TournamentHandler {
     const tournamentId = +query?.params[0] || 0
     if (!tournamentId) throw new BadRequestException()
 
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Tournament)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Tournament)
     const deleted = await repo.delete(tournamentId)
     if (!deleted) throw new BadRequestException()
 
@@ -82,8 +95,8 @@ class TournamentHandler {
   @HttpCode(200)
   @Pagination()
   async paginate(@Req() req: AuthorizedPaginationApiRequest) {
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Tournament)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Tournament)
 
     const arenaId = +req?.query?.arenaId
     if (!arenaId) throw new BadRequestException('not_found_arenaId')
@@ -107,8 +120,8 @@ class TournamentHandler {
   async create(@Req() req: AuthorizedApiRequest) {
     const { auth, body } = req
 
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Tournament)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Tournament)
     const data = { ...body, createdAt: new Date(), createdBy: auth.userId, userId: auth.userId } as ITournament
     const saveData = repo.create(data)
     const created = await repo.save(saveData)

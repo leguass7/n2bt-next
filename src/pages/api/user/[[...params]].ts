@@ -1,7 +1,7 @@
 import { BadRequestException, createHandler, Get, HttpCode, Req } from '@storyofams/next-api-decorators'
 import { instanceToPlain } from 'class-transformer'
 
-import { prepareDataSource } from '~/server-side/database'
+import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
 import { PaginateService } from '~/server-side/services/PaginateService'
 import { Pagination } from '~/server-side/services/PaginateService'
@@ -22,8 +22,8 @@ class UserHandler {
   @JwtAuthGuard()
   @Pagination()
   async users(@Req() req: AuthorizedPaginationApiRequest) {
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(User)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
 
     const { search, order } = req.pagination
     const queryText = search ? searchFields.map(field => `User.${field} LIKE :search`) : null
@@ -45,8 +45,8 @@ class UserHandler {
   @JwtAuthGuard()
   async me(@Req() req: AuthorizedApiRequest) {
     const { auth } = req
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(User)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
     const user = await repo.findOne({ where: { id: auth.userId } })
     if (!user) throw new BadRequestException()
 

@@ -26,12 +26,12 @@ function extractRequestArray<T extends string>(queryOrder: string | string[]): T
 
 export interface AuthorizedPaginationApiRequest<Body = any> extends AuthorizedApiRequest<Body> {
   body: Body
-  pagination: any
+  pagination: QueryPagination
 }
 
 export interface AuthorizedPaginationApiRequest<Body = any> extends NextApiRequest {
   body: Body
-  pagination: any
+  pagination: QueryPagination
 }
 
 export const Pagination = createMiddlewareDecorator((req: AuthorizedPaginationApiRequest, res: NextApiResponse, next: NextFunction) => {

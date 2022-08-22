@@ -41,7 +41,7 @@ export const ProfilePopover: React.FC = () => {
 
   const handleProfile = () => {
     handlePopoverClose()
-    push('/register')
+    push('/me/register')
   }
 
   const open = Boolean(anchorEl)
@@ -51,7 +51,7 @@ export const ProfilePopover: React.FC = () => {
     prefetch('/register')
   }, [prefetch])
 
-  const registerNotify = !!(asPath !== '/register' && userData && !userData?.completed)
+  const registerNotify = !!(asPath !== '/me/register' && userData && !userData?.completed)
 
   const renderSecondaryText = () => {
     if (!registerNotify) return 'Meu cadastro'
@@ -91,7 +91,7 @@ export const ProfilePopover: React.FC = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton dense onClick={() => push('/subscription')}>
+            <ListItemButton dense onClick={() => push('/me/subscription')}>
               <ListItemIcon>
                 <HowToRegIcon fontSize="small" />
               </ListItemIcon>

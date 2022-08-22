@@ -1,9 +1,14 @@
 import type { TableFetchParams } from '~/components/CustomTable/types'
 import type { IResponsePaginated } from '~/server-side/services/PaginateService'
-import type { IResponseTournament, ITournament } from '~/server-side/useCases/tournament/tournament.dto'
+import type { IResponseTournament, IResponseTournaments, ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { apiService } from '~/services/api/api.service'
 
-export async function paginateTournaments(arenaId: number, params: TableFetchParams = {}): Promise<IResponsePaginated<ITournament>> {
+export async function listTournaments(params: TableFetchParams = {}): Promise<IResponseTournaments> {
+  const response = await apiService.get(`/tournament/list`, { params })
+  return response
+}
+
+export async function paginateTournaments(arenaId?: number, params: TableFetchParams = {}): Promise<IResponsePaginated<ITournament>> {
   const response = await apiService.get(`/tournament?arenaId=${arenaId}`, { params })
   return response
 }
