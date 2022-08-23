@@ -1,7 +1,7 @@
 import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from '@storyofams/next-api-decorators'
 import type { NextApiRequest } from 'next'
 
-import { prepareDataSource } from '~/server-side/database'
+import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
 import { PaginateService } from '~/server-side/services/PaginateService'
 import { Pagination } from '~/server-side/services/PaginateService/paginate.middleware'
@@ -21,8 +21,8 @@ class ArenaHandler {
   @Get('/list')
   @HttpCode(200)
   async list(@Req() _req: NextApiRequest) {
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Arena)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Arena)
     const arenas = await repo.find({ select: { id: true, title: true }, where: { published: true } })
     return { success: true, arenas }
   }
@@ -33,8 +33,8 @@ class ArenaHandler {
     const { auth, query } = req
     const arenaId = +query?.params[0] || 0
 
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Arena)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Arena)
     const arena = await repo.findOne({ where: { id: arenaId, published: auth?.level <= 8 ? undefined : true } })
     if (!arena) throw new BadRequestException()
 
@@ -49,8 +49,8 @@ class ArenaHandler {
     const arenaId = +query?.params[0] || 0
     if (!arenaId) throw new BadRequestException()
 
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Arena)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Arena)
     const arena = await repo.update(arenaId, { ...body, updatedAt: new Date(), updatedBy: auth.userId })
     if (!arena) throw new BadRequestException()
 
@@ -65,8 +65,8 @@ class ArenaHandler {
     const arenaId = +query?.params[0] || 0
     if (!arenaId) throw new BadRequestException()
 
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Arena)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Arena)
     const deleted = await repo.delete(arenaId)
     if (!deleted) throw new BadRequestException()
 
@@ -77,8 +77,8 @@ class ArenaHandler {
   @HttpCode(200)
   @Pagination()
   async paginate(@Req() req: AuthorizedPaginationApiRequest) {
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Arena)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Arena)
 
     const { search, order } = req.pagination
     const queryText = search ? searchFields.map(field => `Arena.${field} LIKE :search`) : null
@@ -101,8 +101,8 @@ class ArenaHandler {
   async create(@Req() req: AuthorizedApiRequest) {
     const { auth, body } = req
 
-    const dataSource = await prepareDataSource()
-    const repo = dataSource.getRepository(Arena)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Arena)
     const data = { ...body, createdAt: new Date(), createdBy: auth.userId, userId: auth.userId } as IArena
     const saveData = repo.create(data)
     const created = await repo.save(saveData)

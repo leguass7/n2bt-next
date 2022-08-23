@@ -24,7 +24,7 @@ import { deletetArena } from '~/services/api/arena'
 
 import { FormTournament, SuccessHandler } from '../FormTournament'
 
-export interface IArenaActions {
+export interface ITournamentActions {
   editId?: number
   deleteId?: number
 }
@@ -32,7 +32,7 @@ export interface IArenaActions {
 export const Actions: React.FC = () => {
   const [arenaId] = useAdminArena()
   const [loading, setLoading] = useState(false)
-  const { custom, setCustom } = useTableActions<IArenaActions>()
+  const { custom, setCustom } = useTableActions<ITournamentActions>()
   const { emitFetch } = useCustomTable()
 
   const handleClose = () => {

@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
 import type { GetServerSideProps, NextPage } from 'next'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 
 import { Layout } from '~/components/app/Layout'

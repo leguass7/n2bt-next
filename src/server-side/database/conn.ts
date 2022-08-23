@@ -12,8 +12,8 @@ async function createConnection() {
     entities,
     url: databaseUrl,
     extra: { connectionLimit: 6 },
-    logging: ['error']
-    // logging: ['error', 'query']
+    // logging: ['error']
+    logging: ['error', 'query']
   })
   await newConn.initialize()
   return newConn

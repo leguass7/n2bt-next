@@ -12,6 +12,9 @@ export class Ranking {
   @Column({ unsigned: true, nullable: false })
   tournamentId: number
 
+  @Column({ unsigned: true, nullable: false })
+  categoryId: number
+
   @Column({ type: 'uuid', nullable: false, length: 36 })
   userId: string
 
@@ -34,6 +37,11 @@ export class Ranking {
   @ManyToOne('Tournament', 'rankings', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'tournamentId', referencedColumnName: 'id', foreignKeyConstraintName: 'rankings_tournamentId_fkey' })
   tournament: Tournament
+
+  // relations
+  @ManyToOne('Category', 'rankings', { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'categoryId', referencedColumnName: 'id', foreignKeyConstraintName: 'rankings_categoryId_fkey' })
+  category: Tournament
 
   // relations user
   @ManyToOne('User', 'rankings', { onDelete: 'CASCADE' })

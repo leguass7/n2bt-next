@@ -1,6 +1,6 @@
 import React from 'react'
 
-import SendIcon from '@mui/icons-material/Send'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -32,7 +32,7 @@ export const DrawerMenu: React.FC<Props> = () => {
           return (
             <ListItemButton key={`menu-item-${id}`} onClick={handleClick(path)}>
               <ListItemIcon>
-                <SendIcon />
+                <ChevronRightIcon />
               </ListItemIcon>
               <ListItemText primary={label} />
             </ListItemButton>
