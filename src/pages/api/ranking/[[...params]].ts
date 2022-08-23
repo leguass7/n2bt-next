@@ -17,23 +17,25 @@ class RankingHandler {
   @Pagination()
   @HttpCode(200)
   async list(@Req() req: AuthorizedPaginationApiRequest) {
-    const { order, size = 1000 } = req?.pagination
+    const { query } = req
+    const { order } = req?.pagination
+
+    const categoryId = +query?.categoryId || 0
     const ds = await prepareConnection()
     const repo = ds.getRepository(Ranking)
 
     const queryDb = repo
       .createQueryBuilder('Ranking')
       .select()
-      .addSelect(['Category.id', 'Category.title'])
-      .innerJoin('Ranking.category', 'Category')
-      .where({ published: true })
-      .take(size)
+      .addSelect(['User.id', 'User.name', 'User.image', 'User.email'])
+      .innerJoin('Ranking.user', 'User')
+      .where({ categoryId })
 
     parseOrderDto({ order, table: 'Ranking', orderFields }).querySetup(queryDb)
 
-    const tournaments = await queryDb.getMany()
+    const rankings = await queryDb.getMany()
 
-    return { success: true, tournaments }
+    return { success: true, rankings }
   }
 
   // @Get('/:tournamentId')

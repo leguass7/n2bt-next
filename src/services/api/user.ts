@@ -1,6 +1,6 @@
 import type { TableFetchParams } from '~/components/CustomTable/types'
 import type { IResponsePaginated } from '~/server-side/services/PaginateService'
-import type { IResponseUser, IUser } from '~/server-side/useCases/user/user.dto'
+import type { IResponseUser, IResponseUsers, IUser } from '~/server-side/useCases/user/user.dto'
 
 import { apiService } from './api.service'
 
@@ -26,6 +26,11 @@ export async function getMe(): Promise<IResponseUser> {
 
 export async function paginateUsers(params: TableFetchParams = {}): Promise<IResponsePaginated<IUser>> {
   const response = await apiService.get('/user', { params })
+  return response
+}
+
+export async function findUser(params: any = {}): Promise<IResponseUsers> {
+  const response = await apiService.get('/user/find', { params })
   return response
 }
 

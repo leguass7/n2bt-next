@@ -14,3 +14,7 @@ export interface IResponseRanking extends IResponseApi {
 export interface IResponseRankings extends IResponseApi {
   rankings: IRanking[]
 }
+
+export interface IResponseUserRanking extends IResponseApi {
+  rankings: any[]
+}

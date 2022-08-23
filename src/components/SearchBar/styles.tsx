@@ -10,7 +10,7 @@ export const SearchWrapper = styled.div<{ hasError?: boolean; size?: string; var
   padding-left: ${({ theme }) => theme.spacing.m}px;
   padding-right: ${({ theme }) => theme.spacing.m}px;
   border-bottom: 1px solid ${({ theme, hasError }) => (hasError ? theme.colors.errors : theme.colors.border)};
-
+  background-color: rgba(255, 255, 255, 0);
   margin-top: 0;
   padding-top: 10px;
 
@@ -31,6 +31,7 @@ export const SearchInput = styled.div`
   margin-right: ${({ theme }) => theme.spacing.s}px;
 
   input {
+    background-color: transparent;
     border: 0;
     width: 100%;
     max-width: 100%;
@@ -61,8 +62,10 @@ export const TextError = styled.span`
 `
 export const SearchContainer = styled.div<{ disabled?: boolean }>`
   padding: ${({ theme }) => theme.spacing.l}px;
-  background-color: ${({ theme }) => theme.colors.white};
+  /* background-color: ${({ theme }) => theme.colors.white}; */
+  background-color: transparent;
   margin-bottom: ${({ theme }) => theme.spacing.l}px;
+  /* background-color: white; */
   transition: all ease-in-out 0.2s;
   ${SearchInput} {
     opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};

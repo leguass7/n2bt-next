@@ -1,30 +1,20 @@
 import React, { useCallback, useState } from 'react'
 
-import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
+import Divider from '@mui/material/Divider'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import ListItemText from '@mui/material/ListItemText'
+import Typography from '@mui/material/Typography'
 
-import type { TableFetchParams } from '~/components/CustomTable/types'
+import { CircleLoading } from '~/components/CircleLoading'
+import { useOnceCall } from '~/hooks/useOnceCall'
+import { listRankings } from '~/services/api/ranking'
 
-type Props = {
-  tournamentId: number
-}
-export const RankingList: React.FC<Props> = ({ tournamentId }) => {
-  const [loading, setLoading] = useState(false)
-  const [data, setData] = useState([])
-
-  const fetchData = useCallback(
-    async (pagination?: TableFetchParams) => {
-      setLoading(true)
-      const result = await paginateTournaments(arenaId, pagination)
-      setLoading(false)
-      if (result?.success) {
-        setData(result?.ranking || [])
-      }
-    },
-    [tournamentId]
-  )
-
+export const Item: React.FC = () => {
   return (
-    <List sx={{ width: '100%' }}>
+    <>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
           <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
@@ -42,6 +32,37 @@ export const RankingList: React.FC<Props> = ({ tournamentId }) => {
         />
       </ListItem>
       <Divider variant="inset" component="li" />
-    </List>
+    </>
+  )
+}
+
+type Props = {
+  tournamentId: number
+  categoryId: number
+}
+export const RankingList: React.FC<Props> = ({ categoryId }) => {
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState([])
+
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    const result = await listRankings(categoryId)
+    setLoading(false)
+    if (result?.success) {
+      setData(result?.rankings || [])
+    }
+  }, [categoryId])
+
+  useOnceCall(fetchData)
+
+  return (
+    <>
+      <List sx={{ width: '100%' }}>
+        {data.map(ranking => {
+          return <Item key={`item-${ranking?.id}`} {...ranking} />
+        })}
+      </List>
+      {loading ? <CircleLoading /> : null}
+    </>
   )
 }
