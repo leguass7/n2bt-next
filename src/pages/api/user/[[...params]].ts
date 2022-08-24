@@ -51,7 +51,7 @@ class UserHandler {
     const repo = ds.getRepository(User)
     const userData = repo.create({ ...req.body })
 
-    const userExists = await repo.findOne({ where: [{ cpf: userData?.cpf }, { email: userData.email }] })
+    const userExists = await repo.findOne({ where: { email: userData.email } })
     if (userExists) throw new HttpException(401, 'Usuário já existe')
     if (!userData?.password) throw new BadRequestException('Senha não encontrada')
 

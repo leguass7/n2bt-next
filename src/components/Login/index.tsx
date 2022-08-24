@@ -12,6 +12,9 @@ type Props = {
   layoutName?: ThemeName
   reCAPTCHAKey?: string
 }
+
+const allowRegister = true
+
 export const SigninSlider: React.FC<Props> = () => {
   // const handleSliderChangeComplete = (index: number) => {
   //   console.log('handleSliderChangeComplete', index)
@@ -20,7 +23,7 @@ export const SigninSlider: React.FC<Props> = () => {
   return (
     <Main name="signIn">
       <SliderItem>
-        <StepSignin />
+        <StepSignin allowRegister={allowRegister} />
       </SliderItem>
       <SliderItem>
         <StepForgot />
@@ -28,9 +31,11 @@ export const SigninSlider: React.FC<Props> = () => {
       <SliderItem>
         <StepCode />
       </SliderItem>
-      <SliderItem>
-        <StepSignup />
-      </SliderItem>
+      {allowRegister ? (
+        <SliderItem>
+          <StepSignup />
+        </SliderItem>
+      ) : null}
     </Main>
   )
 }

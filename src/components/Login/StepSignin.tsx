@@ -11,7 +11,11 @@ import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 
 import { LogoSvg } from '../LogoSvg'
 
-export const StepSignin: React.FC = () => {
+interface Props {
+  allowRegister?: boolean
+}
+
+export const StepSignin: React.FC<Props> = ({ allowRegister = false }) => {
   const { goTo } = usePassRoll('signIn')
 
   return (
@@ -23,7 +27,7 @@ export const StepSignin: React.FC = () => {
               <LogoSvg height={92} />
             </FlexContainer>
             <Divider sx={{ mt: 2, mb: 1 }} />
-            <FormSignin onRegister={() => goTo(4)} onForgot={() => goTo(2)} />
+            <FormSignin onRegister={allowRegister ? () => goTo(4) : null} onForgot={() => goTo(2)} />
           </CardContent>
         </Card>
       </FlexContainer>

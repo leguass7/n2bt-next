@@ -5,20 +5,15 @@ import CheckIcon from '@mui/icons-material/Check'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { Form } from '@unform/web'
-import { cpf } from 'cpf-cnpj-validator'
-import { sub } from 'date-fns'
 import { object, ref, string } from 'yup'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { BoxCenter, H4 } from '~/components/styled'
 import { useUserAuth } from '~/components/UserProvider'
-import { categories, genders, shirtSizes } from '~/config/constants'
 import { validateFormData } from '~/helpers/validation'
 import { IUser } from '~/server-side/useCases/user/user.dto'
 import { createUser, saveMe } from '~/services/api/user'
 
-import { InputDate } from '../../InputDate'
-import { InputSelects } from '../../InputSelects'
 import { InputMask, InputText } from '../../InputText'
 
 type FormData = IUser & { confirmPassword: string }
@@ -29,7 +24,7 @@ export type Props = {
 }
 
 export const FormSignup: React.FC<Props> = ({ onCancel, userId }) => {
-  const { loading: loadingUser, userData, authenticated } = useUserAuth()
+  const { loading: loadingUser, authenticated } = useUserAuth()
 
   const [saving, setSaving] = useState(false)
   const [created, setCreated] = useState(false)
@@ -42,11 +37,11 @@ export const FormSignup: React.FC<Props> = ({ onCancel, userId }) => {
         name: string().required('Seu nome é obrigatório'),
         email: string().required('Seu e-mail é obrigatório'),
         phone: string().required('Seu telefone é obrigatório'),
-        birday: string().required('A sua data de nascimento é obrigatória'),
         password: authenticated ? string() : string().required('A senha é obrigatória'),
-        confirmPassword: string().oneOf([ref('password'), null], 'Senha e confirmar senha não batem'),
-        shirtSize: string().required('O tamanho da camisa é obrigatório'),
-        cpf: string().test('cpf', 'CPF inválido', value => (value ? cpf.isValid(value) : true))
+        confirmPassword: string().oneOf([ref('password'), null], 'Senha e confirmar senha não batem')
+        // cpf: string().test('cpf', 'CPF inválido', value => (value ? cpf.isValid(value) : true))
+        // shirtSize: string().required('O tamanho da camisa é obrigatório'),
+        // birday: string().required('A sua data de nascimento é obrigatória'),
         // category: string().required('Categoria é requirido'),
         // gender: string().required('gênero é requirido'),
         // cpf: string().required('CPF é requirido')
@@ -111,9 +106,10 @@ export const FormSignup: React.FC<Props> = ({ onCancel, userId }) => {
         <InputText name="email" label="e-mail *" />
         <InputText type="password" name="password" label="senha *" />
         <InputText type="password" name="confirmPassword" label="Confirmar senha *" />
-        <InputMask name="cpf" label="CPF" mask={'999.999.999-99'} alwaysShowMask={false} />
         <InputMask name="phone" label="Telefone *" mask={'(99) 9 9999-9999'} alwaysShowMask={false} />
-        <InputDate name="birday" label="Nascimento *" maxDate={sub(new Date(), { years: 5 })} minDate={sub(new Date(), { years: 75 })} />
+        {/* <InputMask name="cpf" label="CPF" mask={'999.999.999-99'} alwaysShowMask={false} /> */}
+
+        {/* <InputDate name="birday" label="Nascimento *" maxDate={sub(new Date(), { years: 5 })} minDate={sub(new Date(), { years: 75 })} />
         <div style={{ padding: '10px 0' }}>
           <InputSelects name="category" label="Categoria" options={categories} defaultSelected={userData?.category || 'C'} />
         </div>
@@ -122,7 +118,7 @@ export const FormSignup: React.FC<Props> = ({ onCancel, userId }) => {
         </div>
         <div style={{ padding: '10px 0' }}>
           <InputSelects name="gender" label="Gênero" options={genders} defaultSelected={userData?.gender || 'M'} />
-        </div>
+        </div> */}
 
         <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
           {onCancel ? (
