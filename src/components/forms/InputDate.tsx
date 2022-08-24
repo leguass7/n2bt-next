@@ -3,6 +3,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 import { useField } from '@unform/core'
 
+import { formatDate } from '~/helpers/date'
+
 import { VariantColorsTypes } from '../AppThemeProvider/types'
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { Container, Input, Label } from './InputText/styles'
@@ -17,6 +19,7 @@ type Props = {
   maxDate?: Date
   minDate?: Date
 }
+
 export const InputDate: React.FC<Props> = ({ name, label, themeColor = 'primary', disabled, maxDate, minDate }) => {
   const [actived, setActived] = useState(false)
   const { theme } = useAppTheme()
@@ -42,7 +45,8 @@ export const InputDate: React.FC<Props> = ({ name, label, themeColor = 'primary'
       name: fieldName,
       ref: inputRef,
       getValue: () => {
-        return dates || ''
+        return formatDate(dates, 'yyyy-MM-dd HH:mm:ss')
+        // return dates || ''
       }
     })
   }, [fieldName, registerField, dates])
