@@ -111,7 +111,7 @@ export const FormSignup: React.FC<Props> = ({ onCancel, userId }) => {
         <InputText name="email" label="e-mail *" />
         <InputText type="password" name="password" label="senha *" />
         <InputText type="password" name="confirmPassword" label="Confirmar senha *" />
-        <InputMask name="cpf" label="CPF *" mask={'999.999.999-99'} alwaysShowMask={false} />
+        <InputMask name="cpf" label="CPF" mask={'999.999.999-99'} alwaysShowMask={false} />
         <InputMask name="phone" label="Telefone *" mask={'(99) 9 9999-9999'} alwaysShowMask={false} />
         <InputDate name="birday" label="Nascimento *" maxDate={sub(new Date(), { years: 5 })} minDate={sub(new Date(), { years: 75 })} />
         <div style={{ padding: '10px 0' }}>
