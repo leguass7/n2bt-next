@@ -7,9 +7,9 @@ import type { User } from './user.entity'
 export type IUser = DeepPartial<User>
 
 export interface IResponseUserStore extends IResponseApi {
-  createdId?: string
   userId?: string
-  completed?: boolean
+  // createdId?: string
+  // completed?: boolean
 }
 
 export interface IResponseCheckUser extends IResponseApi {
