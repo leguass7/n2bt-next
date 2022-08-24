@@ -37,3 +37,4 @@ export const ButtonClose = styled(IconButton)`
   top: 0px;
   right: 0px;
 `
+export const ListContent = styled.div``

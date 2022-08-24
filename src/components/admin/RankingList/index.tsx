@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from 'react'
 
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import { IconButton, Toolbar, Tooltip } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
@@ -9,24 +12,45 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 
 import { CircleLoading } from '~/components/CircleLoading'
+import { normalizeImageSrc, stringAvatar } from '~/helpers/string'
 import { useOnceCall } from '~/hooks/useOnceCall'
+import type { IRanking } from '~/server-side/useCases/ranking/ranking.dto'
 import { listRankings } from '~/services/api/ranking'
 
-export const Item: React.FC = () => {
+type ItemProps = IRanking & {}
+export const Item: React.FC<ItemProps> = ({ id, user, category, points }) => {
   return (
     <>
-      <ListItem alignItems="flex-start">
+      <ListItem
+        alignItems="flex-start"
+        secondaryAction={
+          <Toolbar sx={{ justifyContent: 'flex-end' }}>
+            <Tooltip title="Remover" arrow>
+              <IconButton>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Alterar pontos" arrow>
+              <IconButton>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          </Toolbar>
+        }
+      >
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar alt={user?.name} src={normalizeImageSrc(user?.image)}>
+            {stringAvatar(user?.name)}
+          </Avatar>
         </ListItemAvatar>
         <ListItemText
-          primary="Brunch this weekend?"
+          primary={user?.name}
           secondary={
             <React.Fragment>
               <Typography sx={{ display: 'inline' }} component="span" variant="body2" color="text.primary">
-                Ali Connors
+                {points} pontos
               </Typography>
-              {" — I'll be in your neighborhood doing errands this…"}
+              {` — ${category?.tournament?.title} ${category?.title}`}
             </React.Fragment>
           }
         />
@@ -36,11 +60,13 @@ export const Item: React.FC = () => {
   )
 }
 
+export type OnFetchDataHandler = (ids: string[]) => any
 type Props = {
   tournamentId: number
   categoryId: number
+  onFetchData?: OnFetchDataHandler
 }
-export const RankingList: React.FC<Props> = ({ categoryId }) => {
+export const RankingList: React.FC<Props> = ({ categoryId, onFetchData }) => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
 
@@ -50,8 +76,9 @@ export const RankingList: React.FC<Props> = ({ categoryId }) => {
     setLoading(false)
     if (result?.success) {
       setData(result?.rankings || [])
+      if (onFetchData) onFetchData(result?.rankings?.map(f => f.userId) || [])
     }
-  }, [categoryId])
+  }, [categoryId, onFetchData])
 
   useOnceCall(fetchData)
 

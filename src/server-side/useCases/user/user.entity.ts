@@ -26,6 +26,9 @@ export class User {
   @Column({ nullable: false })
   name: string
 
+  @Column({ nullable: true, default: null })
+  nick?: string
+
   @Column({ nullable: false })
   email: string
 

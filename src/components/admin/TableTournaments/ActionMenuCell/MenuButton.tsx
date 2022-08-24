@@ -27,7 +27,7 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
   const handleCloseMenu = () => setAnchorEl(null)
 
   const handleClickRanking = () => {
-    push(`/admin/tournaments/${tournamentId}/ranking`)
+    push(`/admin/tournaments/ranking/${tournamentId}`)
     handleCloseMenu()
   }
   const handleDelete = () => setCustom({ deleteId: tournamentId })
@@ -38,7 +38,7 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
 
   useEffect(() => {
     if (open) {
-      prefetch(`/admin/tournaments/${tournamentId}/ranking`)
+      prefetch(`/admin/tournaments/ranking/${tournamentId}`)
     }
   }, [prefetch, open, tournamentId])
 

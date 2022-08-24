@@ -21,6 +21,7 @@ function hasValues(filter: Filter) {
 }
 
 export type SearchFetchHandler = (params?: Filter) => Promise<any>
+export type SelectHandler = (userId: IUser['id'], data?: IUser) => any
 
 type Props = {
   open?: boolean
@@ -30,8 +31,22 @@ type Props = {
   message?: string
   notFoundMessage?: string
   fetcher: SearchFetchHandler
+  categoryId?: number
+  tournamentId?: number
+  userList?: string[]
 }
-export const SearchUserDrawer: React.FC<Props> = ({ open, onClose, onSelect, fixedFilter, fetcher, message, notFoundMessage }) => {
+export const SearchUserDrawer: React.FC<Props> = ({
+  open,
+  onClose,
+  onSelect,
+  fixedFilter,
+  fetcher,
+  message,
+  notFoundMessage,
+  categoryId,
+  tournamentId,
+  userList
+}) => {
   const [loading, setLoading] = useState(false)
   const [searchStarted, setSearchStarted] = useState(false)
   const [filter, setFilter] = useState<Filter>({})
@@ -119,12 +134,15 @@ export const SearchUserDrawer: React.FC<Props> = ({ open, onClose, onSelect, fix
             </div>
           ) : (
             <FoundList
+              tournamentId={tournamentId}
+              categoryId={categoryId}
               list={data}
               onClickItem={handleClickItem}
               searchStarted={searchStarted}
               registeredGroups={[]}
               message={message}
               notFoundMessage={notFoundMessage}
+              userList={userList}
             />
           )}
           <ButtonClose color="primary" onClick={handleClose}>

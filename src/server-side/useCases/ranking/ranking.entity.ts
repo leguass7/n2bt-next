@@ -3,6 +3,8 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique }
 import type { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
+import type { Category } from '../category/category.entity'
+
 @Unique('rankings_tournamentId_userId_key', ['tournamentId', 'userId'])
 @Entity('rankings')
 export class Ranking {
@@ -18,8 +20,8 @@ export class Ranking {
   @Column({ type: 'uuid', nullable: false, length: 36 })
   userId: string
 
-  @Column({ type: 'float' })
-  points: number
+  @Column({ type: 'float', nullable: true, default: 0 })
+  points?: number
 
   @Column({ type: 'uuid', nullable: true, length: 36 })
   createdBy?: string
@@ -41,7 +43,7 @@ export class Ranking {
   // relations
   @ManyToOne('Category', 'rankings', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'categoryId', referencedColumnName: 'id', foreignKeyConstraintName: 'rankings_categoryId_fkey' })
-  category: Tournament
+  category: Category
 
   // relations user
   @ManyToOne('User', 'rankings', { onDelete: 'CASCADE' })

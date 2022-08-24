@@ -16,6 +16,7 @@ import { store, persistor } from '~/store'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import 'react-circular-progressbar/dist/styles.css'
+import 'react-perfect-scrollbar/dist/css/styles.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

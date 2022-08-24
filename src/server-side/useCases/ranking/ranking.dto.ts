@@ -16,5 +16,5 @@ export interface IResponseRankings extends IResponseApi {
 }
 
 export interface IResponseUserRanking extends IResponseApi {
-  rankings: any[]
+  rankings: IRanking[]
 }

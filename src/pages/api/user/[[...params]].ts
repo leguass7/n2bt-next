@@ -10,10 +10,12 @@ import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import { User } from '~/server-side/useCases/user/user.entity'
 
-const searchFields = ['id', 'name']
+const searchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
+const otherSearch = ['Category.title']
 const orderFields = [
   ['User.id', 'id'],
-  ['User.name', 'name']
+  ['User.name', 'name'],
+  ['User.nick', 'nick']
 ]
 
 class UserHandler {
@@ -51,6 +53,43 @@ class UserHandler {
     if (!user) throw new BadRequestException()
 
     return { success: true, user: instanceToPlain(user) }
+  }
+
+  @Get('/find')
+  @HttpCode(200)
+  @JwtAuthGuard()
+  async find(@Req() req: AuthorizedApiRequest) {
+    const { query } = req
+
+    const search = `${query?.search}`
+    // const tournamentId = +query?.tournamentId
+    // const categoryId = +query?.categoryId
+    if (!search) return { success: true, users: [] }
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+
+    const fields = searchFields.map(f => `User.${f}`)
+
+    const queryText = search ? [...fields.map(field => `${field} LIKE :search`), ...otherSearch.map(field => `${field} LIKE :search`)] : null
+
+    const queryDb = repo
+      .createQueryBuilder('User')
+      .select([...fields, 'User.completed'])
+      .addSelect(['Subscription.id', 'Subscription.userId', 'Subscription.categoryId', 'Subscription.paid'])
+      .addSelect(['Category.id', 'Category.title'])
+      .addSelect(['Tournament.id', 'Tournament.title'])
+      .innerJoin('User.userSubscriptions', 'Subscription')
+      .innerJoin('Subscription.category', 'Category')
+      .innerJoin('Category.tournament', 'Tournament')
+      .orderBy('User.name', 'ASC')
+      .limit(10)
+
+    queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
+
+    const users = (await queryDb.getMany()) || []
+
+    return { success: true, users: users.map(u => instanceToPlain(u)) }
   }
 }
 

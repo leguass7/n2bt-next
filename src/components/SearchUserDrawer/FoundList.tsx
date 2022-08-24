@@ -1,21 +1,17 @@
 import React from 'react'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
-import CheckIcon from '@mui/icons-material/Check'
-import ImportExportIcon from '@mui/icons-material/ImportExport'
-import Avatar from '@mui/material/Avatar'
 import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
 
-import { normalizeImageSrc } from '~/helpers/string'
 import type { IUser } from '~/server-side/useCases/user/user.dto'
 
+import { Item } from './Item'
 import { MessageContainer } from './styles'
 
 type Props = {
+  userList?: IUser['id'][]
+  tournamentId?: number
+  categoryId?: number
   list?: IUser[]
   onClickItem?: (personId: number | string) => void
   searchStarted?: boolean
@@ -25,34 +21,33 @@ type Props = {
 }
 
 export const FoundList: React.FC<Props> = ({
+  userList = [],
+  tournamentId,
+  categoryId,
   list = [],
   onClickItem,
   searchStarted,
   message = 'Buscar atletas cadastrados',
   notFoundMessage = 'Atleta não encontrado'
 }) => {
-  const renderSecondaryText = (email: string, hasGroup: boolean) => {
-    return `${email}${hasGroup ? ` (já selecionado)` : ''}`
-  }
-
   return (
     <>
       {list?.length ? (
-        <List sx={{ maxHeight: 360, overflowY: 'scroll' }}>
-          {list.map(person => {
-            const hasGroup = false //findHasGroup(person?.userGroups)
-            return (
-              <ListItem key={person.id} disablePadding>
-                <ListItemButton onClick={() => onClickItem(person.id)} disabled={!!hasGroup}>
-                  <ListItemAvatar>
-                    <Avatar alt={person?.name} src={normalizeImageSrc(person?.image)} />
-                  </ListItemAvatar>
-                  <ListItemText primary={person?.name} secondary={renderSecondaryText(person.email, hasGroup)} />
-                  <ListItemIcon>{!!hasGroup ? <CheckIcon /> : <ImportExportIcon />}</ListItemIcon>
-                </ListItemButton>
-              </ListItem>
-            )
-          })}
+        <List sx={{ height: 360 }}>
+          <PerfectScrollbar>
+            {list.map(person => {
+              return (
+                <Item
+                  key={`found-item-${person?.id}`}
+                  {...person}
+                  hasIn={!!userList.includes(person?.id)}
+                  onClickItem={onClickItem}
+                  categoryId={categoryId}
+                  tournamentId={tournamentId}
+                />
+              )
+            })}
+          </PerfectScrollbar>
         </List>
       ) : (
         <MessageContainer>

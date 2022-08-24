@@ -33,7 +33,10 @@ const AdminTournamentsRankingPage: NextPage<PageProps> = ({ tournamentId }) => {
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async ({ req, query }) => {
-  const tournamentId = +query?.tournamentId || 0
+  const params = (query?.params || []) as string[]
+  const [tournamentId] = params.map(p => +p || 0).filter(f => !!f)
+
+  // const tournamentId = +query?.tournamentId || 0
   return {
     props: {
       tournamentId,
