@@ -11,7 +11,7 @@ type Props = {
   layoutName?: ThemeName
   reCAPTCHAKey?: string
 }
-export const SiginSlider: React.FC<Props> = () => {
+export const SigninSlider: React.FC<Props> = () => {
   // const handleSliderChangeComplete = (index: number) => {
   //   console.log('handleSliderChangeComplete', index)
   // }
