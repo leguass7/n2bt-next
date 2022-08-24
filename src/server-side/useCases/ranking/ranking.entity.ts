@@ -5,7 +5,7 @@ import type { User } from '~/server-side/useCases/user/user.entity'
 
 import type { Category } from '../category/category.entity'
 
-@Unique('rankings_tournamentId_userId_key', ['tournamentId', 'userId'])
+@Unique('rankings_tournamentId_categoryId_userId_key', ['tournamentId', 'categoryId', 'userId'])
 @Entity('rankings')
 export class Ranking {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
