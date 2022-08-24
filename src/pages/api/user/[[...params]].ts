@@ -1,4 +1,5 @@
-import { BadRequestException, createHandler, Get, HttpCode, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req } from '@storyofams/next-api-decorators'
+import { hashSync } from 'bcrypt'
 import { instanceToPlain } from 'class-transformer'
 
 import { prepareConnection } from '~/server-side/database/conn'
@@ -6,8 +7,9 @@ import { parseOrderDto } from '~/server-side/database/db.helper'
 import { PaginateService } from '~/server-side/services/PaginateService'
 import { Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
-import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
+import type { AuthorizedApiRequest, PublicApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
+import { IUser } from '~/server-side/useCases/user/user.dto'
 import { User } from '~/server-side/useCases/user/user.entity'
 
 const searchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
@@ -40,6 +42,36 @@ class UserHandler {
     const paginateService = new PaginateService('users')
     const paginated = await paginateService.paginate(query, req.pagination)
     return { success: true, ...paginated }
+  }
+
+  @Post('/register')
+  @HttpCode(200)
+  async createUser(@Req() req: PublicApiRequest<IUser>) {
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+    const userData = repo.create({ ...req.body })
+
+    const userExists = await repo.findOne({ where: [{ cpf: userData?.cpf }, { email: userData.email }] })
+    if (userExists) throw new HttpException(401, 'Usuário já existe')
+    if (!userData?.password) throw new BadRequestException('Senha não encontrada')
+
+    const hashPassword = hashSync(userData.password, 14)
+
+    const user = await repo.save({ ...userData, password: hashPassword })
+
+    return { success: !!user, userId: user?.id }
+  }
+
+  @Patch()
+  @HttpCode(200)
+  async saveMe(@Req() req: AuthorizedApiRequest<IUser>) {
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+    const id = req?.auth?.userId
+    if (!id) throw new BadRequestException('Usuário não encontrado')
+    const user = await repo.update(id, { ...req.body })
+
+    return { success: !!user, user }
   }
 
   @Get('/me')

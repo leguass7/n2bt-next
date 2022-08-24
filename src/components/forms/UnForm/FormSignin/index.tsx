@@ -19,9 +19,10 @@ export type FormSigninProps = {
   onFailed?: (message: string) => void
   onInvalid?: (data: Record<keyof PayloadSignin, string>) => void
   onForgot?: () => void
+  onRegister?: () => void
 }
 
-export const FormSignin: React.FC<FormSigninProps> = ({ onInvalid, onSuccess, onFailed, onForgot }) => {
+export const FormSignin: React.FC<FormSigninProps> = ({ onInvalid, onSuccess, onFailed, onForgot, onRegister }) => {
   const formRef = useRef()
   const { authorize, loading } = useAppAuth()
 
@@ -61,14 +62,21 @@ export const FormSignin: React.FC<FormSigninProps> = ({ onInvalid, onSuccess, on
         <Input placeholder={'senha'} type="password" name="password" />
 
         <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
-          {onForgot ? (
-            <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onForgot}>
-              {'Esqueci a senha'}
+          {onRegister ? (
+            <Button color="success" variant="contained" type="button" disabled={!!loading} onClick={onRegister}>
+              Cadastre-se
             </Button>
           ) : null}
           <Button color="primary" variant="contained" type="submit" disabled={!!loading}>
             {'Enviar'}
           </Button>
+        </Stack>
+        <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
+          {onForgot ? (
+            <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onForgot}>
+              {'Esqueci a senha'}
+            </Button>
+          ) : null}
         </Stack>
       </Form>
       {loading ? <CircleLoading /> : null}

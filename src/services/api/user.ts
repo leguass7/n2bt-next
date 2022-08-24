@@ -1,18 +1,18 @@
 import type { TableFetchParams } from '~/components/CustomTable/types'
 import type { IResponsePaginated } from '~/server-side/services/PaginateService'
-import type { IResponseUser, IResponseUsers, IUser } from '~/server-side/useCases/user/user.dto'
+import type { IResponseUser, IResponseUsers, IResponseUserStore, IUser } from '~/server-side/useCases/user/user.dto'
 
 import { apiService } from './api.service'
 
-// export async function saveUser(data: IUser): Promise<IResponseUserStore> {
-//   const response = await apiService.patch('/user', data)
-//   return response
-// }
+export async function saveMe(data: IUser): Promise<IResponseUserStore> {
+  const response = await apiService.patch('/user', data)
+  return response
+}
 
-// export async function createUser(data: IUser): Promise<IResponseUserStore> {
-//   const response = await apiService.post('/user/register', data)
-//   return response
-// }
+export async function createUser(data: IUser): Promise<IResponseUserStore> {
+  const response = await apiService.post('/user/register', data)
+  return response
+}
 
 export async function sendForgot(email?: string): Promise<IResponseUser> {
   const response = await apiService.post('/user/forgot', { email })
