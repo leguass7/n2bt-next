@@ -5,7 +5,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 import { LayoutSigin } from '~/components/app/LayoutSigin'
-import { SigninSlider } from '~/components/SiginSlider'
+import { SigninSlider } from '~/components/SigninSlider'
 import { useAppAuth } from '~/hooks/useAppAuth'
 
 interface LoginPageProps {

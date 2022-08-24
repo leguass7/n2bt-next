@@ -5,7 +5,8 @@ import { ThemeName } from '~/components/AppThemeProvider/themes'
 import { Main, SliderItem } from '../PassRollLayout'
 import { StepCode } from './StepCode'
 import { StepForgot } from './StepForgot'
-import { StepSigin } from './StepSigin'
+import { StepSignin } from './StepSignin'
+import { StepSignup } from './StepSignup'
 
 type Props = {
   layoutName?: ThemeName
@@ -17,15 +18,18 @@ export const SigninSlider: React.FC<Props> = () => {
   // }
 
   return (
-    <Main name="sigin">
+    <Main name="signIn">
       <SliderItem>
-        <StepSigin />
+        <StepSignin />
       </SliderItem>
       <SliderItem>
         <StepForgot />
       </SliderItem>
       <SliderItem>
         <StepCode />
+      </SliderItem>
+      <SliderItem>
+        <StepSignup />
       </SliderItem>
     </Main>
   )
