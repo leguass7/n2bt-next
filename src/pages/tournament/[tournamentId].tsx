@@ -16,7 +16,7 @@ interface PageProps {
 }
 
 const TournamentPage: NextPage<PageProps> = ({ tournamentId }) => {
-  const [data, setData] = useState<ITournament>({})
+  const [data, setData] = useState<Partial<ITournament>>({})
 
   const fetchData = useCallback(async () => {
     const response = await getTournament(tournamentId)

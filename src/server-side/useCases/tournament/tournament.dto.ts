@@ -1,10 +1,10 @@
-import type { DeepPartial } from 'typeorm'
+// import type { DeepPartial } from 'typeorm'
 
 import type { IResponseApi } from '~/server-side/api.interface'
 
 import { Tournament } from './tournament.entity'
 
-export type ITournament = DeepPartial<Tournament>
+export type ITournament = Tournament
 
 export interface IResponseTournament extends IResponseApi {
   tournament: ITournament

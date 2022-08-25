@@ -6,11 +6,12 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
-import { differenceInDays, parseJSON } from 'date-fns'
+import { isPast } from 'date-fns'
 import { useRouter } from 'next/router'
 
 import img02 from '~/assets/paella.jpg'
 import img01 from '~/assets/reptile.jpg'
+import { validDate } from '~/helpers/date'
 import { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 
 const images = [
@@ -25,10 +26,15 @@ const getImage = (id: number) => {
 
 type Props = Partial<ITournament> & {}
 
-export const TournamentCard: React.FC<Props> = ({ id, title, description, expires }) => {
+export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, subscriptionExpiration }) => {
   const { push } = useRouter()
-  const expiresDate = (typeof expires === 'string' ? parseJSON(expires) : expires) as Date
-  const expired = differenceInDays(new Date(), expiresDate)
+
+  const expiresDate = validDate(expires)
+  const subExpiresDate = validDate(subscriptionExpiration)
+
+  const expired = isPast(expiresDate) || isPast(subExpiresDate)
+
+  // const expired = differenceInDays(new Date(), expiresDate)
 
   return (
     <Card sx={{ maxWidth: '100%', minWidth: 320 }}>
@@ -42,7 +48,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
         </Typography>
       </CardContent>
       <CardActions>
-        {expired < 0 ? (
+        {!expired ? (
           <Button size="small" variant="outlined">
             Inscrição
           </Button>
