@@ -24,6 +24,9 @@ export class Tournament {
   published: boolean
 
   @Column({ type: 'datetime', nullable: true, precision: null })
+  subscriptionExpiration: Date
+
+  @Column({ type: 'datetime', nullable: true, precision: null })
   expires: Date
 
   @Column({ type: 'uuid', nullable: true, length: 36 })
