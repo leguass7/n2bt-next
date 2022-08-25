@@ -2,13 +2,15 @@ import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch
 import { hashSync } from 'bcrypt'
 import { instanceToPlain } from 'class-transformer'
 
+import { generatePassword } from '~/helpers/string'
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
+import { createEmailService } from '~/server-side/services/EmailService'
 import { PaginateService } from '~/server-side/services/PaginateService'
 import { Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedApiRequest, PublicApiRequest } from '~/server-side/useCases/auth/auth.dto'
-import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
+import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { IUser } from '~/server-side/useCases/user/user.dto'
 import { User } from '~/server-side/useCases/user/user.entity'
 
@@ -122,6 +124,80 @@ class UserHandler {
     const users = (await queryDb.getMany()) || []
 
     return { success: true, users: users.map(u => instanceToPlain(u)) }
+  }
+
+  @Post('/forgot')
+  @IfAuth()
+  @HttpCode(200)
+  async forgot(@Req() req: AuthorizedApiRequest) {
+    const { email } = req.body
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+
+    const user = await repo.findOne({ where: { email } })
+    if (!user) throw new BadRequestException('not_found_user')
+
+    const publicCode = generatePassword()
+    const privateCode = generatePassword()
+
+    const updated = await repo.update(user.id, { reset: `${publicCode}:${privateCode}` })
+    if (!updated) throw new BadRequestException('database_error')
+
+    const mailService = createEmailService()
+
+    const sent = await mailService.send({
+      from: 'lesbr3@gmail.com',
+      subject: 'N2BT - Recuperação de senha',
+      to: user.email,
+      html: `<p>
+      Seu c&oacute;digo para recupera&ccedil;&atilde;o de senha: <strong>${publicCode}</strong><br />
+      Informe o c&oacute;digo acima no local indicado da p&aacute;gina.<br /><br />
+      <p/>`
+    })
+
+    if (!sent?.accepted?.length) throw new BadRequestException('email_error')
+
+    return { success: true, code: privateCode }
+  }
+
+  @Post('/code')
+  @IfAuth()
+  @HttpCode(200)
+  async code(@Req() req: AuthorizedApiRequest) {
+    const { code, pass } = req.body
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+
+    const user = await repo.findOne({ where: { reset: `${pass}:${code}` } })
+    if (!user) throw new BadRequestException('not_found_code')
+
+    const authorizationCode = generatePassword()
+
+    const updated = await repo.update(user.id, { reset: `${authorizationCode}` })
+    if (!updated) throw new BadRequestException('database_error')
+
+    return { success: true, userId: user.id, authorizationCode }
+  }
+
+  @Post('/reset')
+  @IfAuth()
+  @HttpCode(200)
+  async reset(@Req() req: AuthorizedApiRequest) {
+    const { password, userId, authorizationCode } = req.body
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+
+    const user = await repo.findOne({ where: { reset: authorizationCode, id: userId } })
+    if (!user) throw new BadRequestException('invalid_authorizationCode')
+
+    const hashPassword = hashSync(password, 14)
+    const updated = await repo.update(user.id, { reset: null, password: hashPassword })
+    if (!updated || !updated?.affected) throw new BadRequestException('database_error')
+
+    return { success: true, userId: user.id, affected: updated?.affected }
   }
 }
 
