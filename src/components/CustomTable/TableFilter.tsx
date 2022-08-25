@@ -59,7 +59,7 @@
 
 //   const updateFilter = useCallback(
 //     (data: Partial<IFilter>) => {
-//       if (isMounted.current) {
+//       if (isMounted()) {
 //         setFilter(old => ({ ...old, ...data }))
 //       }
 //     },

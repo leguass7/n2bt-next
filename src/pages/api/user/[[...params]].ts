@@ -47,7 +47,7 @@ class UserHandler {
   }
 
   @Post('/register')
-  @HttpCode(200)
+  @HttpCode(201)
   async createUser(@Req() req: PublicApiRequest<IUser>) {
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)
@@ -65,15 +65,17 @@ class UserHandler {
   }
 
   @Patch()
-  @HttpCode(200)
+  @JwtAuthGuard()
+  @HttpCode(201)
   async saveMe(@Req() req: AuthorizedApiRequest<IUser>) {
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)
-    const id = req?.auth?.userId
-    if (!id) throw new BadRequestException('Usuário não encontrado')
-    const user = await repo.update(id, { ...req.body })
+    const userId = req?.auth?.userId
 
-    return { success: !!user, user }
+    if (!userId) throw new BadRequestException('Usuário não encontrado')
+    const user = await repo.update(userId, { ...req.body })
+
+    return { success: !!user, userId }
   }
 
   @Get('/me')

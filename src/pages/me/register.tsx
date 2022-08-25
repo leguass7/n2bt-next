@@ -16,7 +16,7 @@ interface PageProps {
 }
 
 const MeRegisterPage: NextPage<PageProps> = ({}) => {
-  const [data, setData] = useState<IUser>({})
+  const [data, setData] = useState<Partial<IUser>>({})
 
   const fetchData = useCallback(async () => {
     const response = await getMe()

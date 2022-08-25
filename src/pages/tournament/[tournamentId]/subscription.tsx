@@ -4,8 +4,8 @@ import { useRouter } from 'next/router'
 
 import { Layout } from '~/components/app/Layout'
 import { CircleLoading } from '~/components/CircleLoading'
-import { SectionLogo } from '~/components/SectionLogo'
-import { BoxCenter } from '~/components/styled'
+import { BoxCenter, H4 } from '~/components/styled'
+import { Subscription } from '~/components/Subscription'
 
 interface Props {
   tournamentId: string
@@ -20,8 +20,10 @@ const TournamentSubscription: NextPage<Props> = () => {
         <title>N2BT Beach Tennis</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
-      <SectionLogo />
-      <BoxCenter style={{ padding: 12 }}>Página de inscrição do torneio</BoxCenter>
+      <BoxCenter>
+        <H4 textSize={24}>Página de inscrição do torneio</H4>
+        <Subscription />
+      </BoxCenter>
       {isFallback ? <CircleLoading /> : null}
     </Layout>
   )
