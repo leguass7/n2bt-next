@@ -2,7 +2,7 @@ import { Step, StepLabel, Stepper } from '@mui/material'
 
 import { ColorlibConnector, ColorlibStepIcon } from './stepperUtils'
 
-const steps = ['Início', 'Selecionar dupla']
+const steps = ['Cadastro', 'Selecionar dupla']
 
 interface Props {
   step?: number

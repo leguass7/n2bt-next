@@ -45,7 +45,7 @@ export const SelectPatner: React.FC<Props> = () => {
       {users?.length
         ? users.map(user => {
             const { id, actived, category } = user
-            const allowed = actived && category === userData.category
+            const allowed = actived && category === userData?.category
 
             if (!allowed) return null
 

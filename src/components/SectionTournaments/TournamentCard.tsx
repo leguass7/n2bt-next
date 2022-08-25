@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
@@ -27,7 +27,7 @@ const getImage = (id: number) => {
 type Props = Partial<ITournament> & {}
 
 export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, subscriptionExpiration }) => {
-  const { push } = useRouter()
+  const { push, prefetch } = useRouter()
 
   const expiresDate = validDate(expires)
   const subExpiresDate = validDate(subscriptionExpiration)
@@ -35,6 +35,10 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
   const expired = isPast(expiresDate) || isPast(subExpiresDate)
 
   // const expired = differenceInDays(new Date(), expiresDate)
+
+  useEffect(() => {
+    prefetch(`/tournament/${id}/subscription`)
+  }, [prefetch, id])
 
   return (
     <Card sx={{ maxWidth: '100%', minWidth: 320 }}>

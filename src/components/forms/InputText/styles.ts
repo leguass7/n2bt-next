@@ -2,7 +2,7 @@ import InputMask from 'react-input-mask'
 
 import styled, { keyframes, css } from 'styled-components'
 
-import { brighten } from '~/helpers/colors'
+import { brighten, darken } from '~/helpers/colors'
 
 const ripple = keyframes`
   0% {
@@ -38,6 +38,8 @@ export const Label = styled.label<{ actived?: boolean }>`
   display: inline-block;
   width: 100%;
   max-width: 100%;
+  font-size: 14px;
+  line-height: 14px;
   border: 0;
   border-radius: 16px;
   padding-left: 16px;
@@ -69,11 +71,12 @@ const commonInputCss = css`
   display: block;
   width: 100%;
   max-width: 100%;
-  font-family: Gilroy, Georgia, 'Times New Roman', Times, serif;
+  /* font-family: Gilroy, Georgia, 'Times New Roman', Times, serif; */
   border-radius: 19px;
   min-height: 38px;
   outline: none;
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 16px;
   padding-left: 16px;
   padding-right: 16px;
   transition: all ease-in-out 0.2s;
@@ -82,17 +85,17 @@ const commonInputCss = css`
 
 export const Field = styled(InputMask)`
   ${commonInputCss}
-  background-color: ${({ theme }) => theme.colors.text};
-  border: 1px solid ${({ theme }) => theme.colors.text};
-  color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 2px solid ${({ theme }) => darken(theme.colors.secondary, 0.5)};
+  color: ${({ theme }) => darken(theme.colors.secondary, 0.5)};
 `
 
 export const Input = styled.input`
   ${commonInputCss}
-  text-shadow: 0 0 1px #000;
-  background-color: ${({ theme }) => theme.colors.text};
-  border: 1px solid ${({ theme }) => theme.colors.text};
-  color: ${({ theme }) => theme.colors.white};
+  /* text-shadow: 0 0 1px #000; */
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 2px solid ${({ theme }) => darken(theme.colors.secondary, 0.5)};
+  color: ${({ theme }) => darken(theme.colors.secondary, 0.5)};
 `
 
 export const Container = styled.div<{ labelColor: string; disabled?: boolean; hasError?: boolean }>`
