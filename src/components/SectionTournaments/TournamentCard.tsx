@@ -49,7 +49,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
       </CardContent>
       <CardActions>
         {!expired ? (
-          <Button size="small" variant="outlined">
+          <Button size="small" variant="outlined" onClick={() => push(`/tournament/${id}/subscription`)}>
             Inscrição
           </Button>
         ) : null}
