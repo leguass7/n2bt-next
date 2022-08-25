@@ -69,6 +69,9 @@ export class User {
   @Column({ nullable: true, default: 1 })
   level?: number
 
+  @Column({ nullable: true })
+  reset?: string
+
   // relations sigin
   @OneToMany(() => Session, session => session.user)
   sessions?: Session[]

@@ -1,4 +1,5 @@
 import type { TableFetchParams } from '~/components/CustomTable/types'
+import { IResponseApi } from '~/server-side/api.interface'
 import type { IResponsePaginated } from '~/server-side/services/PaginateService'
 import type { IResponseUser, IResponseUsers, IResponseUserStore, IUser } from '~/server-side/useCases/user/user.dto'
 
@@ -14,7 +15,7 @@ export async function createUser(data: IUser): Promise<IResponseUserStore> {
   return response
 }
 
-export async function sendForgot(email?: string): Promise<IResponseUser> {
+export async function sendForgot(email?: string): Promise<IResponseApi & { code: string }> {
   const response = await apiService.post('/user/forgot', { email })
   return response
 }

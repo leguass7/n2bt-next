@@ -1,7 +1,10 @@
 import React from 'react'
 
+import { usePassRoll } from '../PassRollLayout'
+
 // import { Container } from './styles';
 
 export const StepCode: React.FC = () => {
-  return <div>StepCode</div>
+  const { customContext } = usePassRoll('signIn')
+  return <div>Recuperar senha enviando code={customContext?.code}</div>
 }

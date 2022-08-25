@@ -15,7 +15,7 @@ import { Input } from '../Input'
 type FormData = { email: string }
 
 export type FormForgotProps = {
-  onSuccess?: (response?: any) => void
+  onSuccess?: (code?: string) => void
   onFailed?: (message: string) => void
   onInvalid?: (data: Record<keyof FormData, string>) => void
   onCancel?: () => void
@@ -40,7 +40,7 @@ export const FormForgot: React.FC<FormForgotProps> = ({ onInvalid, onSuccess, on
       const response = await sendForgot(data?.email)
       setLoading(false)
       if (response?.success) {
-        if (onSuccess) onSuccess(response)
+        if (onSuccess) onSuccess(response?.code)
       } else {
         if (onFailed) onFailed(`${response?.message}`)
       }
