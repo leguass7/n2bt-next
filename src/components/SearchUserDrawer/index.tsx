@@ -20,6 +20,7 @@ function hasValues(filter: Filter) {
   return Object.values({ ...filter }).find(f => !!f) || null
 }
 
+export type UserFound = IUser
 export type SearchFetchHandler = (params?: Filter) => Promise<any>
 export type SelectHandler = (userId: IUser['id'], data?: IUser) => any
 

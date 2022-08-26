@@ -1,7 +1,8 @@
 import { Check } from '@mui/icons-material'
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import CategoryIcon from '@mui/icons-material/Category'
 import HomeIcon from '@mui/icons-material/Home'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import VideoLabelIcon from '@mui/icons-material/VideoLabel'
 import { StepConnector, stepConnectorClasses, StepIconProps } from '@mui/material'
 import { styled } from '@mui/system'
 
@@ -84,7 +85,9 @@ export function ColorlibStepIcon(props: StepIconProps) {
 
   const icons: { [index: string]: React.ReactElement } = {
     1: <HomeIcon />,
-    2: <PersonAddIcon />
+    2: <CategoryIcon />,
+    3: <PersonAddIcon />,
+    4: <AttachMoneyIcon />
   }
 
   return (

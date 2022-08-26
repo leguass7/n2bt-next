@@ -1,64 +1,78 @@
-import { useCallback, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import { useCallback, useState } from 'react'
 
-import { Button } from '@mui/material'
+import { Button, List } from '@mui/material'
 
-import { CircleLoading } from '~/components/CircleLoading'
-import { useUserAuth } from '~/components/UserProvider'
-import { useIsMounted } from '~/hooks/useIsMounted'
-import { IUser } from '~/server-side/useCases/user/user.dto'
-import { paginateUsers } from '~/services/api/user'
+import { SearchFetchHandler, SearchUserDrawer, SelectHandler } from '~/components/SearchUserDrawer'
+import type { IUser } from '~/server-side/useCases/user/user.dto'
+import { findUser } from '~/services/api/user'
 
-import { BoxCenter } from '../../styled'
-import { PartnerItem } from './PartnerItem'
+import { BoxCenter, FlexContainer } from '../../styled'
+import { Partner } from './Partner'
 
-interface Props {}
+export type SelectPatnerHandler = (partner?: IUser) => any
+export type DeletePatnerHandler = (id?: IUser['id']) => any
+interface Props {
+  tournamentId: number
+  categoryId: number
+  userId?: number
+  onChange?: SelectPatnerHandler
+  defaultPartner?: IUser | null
+  onDelete?: DeletePatnerHandler
+}
 
-export const SelectPatner: React.FC<Props> = () => {
-  const { userData } = useUserAuth()
-  const [users, setUsers] = useState<IUser[]>([])
-  const [loading, setLoading] = useState(false)
+export const SelectPatner: React.FC<Props> = ({ tournamentId, categoryId, onChange, defaultPartner, onDelete }) => {
+  const [partner, setPartner] = useState(defaultPartner)
+  const [searching, setSearching] = useState(false)
 
-  const isMounted = useIsMounted()
+  const search: SearchFetchHandler = useCallback(async filter => {
+    const response = await findUser(filter)
+    return response
+  }, [])
 
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    const { success, message, data } = await paginateUsers({ size: 12 })
+  const handleSelect: SelectHandler = useCallback(
+    async (userId, user) => {
+      setPartner(user)
+      if (userId && onChange) onChange(user)
+    },
+    [onChange]
+  )
 
-    if (isMounted()) {
-      setLoading(false)
-      if (!success) {
-        toast.error(message)
-        return
-      }
+  const handleToogle = () => {
+    setSearching(old => !old)
+  }
 
-      setUsers(data)
-    }
-  }, [isMounted])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
+  const handleDelete = (id: IUser['id']) => {
+    setPartner(null)
+    if (onDelete) onDelete(id)
+  }
 
   return (
-    <BoxCenter>
-      {users?.length
-        ? users.map(user => {
-            const { id, actived, category } = user
-            const allowed = actived && category === userData?.category
-
-            if (!allowed) return null
-
-            return <PartnerItem key={`user-${id}`} {...user} />
-          })
-        : null}
+    <>
       <BoxCenter>
-        <Button variant="contained" color="primary">
-          Enviar
-        </Button>
+        {partner ? (
+          <div style={{ minWidth: 260, width: '100%' }}>
+            <List>
+              <Partner {...partner} onDelete={handleDelete} />
+            </List>
+          </div>
+        ) : (
+          <FlexContainer verticalPad={20} justify="center">
+            <Button variant="contained" color="primary" onClick={handleToogle}>
+              Localizar sua dupla
+            </Button>
+          </FlexContainer>
+        )}
       </BoxCenter>
-
-      {loading ? <CircleLoading /> : null}
-    </BoxCenter>
+      <SearchUserDrawer
+        open={searching}
+        fetcher={search}
+        onClose={handleToogle}
+        categoryId={categoryId}
+        tournamentId={tournamentId}
+        fixedFilter={{ tournamentId, categoryId }}
+        userList={[]}
+        onSelect={handleSelect}
+      />
+    </>
   )
 }

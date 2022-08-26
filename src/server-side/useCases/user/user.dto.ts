@@ -2,7 +2,7 @@ import type { IResponseApi } from '~/server-side/api.interface'
 
 import type { User } from './user.entity'
 
-export type IUser = User
+export type IUser = Partial<User>
 
 export interface IResponseUserStore extends IResponseApi {
   userId?: string

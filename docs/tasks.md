@@ -32,3 +32,8 @@
 > Não pode se inscrever duas vezes na mesma categoria do torneio. **table `categories`**
 
 ---
+
+▶️Principiante - fem
+▶️Iniciante - Fem e mas
+▶️Intermediário- masculino
+▶️Mista - iniciante e Intermediário

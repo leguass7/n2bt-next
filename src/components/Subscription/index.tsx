@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react'
 
 import { Main, SliderItem } from '../PassRollLayout'
+import { StepCategory } from './steps/StepCategory'
 import { StepPartner } from './steps/StepPartner'
+import { StepPayment } from './steps/StepPayment'
 import { StepStart } from './steps/StepStart'
 import { SubscriptionProvider } from './SubscriptionProvider'
 import { SubscriptionStepper } from './SubscriptionStepper'
@@ -26,7 +28,13 @@ export const Subscription: React.FC<Props> = ({ tournamentId }) => {
             <StepStart />
           </SliderItem>
           <SliderItem>
+            <StepCategory />
+          </SliderItem>
+          <SliderItem>
             <StepPartner />
+          </SliderItem>
+          <SliderItem>
+            <StepPayment />
           </SliderItem>
         </Main>
       </div>

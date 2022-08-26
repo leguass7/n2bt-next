@@ -27,7 +27,7 @@ const TournamentSubscription: NextPage<Props> = ({ tournamentId, tournament }) =
         <meta name="description" content={description} />
       </Head>
       <BoxCenter>
-        <H4 textSize={24}>Página de inscrição do torneio {tournamentId}</H4>
+        <H4 textSize={24}>Inscrição do torneio</H4>
         <Subscription tournamentId={tournamentId} />
       </BoxCenter>
       {isFallback ? <CircleLoading /> : null}
