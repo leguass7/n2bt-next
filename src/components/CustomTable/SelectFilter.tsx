@@ -1,6 +1,8 @@
 import React, { useCallback } from 'react'
 
-import { FormControl, InputLabel, Select } from '@mui/material'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Select from '@mui/material/Select'
 
 export interface ItemOptions {
   id: string | number

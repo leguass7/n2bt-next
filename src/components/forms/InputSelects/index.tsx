@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Button } from '@mui/material'
+import Button from '@mui/material/Button'
 import { useField } from '@unform/core'
 
 import { VariantColorsTypes } from '~/components/AppThemeProvider/types'

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 
-import { Stack } from '@mui/material'
 import Pagination from '@mui/material/Pagination'
+import Stack from '@mui/material/Stack'
 import Table, { TableProps } from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import styled from 'styled-components'

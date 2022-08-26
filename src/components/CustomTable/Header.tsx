@@ -1,6 +1,9 @@
 import React, { useContext, useCallback, useMemo } from 'react'
 
-import { TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material'
+import TableCell from '@mui/material/TableCell'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import TableSortLabel from '@mui/material/TableSortLabel'
 import styled from 'styled-components'
 
 import CustomTableContext from './CustomTableContext'

@@ -1,5 +1,8 @@
 import ArrowRightIcon from '@mui/icons-material/ChevronRight'
-import { Button, CardContent, CardActions, Grid } from '@mui/material'
+import Button from '@mui/material/Button'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Grid from '@mui/material/Grid'
 
 import { FormSubscriptionStart } from '~/components/forms/UnForm/FormSubscription/start'
 import { LogoSvg } from '~/components/LogoSvg'

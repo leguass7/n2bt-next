@@ -1,4 +1,4 @@
-import { Checkbox } from '@mui/material'
+import Checkbox from '@mui/material/Checkbox'
 import styled from 'styled-components'
 
 import { H4 } from '~/components/styled'

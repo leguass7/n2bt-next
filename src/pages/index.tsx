@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'
+import Button from '@mui/material/Button'
 import type { GetServerSideProps, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Head from 'next/head'

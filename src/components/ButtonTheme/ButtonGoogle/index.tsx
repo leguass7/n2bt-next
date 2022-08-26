@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 
 import GoogleIcon from '@mui/icons-material/Google'
-import { Avatar } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'

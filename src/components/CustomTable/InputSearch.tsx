@@ -1,7 +1,8 @@
 import React from 'react'
 
 import { Search } from '@mui/icons-material'
-import { TextField, InputAdornment } from '@mui/material'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
 
 interface InputSearchProps {
   onChange?: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 
-import { Button, List } from '@mui/material'
+import Button from '@mui/material/Button'
+import List from '@mui/material/List'
 
 import { SearchFetchHandler, SearchUserDrawer, SelectHandler } from '~/components/SearchUserDrawer'
 import type { IUser } from '~/server-side/useCases/user/user.dto'

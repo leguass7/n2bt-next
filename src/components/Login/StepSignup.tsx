@@ -1,4 +1,6 @@
-import { Card, CardContent, Divider } from '@mui/material'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Divider from '@mui/material/Divider'
 import Link from 'next/link'
 
 import { FormSignup } from '../forms/UnForm/FormSignup'

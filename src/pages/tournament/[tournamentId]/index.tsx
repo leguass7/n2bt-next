@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 

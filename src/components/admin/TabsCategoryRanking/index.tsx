@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Grid } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 

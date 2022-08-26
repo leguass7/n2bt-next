@@ -3,8 +3,9 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import CategoryIcon from '@mui/icons-material/Category'
 import HomeIcon from '@mui/icons-material/Home'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import { StepConnector, stepConnectorClasses, StepIconProps } from '@mui/material'
-import { styled } from '@mui/system'
+import { styled } from '@mui/material'
+import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector'
+import { StepIconProps } from '@mui/material/StepIcon'
 
 const QontoStepIconRoot = styled('div')<{ ownerState: { active?: boolean } }>(({ theme, ownerState }) => ({
   color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',

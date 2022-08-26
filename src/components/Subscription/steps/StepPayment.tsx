@@ -1,6 +1,9 @@
 import ArrowLeftIcon from '@mui/icons-material/ChevronLeft'
 // import ArrowRightIcon from '@mui/icons-material/ChevronRight'
-import { Button, CardContent, CardActions, Grid } from '@mui/material'
+import Button from '@mui/material/Button'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Grid from '@mui/material/Grid'
 
 import { LogoSvg } from '~/components/LogoSvg'
 import { usePassRoll } from '~/components/PassRollLayout'

@@ -1,6 +1,7 @@
 import { useContext, useCallback } from 'react'
 
-import { useMediaQuery, useTheme } from '@mui/material'
+import { useTheme } from '@mui/material'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { ThemeContext } from './ThemeContext'
 import { IUseAppTheme, MatchingRules, TextColor, VariantColorsTypes } from './types'

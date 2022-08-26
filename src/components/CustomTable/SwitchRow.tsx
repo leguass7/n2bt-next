@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, memo } from 'react'
 
-import { Switch, SwitchProps } from '@mui/material'
+import Switch, { SwitchProps } from '@mui/material/Switch'
 
 import { useIsMounted } from '~/hooks/useIsMounted'
 

@@ -1,6 +1,7 @@
 import { ChangeEventHandler, useCallback, useEffect, useRef, useState } from 'react'
 
-import { FormControl, InputLabel } from '@mui/material'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
 import MenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 import MuiSelect, { SelectProps } from '@mui/material/Select'
 import { useField } from '@unform/core'
