@@ -21,6 +21,7 @@ type Props = {
 export const SubscriptionProvider: React.FC<Props> = ({ children, tournamentId }) => {
   const [category, setCategory] = useState<ICategory>(null)
   const [partner, setPartner] = useState<IUser>(null)
+
   return (
     <SubscriptionProviderContext.Provider value={{ tournamentId, category, setCategory, partner, setPartner }}>
       {children}

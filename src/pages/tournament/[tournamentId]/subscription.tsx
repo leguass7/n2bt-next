@@ -6,6 +6,7 @@ import { Layout } from '~/components/app/Layout'
 import { CircleLoading } from '~/components/CircleLoading'
 import { BoxCenter, H4 } from '~/components/styled'
 import { Subscription } from '~/components/Subscription'
+import { SubscriptionProvider } from '~/components/Subscription/SubscriptionProvider'
 import { prepareConnection } from '~/server-side/database/conn'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
@@ -28,7 +29,9 @@ const TournamentSubscription: NextPage<Props> = ({ tournamentId, tournament }) =
       </Head>
       <BoxCenter>
         <H4 textSize={24}>Inscrição do torneio</H4>
-        <Subscription tournamentId={tournamentId} />
+        <SubscriptionProvider tournamentId={tournamentId}>
+          <Subscription />
+        </SubscriptionProvider>
       </BoxCenter>
       {isFallback ? <CircleLoading /> : null}
     </Layout>
