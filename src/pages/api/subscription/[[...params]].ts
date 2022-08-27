@@ -1,7 +1,7 @@
 import { BadRequestException, createHandler, HttpCode, HttpException, Post, Req } from '@storyofams/next-api-decorators'
 
 import { prepareConnection } from '~/server-side/database/conn'
-import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
+import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
@@ -9,7 +9,7 @@ class SubscriptionHandler {
   @Post()
   @JwtAuthGuard()
   @HttpCode(201)
-  async create(@Req() req: AuthorizedPaginationApiRequest<Partial<Subscription>>) {
+  async create(@Req() req: AuthorizedApiRequest<Partial<Subscription>>) {
     const { userId } = req.auth
     if (!userId) throw new BadRequestException('Usuário não encontrado')
 

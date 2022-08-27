@@ -1,10 +1,11 @@
 import type { NextApiRequest } from 'next'
 import type { UserAgent } from 'next-useragent'
 
-export interface AuthorizedApiRequest<Body = any> extends NextApiRequest {
+export interface AuthorizedApiRequest<Body = any, Query = any> extends NextApiRequest {
   ua?: UserAgent | null
   auth: IAuthorizedUser
   body: Body
+  query: Query
 }
 
 export interface PublicApiRequest<Body = any> extends NextApiRequest {
