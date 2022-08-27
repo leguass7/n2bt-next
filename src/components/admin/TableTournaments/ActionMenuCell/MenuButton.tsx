@@ -23,7 +23,11 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
 
   const open = useMemo(() => Boolean(anchorEl), [anchorEl])
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget)
+  }
   const handleCloseMenu = () => setAnchorEl(null)
 
   const handleClickRanking = () => {

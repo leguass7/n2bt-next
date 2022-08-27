@@ -36,3 +36,8 @@ export async function storeTournament({ id, ...data }: Partial<ITournament>): Pr
   const response = await handler()
   return response
 }
+
+export async function deletetTournament(tournamentId: number): Promise<IResponseTournament> {
+  const response = await apiService.delete(`/tournament/${tournamentId}`)
+  return response
+}

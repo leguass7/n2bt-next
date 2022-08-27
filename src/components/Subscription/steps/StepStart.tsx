@@ -8,12 +8,14 @@ import { FormSubscriptionStart } from '~/components/forms/UnForm/FormSubscriptio
 import { LogoSvg } from '~/components/LogoSvg'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, Text } from '~/components/styled'
+import { useUserAuth } from '~/components/UserProvider'
 
 import { CardContainer } from './style'
 
 interface Props {}
 
 export const StepStart: React.FC<Props> = () => {
+  const { userData } = useUserAuth()
   const { goTo } = usePassRoll('subscription')
 
   return (
@@ -34,7 +36,7 @@ export const StepStart: React.FC<Props> = () => {
           </Grid>
         </CardContent>
         <CardActions style={{ justifyContent: 'flex-end' }}>
-          <Button type="button" variant="contained" onClick={() => goTo(2)} endIcon={<ArrowRightIcon />}>
+          <Button type="button" variant="contained" onClick={() => goTo(2)} endIcon={<ArrowRightIcon />} disabled={!userData?.cpf}>
             Próximo
           </Button>
         </CardActions>

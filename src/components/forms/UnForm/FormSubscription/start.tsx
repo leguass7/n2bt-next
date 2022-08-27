@@ -41,7 +41,7 @@ const schema = object().shape({
 export const FormSubscriptionStart: React.FC<Props> = ({ onCancel }) => {
   const [data, setData] = useState(null)
   const formRef = useRef<FormHandles>()
-  const { loading: loadingUser, updateUserData, requestMe, userData } = useUserAuth()
+  const { loading: loadingUser, updateUserData, requestMe } = useUserAuth()
   const [saving, setSaving] = useState(false)
 
   const handleSubmit = useCallback(
@@ -68,12 +68,10 @@ export const FormSubscriptionStart: React.FC<Props> = ({ onCancel }) => {
     if (response?.success) {
       setData(response?.user)
     }
-    console.log('fetchData', response?.user)
   }, [requestMe])
 
   useOnceCall(fetchData)
 
-  console.log('userData', userData)
   return (
     <>
       <Form ref={formRef} onSubmit={handleSubmit} initialData={data} key={`form-${data?.id}`} role="form">

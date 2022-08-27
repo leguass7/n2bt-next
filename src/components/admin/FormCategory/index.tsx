@@ -9,44 +9,44 @@ import { CircleLoading } from '~/components/CircleLoading'
 import { Input } from '~/components/forms/UnForm/Input'
 import { validateFormData } from '~/helpers/validation'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import type { IResponseTournament, ITournament } from '~/server-side/useCases/tournament/tournament.dto'
-import { getTournament, storeTournament } from '~/services/api/tournament'
+import type { ICategory, IResponseCategory } from '~/server-side/useCases/category/category.dto'
+import { getCategory, storeCategory } from '~/services/api/category'
 
-type FormData = Partial<ITournament> & {}
+type FormData = Partial<ICategory> & {}
 
 type SuccessReason = 'edit' | 'create'
 
-export type SuccessHandler = (reason: SuccessReason, response?: IResponseTournament) => void
+export type SuccessHandler = (reason: SuccessReason, response?: IResponseCategory) => void
 
 const schema = object().shape({
-  title: string().required('titulo do torneio requerido'),
+  title: string().required('titulo da categoria requerido'),
   description: string()
 })
 
-export type FormTournamentProps = {
-  arenaId?: number
+export type FormCategoryProps = {
   tournamentId?: number
+  categoryId?: number
   onCancel?: () => void
   onSuccess?: SuccessHandler
   onFailed?: (message: string) => void
   onInvalid?: (data: Record<keyof FormData, string>) => void
 }
 
-export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuccess, onFailed, onCancel, tournamentId, arenaId }) => {
+export const FormCategory: React.FC<FormCategoryProps> = ({ onInvalid, onSuccess, onFailed, onCancel, categoryId, tournamentId }) => {
   const formRef = useRef()
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<Partial<ITournament>>(null)
+  const [data, setData] = useState<Partial<ICategory>>(null)
 
   const fetchData = useCallback(async () => {
-    if (tournamentId && tournamentId > 0) {
+    if (categoryId && categoryId > 0) {
       setLoading(true)
-      const response = await getTournament(tournamentId)
+      const response = await getCategory(categoryId)
       setLoading(false)
       if (response?.success) {
-        setData(response?.tournament)
+        setData(response?.category)
       }
     }
-  }, [tournamentId])
+  }, [categoryId])
 
   const handleSubmit = useCallback(
     async (formData: FormData) => {
@@ -56,16 +56,16 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
         return null
       }
       setLoading(true)
-      const response = await storeTournament({ id: tournamentId, arenaId, ...formData })
+      const response = await storeCategory({ id: categoryId, tournamentId, ...formData })
       setLoading(false)
       if (response?.success) {
-        const reason: SuccessReason = tournamentId > 0 ? 'edit' : 'create'
+        const reason: SuccessReason = categoryId > 0 ? 'edit' : 'create'
         if (onSuccess) onSuccess(reason, response)
       } else {
         if (onFailed) onFailed(`${response?.message}`)
       }
     },
-    [onInvalid, onSuccess, onFailed, tournamentId, arenaId]
+    [onInvalid, onSuccess, onFailed, categoryId, tournamentId]
   )
 
   useOnceCall(() => {

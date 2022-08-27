@@ -11,10 +11,10 @@ import { IfAuth, JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
-const searchFields = ['id', 'name']
+const searchFields = ['id', 'title']
 const orderFields = [
   ['Tournament.id', 'id'],
-  ['Tournament.name', 'name']
+  ['Tournament.title', 'title']
 ]
 
 class TournamentHandler {

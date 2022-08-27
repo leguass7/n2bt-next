@@ -4,7 +4,7 @@ import type { IResponseApi } from '~/server-side/api.interface'
 
 import { Tournament } from './tournament.entity'
 
-export type ITournament = Tournament
+export type ITournament = Partial<Tournament>
 
 export interface IResponseTournament extends IResponseApi {
   tournament: ITournament

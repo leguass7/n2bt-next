@@ -15,24 +15,24 @@ import Stack from '@mui/material/Stack'
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 
-import { useAdminArena } from '~/components/app/LayoutAdmin/LayoutAdminProvider'
+import { useAdminTournament } from '~/components/app/LayoutAdmin/LayoutAdminProvider'
 import { CircleLoading } from '~/components/CircleLoading'
 import { useCustomTable } from '~/components/CustomTable'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
-import { deletetTournament } from '~/services/api/tournament'
+import { deletetCategory } from '~/services/api/category'
 
-import { FormTournament, SuccessHandler } from '../FormTournament'
+import { FormCategory, SuccessHandler } from '../FormCategory'
 
-export interface ITournamentActions {
+export interface ICategoryActions {
   editId?: number
   deleteId?: number
 }
 
 export const Actions: React.FC = () => {
-  const [arenaId] = useAdminArena()
+  const [tournamentId] = useAdminTournament()
   const [loading, setLoading] = useState(false)
-  const { custom, setCustom } = useTableActions<ITournamentActions>()
+  const { custom, setCustom } = useTableActions<ICategoryActions>()
   const { emitFetch } = useCustomTable()
 
   const handleClose = () => {
@@ -44,7 +44,7 @@ export const Actions: React.FC = () => {
   }
 
   const handleSuccess: SuccessHandler = () => {
-    toast.success('Torneio salvo com sucesso')
+    toast.success('Categoria salva com sucesso')
     handleClose()
     emitFetch()
   }
@@ -52,10 +52,10 @@ export const Actions: React.FC = () => {
   const handleDelete = async () => {
     if (custom?.deleteId > 0) {
       setLoading(true)
-      const response = await deletetTournament(custom.deleteId)
+      const response = await deletetCategory(custom.deleteId)
       if (!!response.success) {
         handleClose()
-        toast.success('Arena excluída com sucesso')
+        toast.success('Categoria excluída com sucesso')
         emitFetch()
       }
       setLoading(false)
@@ -68,7 +68,7 @@ export const Actions: React.FC = () => {
     <>
       <FlexContainer justify="space-between">
         <Text textSize={18} bold horizontalPad={10}>
-          Torneios cadastrados
+          Categorias cadastradas
         </Text>
         <Toolbar sx={{ justifyContent: 'flex-end' }}>
           <Tooltip title="Adicionar Torneio" arrow>
@@ -82,10 +82,10 @@ export const Actions: React.FC = () => {
       <Modal open={!!custom?.editId} onClose={handleClose} keepMounted={false}>
         <BoxCenter spacing={1}>
           <Card>
-            <CardHeader title={`${title} Torneio`} />
+            <CardHeader title={`${title} Categoria`} />
             <Divider />
             <CardContent>
-              <FormTournament arenaId={arenaId} tournamentId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
+              <FormCategory tournamentId={tournamentId} categoryId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
             </CardContent>
           </Card>
         </BoxCenter>
@@ -94,7 +94,7 @@ export const Actions: React.FC = () => {
         <BoxCenter spacing={1}>
           <Card>
             <CardHeader
-              title={`Removendo Torneio`}
+              title={`Removendo Categoria`}
               action={
                 <Tooltip title="Mensagem de alerta">
                   <IconButton>
@@ -108,7 +108,7 @@ export const Actions: React.FC = () => {
               <>
                 <p>
                   <Text textSize={16} align="center">
-                    Todos os registros vinculados ao torneio serão excluídos permanentemente.
+                    Todos os registros vinculados à categoria serão excluídos permanentemente.
                   </Text>
                   <br />
                   <Text textSize={16} bold align="center">

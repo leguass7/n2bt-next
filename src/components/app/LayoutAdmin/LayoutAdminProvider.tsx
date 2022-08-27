@@ -8,6 +8,8 @@ import type { AppStoreState } from '~/store'
 import type { IArenaAppState } from '~/store/reducers/arena'
 
 export interface ILayoutAdminContext {
+  tournamentId?: number
+  setTournamentId: React.Dispatch<React.SetStateAction<number>>
   arenaId?: number
   setArenaId: (id?: number) => void
   menuOpen: boolean
@@ -22,6 +24,7 @@ type Props = {
 export const LayoutAdminProvider: React.FC<Props> = ({ children }) => {
   const { updateAppArena, arenaId } = useAppArena()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [tournamentId, setTournamentId] = useState(0)
 
   const setArenaId = useCallback(
     (id = 0) => {
@@ -29,7 +32,11 @@ export const LayoutAdminProvider: React.FC<Props> = ({ children }) => {
     },
     [updateAppArena]
   )
-  return <LayoutAdminContext.Provider value={{ arenaId, setArenaId, menuOpen, setMenuOpen }}>{children}</LayoutAdminContext.Provider>
+  return (
+    <LayoutAdminContext.Provider value={{ arenaId, setArenaId, menuOpen, setMenuOpen, tournamentId, setTournamentId }}>
+      {children}
+    </LayoutAdminContext.Provider>
+  )
 }
 
 export function useAdminMenu(): [ILayoutAdminContext['menuOpen'], ILayoutAdminContext['setMenuOpen']] {
@@ -44,4 +51,12 @@ export function useAdminArena(): [ILayoutAdminContext['arenaId'], ILayoutAdminCo
   const setArenaId = useContextSelector(LayoutAdminContext, ({ setArenaId }) => setArenaId)
 
   return [arenaId, setArenaId, arenas]
+}
+
+export function useAdminTournament(): [ILayoutAdminContext['tournamentId'], ILayoutAdminContext['setTournamentId']] {
+  const [tournamentId, setTournamentId] = useContextSelector(LayoutAdminContext, ({ tournamentId, setTournamentId }) => [
+    tournamentId,
+    setTournamentId
+  ])
+  return [tournamentId, setTournamentId]
 }

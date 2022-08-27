@@ -5,6 +5,8 @@ import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions
 import type { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
+export type CategoryGender = 'M' | 'F' | 'MF'
+
 @Entity('categories')
 export class Category {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
@@ -21,6 +23,9 @@ export class Category {
 
   @Column({ nullable: true, default: false })
   published: boolean
+
+  @Column({ nullable: true, default: false })
+  mixGender?: boolean
 
   @Column({ type: 'decimal', scale: 2, precision: 10, nullable: true, default: null })
   price: number

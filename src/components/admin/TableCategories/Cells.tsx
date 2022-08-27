@@ -1,22 +1,30 @@
 import React, { useState } from 'react'
 
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import IconButton from '@mui/material/IconButton'
 import Switch from '@mui/material/Switch'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
 import { format, isValid, parseJSON } from 'date-fns'
 
 import type { ICustomCellProps } from '~/components/CustomTable'
 import { Text } from '~/components/styled'
 import { CellContainer } from '~/components/tables/cells/styles'
+import { useTableActions } from '~/components/tables/TableActionsProvider'
 import { splitDateTime } from '~/helpers/dates'
-import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
-import { updateTournament } from '~/services/api/tournament'
+import type { ICategory } from '~/server-side/useCases/category/category.dto'
+import { updateCategory } from '~/services/api/category'
 
-type Props = ICustomCellProps<ITournament>
+import type { ICategoryActions } from './Actions'
+
+type Props = ICustomCellProps<ICategory>
 
 export const SwitchCell: React.FC<Props> = ({ record }) => {
   const [checked, setChecked] = useState(!!record?.published)
 
   const save = async (published: boolean) => {
-    await updateTournament(record?.id, { published })
+    await updateCategory(record?.id, { published })
   }
 
   const handleChange = (evt: any, chk?: boolean) => {
@@ -58,6 +66,34 @@ export const DateCell: React.FC<DateCellProps> = ({ date }) => {
   return (
     <CellContainer>
       <Text textSize={14}>{text}</Text>
+    </CellContainer>
+  )
+}
+
+export const ActionCell: React.FC<Props> = ({ record }) => {
+  const { setCustom } = useTableActions<ICategoryActions>()
+
+  const handleEdit = () => {
+    setCustom({ editId: record?.id })
+  }
+
+  const handleDel = () => {
+    setCustom({ deleteId: record?.id })
+  }
+  return (
+    <CellContainer>
+      <Toolbar>
+        <Tooltip title="Alterar" arrow>
+          <IconButton size="small" onClick={handleEdit}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Alterar" arrow>
+          <IconButton size="small" onClick={handleDel}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      </Toolbar>
     </CellContainer>
   )
 }

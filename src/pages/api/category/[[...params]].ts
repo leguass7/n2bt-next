@@ -1,11 +1,16 @@
-import { createHandler, Get, HttpCode, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from '@storyofams/next-api-decorators'
+import type { FindOptionsWhere } from 'typeorm'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
-import { Pagination } from '~/server-side/services/PaginateService'
+import { PaginateService, Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
-import { IfAuth } from '~/server-side/useCases/auth/middleware'
+import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
+import { IfAuth, JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
+import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import { Category } from '~/server-side/useCases/category/category.entity'
+
+const searchFields = ['id', 'title']
 const orderFields = [
   ['Category.id', 'id'],
   ['Category.title', 'title']
@@ -37,6 +42,95 @@ class CategoryHandler {
     const categories = await queryDb.getMany()
 
     return { success: true, categories }
+  }
+
+  @Get('/:categoryId')
+  @IfAuth()
+  @HttpCode(200)
+  async one(@Req() req: AuthorizedApiRequest) {
+    const { auth, query } = req
+    const categoryId = +query?.params[0] || 0
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Category)
+    const where: FindOptionsWhere<Category> = { id: categoryId }
+    if (auth?.level <= 8) where.published = true
+
+    const category = await repo.findOne({ where })
+    if (!category) throw new BadRequestException()
+
+    return { success: true, category }
+  }
+
+  @Patch('/:categoryId')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async update(@Req() req: AuthorizedApiRequest) {
+    const { auth, query, body } = req
+    const categoryId = +query?.params[0] || 0
+    if (!categoryId) throw new BadRequestException()
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Category)
+    const category = await repo.update(categoryId, { ...body, updatedAt: new Date(), updatedBy: auth.userId })
+    if (!category) throw new BadRequestException()
+
+    return { success: true, categoryId, affected: category?.affected }
+  }
+
+  @Delete('/:categoryId')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async remove(@Req() req: AuthorizedApiRequest) {
+    const { query } = req
+    const categoryId = +query?.params[0] || 0
+    if (!categoryId) throw new BadRequestException()
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Category)
+    const deleted = await repo.delete(categoryId)
+    if (!deleted) throw new BadRequestException()
+
+    return { success: true, categoryId, affected: deleted?.affected }
+  }
+
+  @Get()
+  @HttpCode(200)
+  @Pagination()
+  async paginate(@Req() req: AuthorizedPaginationApiRequest) {
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Category)
+
+    const tournamentId = +req?.query?.tournamentId
+    if (!tournamentId) throw new BadRequestException('not_found_tournamentId')
+
+    const { search, order } = req.pagination
+    const queryText = search ? searchFields.map(field => `Category.${field} LIKE :search`) : null
+
+    const queryDb = repo.createQueryBuilder('Category').select().where({ tournamentId })
+
+    if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
+    parseOrderDto({ order, table: 'Category', orderFields }).querySetup(queryDb)
+
+    const paginateService = new PaginateService('category')
+    const paginated = await paginateService.paginate(queryDb, req.pagination)
+    return { success: true, ...paginated }
+  }
+
+  @Post()
+  @JwtAuthGuard()
+  @HttpCode(201)
+  async create(@Req() req: AuthorizedApiRequest) {
+    const { auth, body } = req
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Category)
+    const data = { ...body, createdAt: new Date(), createdBy: auth.userId, userId: auth.userId } as ICategory
+    const saveData = repo.create(data)
+    const created = await repo.save(saveData)
+    if (!created) throw new BadRequestException()
+
+    return { success: true, categoryId: created?.id, arena: created }
   }
 }
 
