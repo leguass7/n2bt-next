@@ -29,7 +29,7 @@ export class Subscription {
   paid?: boolean
 
   @Column({ unsigned: true, nullable: true, default: null })
-  paymentId?: number
+  paymentId?: string
 
   @Column({ type: 'uuid', nullable: true, default: null, length: 36 })
   createdBy?: string

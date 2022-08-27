@@ -1,3 +1,5 @@
+import { IResponseApi } from '~/server-side/api.interface'
+
 export enum PaymentMethod {
   PIX = 'PIX',
   CASH = 'CASH'
@@ -34,6 +36,13 @@ export interface IResponseCob {
     nome: string
     valor: string
   }[]
+}
+
+export interface IResponseGeneratePix extends IResponseApi {
+  txid: string
+  status: CobStatus
+  expiresIn: Date
+  txKey: string
 }
 
 export type PaymentMeta = { loc?: IResponseCob['loc']; horario?: Date | string; endToEndId?: string }

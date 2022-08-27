@@ -1,6 +1,7 @@
 import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req } from '@storyofams/next-api-decorators'
 import { hashSync } from 'bcrypt'
 import { instanceToPlain } from 'class-transformer'
+import { parseISO } from 'date-fns'
 
 import { generatePassword } from '~/helpers/string'
 import { prepareConnection } from '~/server-side/database/conn'
@@ -71,9 +72,13 @@ class UserHandler {
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)
     const userId = req?.auth?.userId
+    const { birday, ...data } = req?.body
+
+    const u: Partial<IUser> = { ...data }
+    if (birday) u.birday = parseISO(`${birday}`)
 
     if (!userId) throw new BadRequestException('Usuário não encontrado')
-    const user = await repo.update(userId, { ...req.body })
+    const user = await repo.update(userId, u)
 
     return { success: !!user, userId }
   }

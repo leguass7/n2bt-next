@@ -7,7 +7,7 @@ import type { IResponseUser, IUser } from '~/server-side/useCases/user/user.dto'
 import { getMe } from '~/services/api/user'
 
 export interface IUserContext {
-  requestMe: () => Promise<void | IResponseUser>
+  requestMe: () => Promise<IResponseUser>
   userData: IUser | null
   setUserData: React.Dispatch<React.SetStateAction<IUser>>
   loadingUser?: boolean

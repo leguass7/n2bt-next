@@ -1,4 +1,5 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import ArrowLeftIcon from '@mui/icons-material/ChevronLeft'
 import ArrowRightIcon from '@mui/icons-material/ChevronRight'
@@ -7,10 +8,12 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 
+import { CircleLoading } from '~/components/CircleLoading'
 import { LogoSvg } from '~/components/LogoSvg'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, Text } from '~/components/styled'
 import { DeletePatnerHandler, SelectPatner, SelectPatnerHandler } from '~/components/User/SelectPartner'
+import { useIsMounted } from '~/hooks/useIsMounted'
 
 import { useSubscription } from '../SubscriptionProvider'
 import { CardContainer } from './style'
@@ -18,8 +21,11 @@ import { CardContainer } from './style'
 interface Props {}
 
 export const StepPartner: React.FC<Props> = () => {
-  const { partner, setPartner, tournamentId, category } = useSubscription()
+  const { partner, setPartner, tournamentId, category, savePayment } = useSubscription()
   const { goTo } = usePassRoll('subscription')
+
+  const [loading, setLoading] = useState(false)
+  const isMounted = useIsMounted()
 
   const handleChange: SelectPatnerHandler = useCallback(
     user => {
@@ -27,6 +33,31 @@ export const StepPartner: React.FC<Props> = () => {
     },
     [setPartner]
   )
+
+  const handlePayment = useCallback(async () => {
+    if (!partner) return null
+    setLoading(true)
+
+    const response = await savePayment()
+    if (!response) return null
+
+    const { success = false, message } = response
+
+    if (isMounted()) {
+      setLoading(false)
+      if (!success) {
+        toast.error(message)
+        return null
+      }
+
+      console.log(response)
+    }
+  }, [isMounted, savePayment, partner])
+
+  const handleNext = useCallback(() => {
+    handlePayment()
+    goTo(4)
+  }, [handlePayment, goTo])
 
   const handleDelete: DeletePatnerHandler = useCallback(() => {
     setPartner(null)
@@ -55,11 +86,12 @@ export const StepPartner: React.FC<Props> = () => {
           <Button type="button" variant="contained" onClick={() => goTo(2)} startIcon={<ArrowLeftIcon />}>
             Anterior
           </Button>
-          <Button type="button" variant="contained" onClick={() => goTo(4)} endIcon={<ArrowRightIcon />} disabled={!partner}>
+          <Button type="button" variant="contained" onClick={handleNext} endIcon={<ArrowRightIcon />} disabled={!partner}>
             Próximo
           </Button>
         </CardActions>
       </CardContainer>
+      {loading ? <CircleLoading /> : null}
     </BoxCenter>
   )
 }

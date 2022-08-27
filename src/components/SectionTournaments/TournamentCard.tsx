@@ -14,7 +14,7 @@ import gfm from 'remark-gfm'
 import img02 from '~/assets/original-1ano.jpg'
 import img01 from '~/assets/primeira-speed.jpg'
 import { validDate } from '~/helpers/date'
-import { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
+import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 
 import { MkContainer } from './styles'
 
@@ -57,7 +57,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
       </CardContent>
       <CardActions>
         {!expired ? (
-          <Button size="small" variant="outlined" onClick={() => push(`/subscription/${id}/`)}>
+          <Button size="small" variant="outlined" onClick={() => push(`/subscription/${id}`)}>
             Inscrição
           </Button>
         ) : null}
