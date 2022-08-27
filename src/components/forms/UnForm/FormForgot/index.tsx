@@ -37,7 +37,6 @@ export const FormForgot: React.FC<FormForgotProps> = ({ isWhatsapp, onInvalid, o
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
-      toast.success('teste')
       const invalid = await validateFormData(schema, data, formRef.current)
       if (invalid) {
         if (onInvalid) onInvalid(invalid)

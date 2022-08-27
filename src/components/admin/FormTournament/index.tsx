@@ -76,7 +76,7 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
     <>
       <Form ref={formRef} onSubmit={handleSubmit} role="form" initialData={data} key={`form-${data?.id || ''}`}>
         <Input placeholder="nome" type="text" name="title" label="Nome" />
-        <Input placeholder="descrição" type="text" name="description" label="Descrição" />
+        <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
         <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 2 }}>
           {onCancel ? (
             <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onCancel}>

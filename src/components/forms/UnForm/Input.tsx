@@ -10,7 +10,7 @@ interface Props extends InputProps {
   number?: boolean
 }
 
-export const Input: React.FC<Props> = ({ name, type = 'text', id, label, number, onChange, placeholder }) => {
+export const Input: React.FC<Props> = ({ name, type = 'text', id, label, number, onChange, placeholder, multiline }) => {
   const ref = useRef<HTMLInputElement>(null)
   const { defaultValue, fieldName, registerField, error } = useField(name)
 
@@ -51,6 +51,7 @@ export const Input: React.FC<Props> = ({ name, type = 'text', id, label, number,
         onChange={handleChange}
         defaultValue={defaultValue}
         inputRef={ref}
+        multiline={multiline}
         placeholder={placeholder}
       />
       {error ? <ErrorMessage>{error}</ErrorMessage> : null}

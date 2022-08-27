@@ -153,7 +153,7 @@ class UserHandler {
       subject: 'N2BT - Recuperação de senha',
       to: user.email,
       html: `<p>
-      Seu c&oacute;digo para recupera&ccedil;&atilde;o de senha: <strong>${publicCode}</strong><br />
+      Seu c&oacute;digo para recupera&ccedil;&atilde;o de senha:<br /><br /><strong>${publicCode}</strong><br /><br />
       Informe o c&oacute;digo acima no local indicado da p&aacute;gina.<br /><br />
       <p/>`
     })
