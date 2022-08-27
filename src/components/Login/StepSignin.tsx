@@ -10,13 +10,14 @@ import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 
 import { LogoSvg } from '../LogoSvg'
+import type { CustomContextSigin } from './custom.types'
 
 interface Props {
   allowRegister?: boolean
 }
 
 export const StepSignin: React.FC<Props> = ({ allowRegister = false }) => {
-  const { goTo } = usePassRoll('signIn')
+  const { goTo } = usePassRoll<CustomContextSigin>('signIn')
 
   return (
     <BoxCenter>

@@ -10,7 +10,7 @@ interface Props extends InputProps {
   number?: boolean
 }
 
-export const Input: React.FC<Props> = ({ name, type = 'text', id, label, number, onChange, ...rest }) => {
+export const Input: React.FC<Props> = ({ name, type = 'text', id, label, number, onChange, placeholder }) => {
   const ref = useRef<HTMLInputElement>(null)
   const { defaultValue, fieldName, registerField, error } = useField(name)
 
@@ -43,7 +43,16 @@ export const Input: React.FC<Props> = ({ name, type = 'text', id, label, number,
   return (
     <div style={{ padding: 4 }}>
       {label ? <label htmlFor={id}>{label}</label> : null}
-      <MuiInput fullWidth type={type} inputProps={{ id }} name={name} onChange={handleChange} defaultValue={defaultValue} inputRef={ref} {...rest} />
+      <MuiInput
+        fullWidth
+        type={type}
+        inputProps={{ id }}
+        name={name}
+        onChange={handleChange}
+        defaultValue={defaultValue}
+        inputRef={ref}
+        placeholder={placeholder}
+      />
       {error ? <ErrorMessage>{error}</ErrorMessage> : null}
     </div>
   )

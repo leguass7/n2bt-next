@@ -13,7 +13,7 @@ interface LoginPageProps {
   uaString?: string
 }
 
-const Login: NextPage<LoginPageProps> = ({}) => {
+const Login: NextPage<LoginPageProps> = ({ uaString }) => {
   const { replace } = useRouter()
   const { authenticated, userData, loading } = useAppAuth()
 
@@ -37,7 +37,7 @@ const Login: NextPage<LoginPageProps> = ({}) => {
         <title>N2BT Beach Tennis - Login</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
-      <SigninSlider />
+      <SigninSlider uaString={uaString} />
     </LayoutSigin>
   )
 }

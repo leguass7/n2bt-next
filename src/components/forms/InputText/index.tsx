@@ -63,7 +63,7 @@ export const InputText: React.FC<InputText> = ({ themeColor = 'primary', name, l
 }
 
 type MaskProps = InputText & InputMaskProps
-export const InputMask: React.FC<MaskProps> = ({ themeColor = 'primary', name, label, disabled, ...rest }) => {
+export const InputMask: React.FC<MaskProps> = ({ themeColor = 'primary', name, label, disabled }) => {
   const inputRef = useRef<ReactInputMask>(null)
   const [focused, setFocused] = useState(false)
   const { fieldName, defaultValue, registerField, error } = useField(name)
@@ -94,7 +94,7 @@ export const InputMask: React.FC<MaskProps> = ({ themeColor = 'primary', name, l
         disabled={disabled}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        {...rest}
+        // {...rest}
       />
       {label ? <Label htmlFor={id}>{label}</Label> : null}
       {error ? (

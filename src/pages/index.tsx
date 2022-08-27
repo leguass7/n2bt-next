@@ -1,42 +1,36 @@
-import Button from '@mui/material/Button'
 import type { GetServerSideProps, NextPage } from 'next'
-import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 
 import { Layout } from '~/components/app/Layout'
 import { SectionLogo } from '~/components/SectionLogo'
 import { SectionTournaments } from '~/components/SectionTournaments'
-import { useAppAuth } from '~/hooks/useAppAuth'
+import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 
 interface HomePageProps {
   csrfToken?: string
   uaString?: string
+  tournaments?: ITournament[]
 }
 
-const Home: NextPage<HomePageProps> = ({}) => {
-  // const { push } = useRouter()
-  const { status } = useSession()
-  const { logOut } = useAppAuth()
-
+const Home: NextPage<HomePageProps> = ({ tournaments }) => {
   return (
     <Layout>
       <Head>
         <title>N2BT Beach Tennis</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
-      <Button variant="outlined" onClick={() => logOut()}>
-        {status}
-      </Button>
       <SectionLogo />
-      <SectionTournaments />
+      <SectionTournaments tournaments={tournaments} />
     </Layout>
   )
 }
 
 export const getServerSideProps: GetServerSideProps<HomePageProps> = async ({ req }) => {
+  const tournaments = []
   return {
     props: {
-      uaString: req.headers['user-agent']
+      uaString: req.headers['user-agent'],
+      tournaments
     }
   }
 }

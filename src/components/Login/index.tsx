@@ -11,11 +11,12 @@ import { StepSignup } from './StepSignup'
 type Props = {
   layoutName?: ThemeName
   reCAPTCHAKey?: string
+  uaString?: string
 }
 
 const allowRegister = true
 
-export const SigninSlider: React.FC<Props> = () => {
+export const SigninSlider: React.FC<Props> = ({ uaString }) => {
   // const handleSliderChangeComplete = (index: number) => {
   //   console.log('handleSliderChangeComplete', index)
   // }
@@ -26,7 +27,7 @@ export const SigninSlider: React.FC<Props> = () => {
         <StepSignin allowRegister={allowRegister} />
       </SliderItem>
       <SliderItem>
-        <StepForgot />
+        <StepForgot uaString={uaString} />
       </SliderItem>
       <SliderItem>
         <StepCode />

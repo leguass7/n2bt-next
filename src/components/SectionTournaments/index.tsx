@@ -10,9 +10,11 @@ import { listTournaments } from '~/services/api/tournament'
 import { TournamentCard } from './TournamentCard'
 
 // import { Container } from './styles';
-
-export const SectionTournaments: React.FC = () => {
-  const [data, setData] = useState<ITournament[]>([])
+type Props = {
+  tournaments?: ITournament[]
+}
+export const SectionTournaments: React.FC<Props> = ({ tournaments = [] }) => {
+  const [data, setData] = useState<ITournament[]>(tournaments)
 
   const fetchData = useCallback(async () => {
     const response = await listTournaments({ size: 500, order: 'desc', orderby: 'createdAt' })
