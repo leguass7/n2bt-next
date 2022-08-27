@@ -20,6 +20,21 @@ export async function sendForgot(email?: string): Promise<IResponseApi & { code:
   return response
 }
 
+export async function sendCode(userCode: string, privateCode: string): Promise<IResponseApi & { code: string }> {
+  const response = await apiService.post('/user/code', { userCode, privateCode })
+  return response
+}
+
+type Payload = {
+  userId: string
+  authorization: string
+  password: string
+}
+export async function sendRecover(data: Payload): Promise<IResponseApi> {
+  const response = await apiService.post('/user/recover', data)
+  return response
+}
+
 export async function getMe(): Promise<IResponseUser> {
   const response = await apiService.get('/user/me')
   return response

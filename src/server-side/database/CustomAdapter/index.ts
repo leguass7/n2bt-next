@@ -75,29 +75,32 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
       const repo = ds.getRepository(User)
       const saveData = repo.create(user)
       const data = await repo.save(saveData)
-      // ds.destroy()
+
       return userDto(data)
     },
     async getUser(id) {
       const ds = await getDS()
       const repo = ds.getRepository(User)
       const result = await repo.findOne({ where: { id } })
-      // ds.destroy()
+      console.log('\n getUser \n', result)
       return userDto(result)
     },
     async getUserByEmail(email) {
       const ds = await getDS()
       const repo = ds.getRepository(User)
       const result = await repo.findOne({ where: { email } })
-      // ds.destroy()
-      return userDto(result)
+      const u = result ? userDto(result) : null
+      console.log('\n getUserByEmail \n', u)
+
+      return u
     },
     async getUserByAccount({ providerAccountId, provider }) {
       const ds = await getDS()
       const repo = ds.getRepository(Account)
       const result = await repo.findOne({ where: { providerAccountId, provider }, relations: { user: true } })
-      // ds.destroy()
-      return userDto(result?.user)
+      const u = result?.user ? userDto(result?.user) : null
+      console.log('\n getUserByAccount \n', u)
+      return u
     },
     async updateUser(user) {
       const ds = await getDS()
@@ -118,6 +121,8 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
       const repo = ds.getRepository(Account)
       const saveData = repo.create(account)
       const result = await repo.save(saveData)
+
+      console.log('\n linkAccount \n', result)
       // ds.destroy()
       return accDto(result)
     },

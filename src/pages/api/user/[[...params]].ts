@@ -167,32 +167,32 @@ class UserHandler {
   @IfAuth()
   @HttpCode(200)
   async code(@Req() req: AuthorizedApiRequest) {
-    const { code, pass } = req.body
+    const { privateCode, userCode } = req.body
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)
 
-    const user = await repo.findOne({ where: { reset: `${pass}:${code}` } })
+    const user = await repo.findOne({ where: { reset: `${userCode}:${privateCode}` } })
     if (!user) throw new BadRequestException('not_found_code')
 
-    const authorizationCode = generatePassword()
+    const authorization = generatePassword()
 
-    const updated = await repo.update(user.id, { reset: `${authorizationCode}` })
+    const updated = await repo.update(user.id, { reset: `${authorization}` })
     if (!updated) throw new BadRequestException('database_error')
 
-    return { success: true, userId: user.id, authorizationCode }
+    return { success: true, userId: user.id, authorization }
   }
 
   @Post('/reset')
   @IfAuth()
   @HttpCode(200)
   async reset(@Req() req: AuthorizedApiRequest) {
-    const { password, userId, authorizationCode } = req.body
+    const { password, userId, authorization } = req.body
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)
 
-    const user = await repo.findOne({ where: { reset: authorizationCode, id: userId } })
+    const user = await repo.findOne({ where: { reset: authorization, id: userId } })
     if (!user) throw new BadRequestException('invalid_authorizationCode')
 
     const hashPassword = hashSync(password, 14)

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { Dispatch, SetStateAction, useCallback, useState } from 'react'
 
 import { createContext, useContextSelector } from 'use-context-selector'
 
@@ -18,12 +18,12 @@ export interface ISliders {
 
 export interface IPassRollContext {
   readonly sliders: ISliders[]
-  setSliders: React.Dispatch<React.SetStateAction<ISliders[]>>
+  setSliders: Dispatch<SetStateAction<ISliders[]>>
   registerSlider: (data: ISliders) => void
   unregisterSlider: (name: string) => void
   setSelected: (name: string, index: number) => void
   customContext: Record<string, any>
-  setCustomContext: React.Dispatch<React.SetStateAction<Record<string, any>>>
+  setCustomContext: Dispatch<SetStateAction<Record<string, any>>>
 }
 
 export const PassRollContext = createContext({} as IPassRollContext)
@@ -91,7 +91,7 @@ export function usePassRoll<CustomData = Record<string, any>>(name: string) {
     return ctx.sliders.find(f => f.name === name)
   })
   const setSelected = useContextSelector(PassRollContext, ctx => ctx.setSelected)
-  const setCustomContext = useContextSelector(PassRollContext, ctx => ctx.setCustomContext)
+  const setCustomContext = useContextSelector(PassRollContext, ctx => ctx.setCustomContext) as Dispatch<SetStateAction<CustomData>>
   const customContext = useContextSelector(PassRollContext, ctx => ctx.customContext) as CustomData
 
   const goTo = useCallback(
@@ -101,5 +101,6 @@ export function usePassRoll<CustomData = Record<string, any>>(name: string) {
     },
     [setSelected, name, setCustomContext]
   )
-  return { slider, goTo, customContext }
+
+  return { slider, goTo, customContext, setCustomContext }
 }

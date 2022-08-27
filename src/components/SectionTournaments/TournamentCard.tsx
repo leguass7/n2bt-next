@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import { isPast } from 'date-fns'
 import { useRouter } from 'next/router'
 
-import img02 from '~/assets/paella.jpg'
+import img02 from '~/assets/original-1ano.jpg'
 import img01 from '~/assets/reptile.jpg'
 import { validDate } from '~/helpers/date'
 import { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
@@ -44,12 +44,14 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
     <Card sx={{ maxWidth: '100%', minWidth: 320 }}>
       <CardMedia component="img" height="140" image={getImage(id)} alt="green iguana" />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {title} {id}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {description}
-        </Typography>
+        <div style={{ maxWidth: 290 }}>
+          <Typography gutterBottom variant="h5" component="div">
+            {title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {description}
+          </Typography>
+        </div>
       </CardContent>
       <CardActions>
         {!expired ? (

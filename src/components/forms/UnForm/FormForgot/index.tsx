@@ -1,20 +1,24 @@
 import React, { useCallback, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import Button from '@mui/material/Button'
+// import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { Form } from '@unform/web'
+// import { signIn, useSession } from 'next-auth/react'
 import { object, string } from 'yup'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { H4, Text } from '~/components/styled'
 import { validateFormData } from '~/helpers/validation'
-import { sendForgot } from '~/services/api/user'
+import { sendForgot } from '~/services/api/user/recover'
 
 import { Input } from '../Input'
 
 type FormData = { email: string }
-
+type InputChange = React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
 export type FormForgotProps = {
+  isWhatsapp?: boolean
   onSuccess?: (code?: string) => void
   onFailed?: (message: string) => void
   onInvalid?: (data: Record<keyof FormData, string>) => void
@@ -25,12 +29,15 @@ const schema = object().shape({
   email: string().required('e-mail requerido').email('e-mail inválido')
 })
 
-export const FormForgot: React.FC<FormForgotProps> = ({ onInvalid, onSuccess, onFailed, onCancel }) => {
+export const FormForgot: React.FC<FormForgotProps> = ({ isWhatsapp, onInvalid, onSuccess, onFailed, onCancel }) => {
+  // const session = useSession()
+  const [isGmail, setIsGmail] = useState(false)
   const [loading, setLoading] = useState(false)
   const formRef = useRef()
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
+      toast.success('teste')
       const invalid = await validateFormData(schema, data, formRef.current)
       if (invalid) {
         if (onInvalid) onInvalid(invalid)
@@ -48,6 +55,15 @@ export const FormForgot: React.FC<FormForgotProps> = ({ onInvalid, onSuccess, on
     [onInvalid, onSuccess, onFailed]
   )
 
+  const handleTextChange: InputChange = e => {
+    const value: string = e?.target?.value || ''
+    setIsGmail(!!value.match('gmail.com'))
+  }
+
+  // const handleGoogleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
+  //   if (session.status === 'unauthenticated') signIn('google', { redirect: false })
+  // }
+
   return (
     <>
       <H4 align="center" transform="uppercase">
@@ -58,7 +74,24 @@ export const FormForgot: React.FC<FormForgotProps> = ({ onInvalid, onSuccess, on
       </p>
 
       <Form ref={formRef} onSubmit={handleSubmit} role="form">
-        <Input placeholder="endereço de e-mail" type="email" name="email" />
+        <Input placeholder="endereço de e-mail" type="email" name="email" onChange={handleTextChange} />
+
+        {isGmail && !isWhatsapp ? (
+          <div>
+            {/* <br />
+            <Divider />
+            <FlexContainer justify="center" verticalPad={6}>
+              <Text align="center">Tente fazer login com o google</Text>
+            </FlexContainer>
+            <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
+              <Button color="secondary" variant="contained" type="button" size="small" disabled={!!loading} onClick={handleGoogleClick}>
+                {'Login com Google'}
+              </Button>
+            </Stack>
+            <br />
+            <Divider /> */}
+          </div>
+        ) : null}
 
         <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
           {onCancel ? (
