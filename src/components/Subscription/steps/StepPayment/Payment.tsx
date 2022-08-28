@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { PixCode } from '~/components/PixCode'
-import { FlexContainer, Text } from '~/components/styled'
+import { FlexContainer } from '~/components/styled'
 
 import { useSubscription } from '../../SubscriptionProvider'
 

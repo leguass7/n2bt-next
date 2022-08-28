@@ -6,11 +6,11 @@ import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import { useUserAgent } from 'next-useragent'
 
+import { FormForgot } from '~/components/forms/UnForm/FormForgot'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer } from '~/components/styled'
+import { LogoSvg } from '~/components/svg/LogoSvg'
 
-import { FormForgot } from '../forms/UnForm/FormForgot'
-import { LogoSvg } from '../LogoSvg'
 import type { CustomContextSigin } from './custom.types'
 
 type Props = { uaString?: string }

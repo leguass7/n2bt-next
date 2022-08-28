@@ -3,10 +3,10 @@ import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Link from 'next/link'
 
-import { FormSignup } from '../forms/UnForm/FormSignup'
-import { LogoSvg } from '../LogoSvg'
-import { usePassRoll } from '../PassRollLayout'
-import { BoxCenter, FlexContainer, Text } from '../styled'
+import { FormSignup } from '~/components/forms/UnForm/FormSignup'
+import { usePassRoll } from '~/components/PassRollLayout'
+import { BoxCenter, FlexContainer, Text } from '~/components/styled'
+import { LogoSvg } from '~/components/svg/LogoSvg'
 
 interface Props {}
 

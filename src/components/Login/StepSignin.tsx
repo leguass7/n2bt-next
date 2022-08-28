@@ -8,8 +8,8 @@ import Link from 'next/link'
 import { FormSignin } from '~/components/forms/UnForm/FormSignin'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
+import { LogoSvg } from '~/components/svg/LogoSvg'
 
-import { LogoSvg } from '../LogoSvg'
 import type { CustomContextSigin } from './custom.types'
 
 interface Props {

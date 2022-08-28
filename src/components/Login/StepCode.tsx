@@ -8,11 +8,11 @@ import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 
 import { FormRecoverCode, FormRecoverCodeProps } from '~/components/forms/UnForm/FormRecoverCode'
-import { LogoSvg } from '~/components/LogoSvg'
+import { FromPass } from '~/components/forms/UnForm/FromPass'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
+import { LogoSvg } from '~/components/svg/LogoSvg'
 
-import { FromPass } from '../forms/UnForm/FromPass'
 import type { CustomContextSigin } from './custom.types'
 
 export const StepCode: React.FC = () => {
