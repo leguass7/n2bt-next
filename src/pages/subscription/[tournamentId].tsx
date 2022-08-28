@@ -1,6 +1,7 @@
 import { Button, Stack } from '@mui/material'
 import { differenceInMinutes } from 'date-fns'
 import type { GetServerSideProps, NextPage } from 'next'
+import { unstable_getServerSession } from 'next-auth/next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -8,9 +9,10 @@ import { Layout } from '~/components/app/Layout'
 import { CircleLoading } from '~/components/CircleLoading'
 import { BoxCenter, H4, Paragraph } from '~/components/styled'
 import { Subscription } from '~/components/Subscription'
-import { prepareConnection } from '~/server-side/database/conn'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
+
+import { createOAuthOptions } from '../api/auth/[...nextauth]'
 
 interface Props {
   tournamentId: number
@@ -52,24 +54,34 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async context => {
+  const { params } = context
   const tournamentId = +params?.tournamentId || 0
 
-  const ds = await prepareConnection()
+  const [authOptions, ds] = await createOAuthOptions()
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+
+  console.log('session', session)
+
+  if (!session) {
+    return {
+      redirect: { destination: `/login?tournamentId=${tournamentId}` },
+      props: { tournamentId }
+    }
+  }
+
+  // const ds = await prepareConnection()
   const repo = ds.getRepository(Tournament)
 
   const tournament = await repo.findOne({ where: { id: tournamentId } })
-
   const isExpired = !!(tournament?.subscriptionExpiration && differenceInMinutes(tournament?.subscriptionExpiration, new Date()) <= 0)
 
   return {
     props: {
+      session,
       isExpired,
       tournamentId,
-      tournament: {
-        title: tournament?.title,
-        description: tournament?.description
-      }
+      tournament: { title: tournament?.title, description: tournament?.description }
     }
   }
 }

@@ -11,21 +11,24 @@ import { useAppAuth } from '~/hooks/useAppAuth'
 interface LoginPageProps {
   csrfToken?: string
   uaString?: string
+  tournamentId?: number
 }
 
-const Login: NextPage<LoginPageProps> = ({ uaString }) => {
+const Login: NextPage<LoginPageProps> = ({ uaString, tournamentId }) => {
   const { replace } = useRouter()
   const { authenticated, userData, loading } = useAppAuth()
 
   const checkLogged = useCallback(() => {
     if (!!authenticated && !loading) {
-      if (userData?.level >= 8) {
+      if (tournamentId) {
+        replace(`/subscription/${tournamentId}`)
+      } else if (userData?.level >= 8) {
         replace('/admin')
       } else {
         replace('/')
       }
     }
-  }, [userData, replace, authenticated, loading])
+  }, [userData, replace, authenticated, loading, tournamentId])
 
   useEffect(() => {
     checkLogged()
@@ -42,9 +45,11 @@ const Login: NextPage<LoginPageProps> = ({ uaString }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<LoginPageProps> = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps<LoginPageProps> = async ({ req, query }) => {
+  const tournamentId = +query?.tournamentId
   return {
     props: {
+      tournamentId,
       uaString: req.headers['user-agent']
     }
   }

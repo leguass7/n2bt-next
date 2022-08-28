@@ -20,7 +20,7 @@ import { MkContainer } from '../styled'
 type Props = Partial<ITournament> & {}
 
 export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, subscriptionExpiration }) => {
-  const { push, prefetch } = useRouter()
+  const { prefetch } = useRouter()
 
   const expiresDate = validDate(expires)
   const subExpiresDate = validDate(subscriptionExpiration)
@@ -46,11 +46,20 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
       </CardContent>
       <CardActions>
         {!expired ? (
-          <Button size="small" variant="outlined" onClick={() => push(`/subscription/${id}`)}>
+          <Button
+            size="small"
+            variant="outlined"
+            href={`/subscription/${id}`}
+            //onClick={() => push(`/subscription/${id}`)}
+          >
             Inscrição
           </Button>
         ) : null}
-        <Button size="small" onClick={() => push(`/tournament/about/${id}`)}>
+        <Button
+          size="small"
+          href={`/tournament/about/${id}`}
+          //onClick={() => push(`/tournament/about/${id}`)}
+        >
           Saiba mais
         </Button>
       </CardActions>

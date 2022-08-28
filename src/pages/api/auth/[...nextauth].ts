@@ -2,6 +2,7 @@ import { NextApiHandler } from 'next'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
+import type { DataSource } from 'typeorm'
 
 import { googleSecrets, isDevMode, secret } from '~/server-side/config'
 import { prepareConnection } from '~/server-side/database/conn'
@@ -10,6 +11,7 @@ import { checkCredentials, getUserCredentials } from '~/server-side/useCases/use
 
 // const authorizationUrl = 'https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code'
 const maxAge = 30 * 24 * 60 * 60 // 30 days
+
 const options: NextAuthOptions = {
   secret,
   session: { strategy: 'jwt', maxAge },
@@ -60,10 +62,19 @@ const options: NextAuthOptions = {
 }
 
 const authHandler: NextApiHandler = async (req, res) => {
-  const opt = { ...options }
-  // const ds = await prepareDataSource()
-  const ds = await prepareConnection()
-  opt.adapter = CustomAdapter(ds, prepareConnection)
+  // const opt = { ...options }
+  // // const ds = await prepareDataSource()
+  // const ds = await prepareConnection()
+  // opt.adapter = CustomAdapter(ds, prepareConnection)
+  const [opt] = await createOAuthOptions()
   return NextAuth(req, res, opt)
 }
+
 export default authHandler
+
+export async function createOAuthOptions(): Promise<[NextAuthOptions, DataSource]> {
+  const opt = { ...options } as NextAuthOptions
+  const ds = await prepareConnection()
+  opt.adapter = CustomAdapter(ds, prepareConnection)
+  return [opt, ds]
+}
