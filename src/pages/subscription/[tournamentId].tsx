@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async context => {
   const [authOptions, ds] = await createOAuthOptions()
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
 
-  console.log('session', session)
+  console.log('session getServerSideProps', session)
 
   if (!session) {
     return {
