@@ -9,7 +9,7 @@ const nodeEnv = process.env.NODE_ENV
 
 export const close = async () => {
   if (dataSource) {
-    console.log('DATABASE CLOSING')
+    // console.log('DATABASE CLOSING')
     await dataSource?.destroy()
     dataSource = null
   }

@@ -3,6 +3,6 @@ import type { IResponseSubscriptions } from '~/server-side/useCases/subscription
 import { apiService } from '../api.service'
 
 export async function listMeSubscriptions(): Promise<IResponseSubscriptions> {
-  const response = await apiService.get('/me/subscriptions')
+  const response = await apiService.get('/me/subscription')
   return response
 }

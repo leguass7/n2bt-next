@@ -1,7 +1,7 @@
 import { createMiddlewareDecorator, NextFunction } from '@storyofams/next-api-decorators'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiResponse } from 'next'
 
-import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
+import { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 
 type Order = 'ASC' | 'DESC'
 export type ArrayOrder = [
@@ -24,12 +24,7 @@ function extractRequestArray<T extends string>(queryOrder: string | string[]): T
   return queryOrder.split(',') as T[]
 }
 
-export interface AuthorizedPaginationApiRequest<Body = any> extends AuthorizedApiRequest<Body> {
-  body: Body
-  pagination: QueryPagination
-}
-
-export interface AuthorizedPaginationApiRequest<Body = any> extends NextApiRequest {
+export interface AuthorizedPaginationApiRequest<Body = any> extends AuthorizedApiRequest {
   body: Body
   pagination: QueryPagination
 }

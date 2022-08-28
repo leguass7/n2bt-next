@@ -20,7 +20,7 @@ import type { IRanking } from '~/server-side/useCases/ranking/ranking.dto'
 import { listRankings } from '~/services/api/ranking'
 
 type ItemProps = IRanking & {}
-export const Item: React.FC<ItemProps> = ({ id, user, category, points }) => {
+export const Item: React.FC<ItemProps> = ({ user, category, points }) => {
   return (
     <>
       <ListItem

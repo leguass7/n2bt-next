@@ -7,6 +7,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 
 import { Layout } from '~/components/app/Layout'
+import { SubscriptionItem } from '~/components/SubscriptionItem'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { listMeSubscriptions } from '~/services/api/user/me'
@@ -29,7 +30,7 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
   })
 
   return (
-    <Layout>
+    <Layout isProtected>
       <Head>
         <title>Minhas inscrições - N2BT Beach Tennis</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
@@ -38,12 +39,11 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
         {'Minhas inscrições'}
       </Typography>
       <Divider />
-      <Grid container sx={{ flexGrow: 1 }} xs={12}>
-        <Grid item xs={12} sm={6}>
-          asas
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          {' '}
+      <Grid container sx={{ flexGrow: 1 }} spacing={1}>
+        <Grid item xs sm={10} md={6} spacing={1} sx={{ mt: 2 }}>
+          {data?.map(subscription => {
+            return <SubscriptionItem key={`sub-item-${subscription?.id}`} {...subscription} />
+          })}
         </Grid>
       </Grid>
       <Typography variant="body1" align="center" sx={{ m: 2 }}>

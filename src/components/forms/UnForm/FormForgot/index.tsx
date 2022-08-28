@@ -1,11 +1,8 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { toast } from 'react-toastify'
 
 import Button from '@mui/material/Button'
-// import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { Form } from '@unform/web'
-// import { signIn, useSession } from 'next-auth/react'
 import { object, string } from 'yup'
 
 import { CircleLoading } from '~/components/CircleLoading'
@@ -30,7 +27,6 @@ const schema = object().shape({
 })
 
 export const FormForgot: React.FC<FormForgotProps> = ({ isWhatsapp, onInvalid, onSuccess, onFailed, onCancel }) => {
-  // const session = useSession()
   const [isGmail, setIsGmail] = useState(false)
   const [loading, setLoading] = useState(false)
   const formRef = useRef()

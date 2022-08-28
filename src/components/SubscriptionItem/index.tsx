@@ -13,13 +13,12 @@ import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { FlexContainer } from '../styled'
 import { Partner } from '../User/SelectPartner/Partner'
 
-// import { Container } from './styles';
 type Props = ISubscription & {}
 
 export const SubscriptionItem: React.FC<Props> = ({ partner, category }) => {
   const { isMobile } = useAppTheme()
   return (
-    <Card sx={{ display: 'flex', width: '100%' }}>
+    <Card sx={{ display: 'flex', width: '100%', mb: 1 }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
           <Typography component="div" variant="h5">
