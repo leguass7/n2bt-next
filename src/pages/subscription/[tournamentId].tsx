@@ -55,6 +55,7 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async context => {
+  console.log('Entrando em serverless function')
   const { params } = context
   const tournamentId = +params?.tournamentId || 0
 
