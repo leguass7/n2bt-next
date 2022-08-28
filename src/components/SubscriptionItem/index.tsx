@@ -59,9 +59,9 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner, category, disab
             <Partner {...partner} />
           </FlexContainer>
         ) : null}
-        {category?.price ? (
+        {value || category?.price ? (
           <Text bold textSize={18}>
-            {formatPrice(category?.price)}
+            {formatPrice(value || category?.price)}
           </Text>
         ) : null}
       </CardContent>

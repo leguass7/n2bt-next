@@ -77,7 +77,7 @@ class MeHandler {
       .createQueryBuilder('Subscription')
       .select()
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email'])
-      .addSelect(['Category.id', 'Category.title', 'Category.tournamentId'])
+      .addSelect(['Category.id', 'Category.title', 'Category.tournamentId', 'Category.price', 'Category.maxSubscription'])
       .addSelect(['Tournament.id', 'Tournament.title'])
       .innerJoin('Subscription.partner', 'Partner')
       .innerJoin('Subscription.category', 'Category')

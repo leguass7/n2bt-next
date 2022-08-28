@@ -30,6 +30,7 @@ export class Category {
   @Column({ type: 'decimal', scale: 2, precision: 10, nullable: true, default: null })
   price: number
 
+  // FIXME: remover esa coluna
   @Column({ nullable: true, default: 2 })
   maxSubscription?: number
 
