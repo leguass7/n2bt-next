@@ -36,7 +36,7 @@ export const FormSignup: React.FC<Props> = ({ onCancel, userId }) => {
       object().shape({
         name: string().required('Seu nome é obrigatório'),
         email: string().required('Seu e-mail é obrigatório'),
-        phone: string().required('Seu telefone é obrigatório'),
+        // phone: string().required('Seu telefone é obrigatório'),
         password: authenticated ? string() : string().required('A senha é obrigatória'),
         confirmPassword: string().oneOf([ref('password'), null], 'Senha e confirmar senha não batem')
         // cpf: string().test('cpf', 'CPF inválido', value => (value ? cpf.isValid(value) : true))
@@ -63,13 +63,6 @@ export const FormSignup: React.FC<Props> = ({ onCancel, userId }) => {
           toast.error(response?.message || 'Erro ao salvar')
         } else {
           setCreated(!!response?.userId)
-          // if (response.createdId) {
-          //   setCreated(response.createdId)
-          // } else {
-          //   updateUserData({ completed: !!response?.completed })
-          //   requestMe()
-          //   setCreated('')
-          // }
           toast.success('Informações gravadas')
         }
         setSaving(false)
@@ -100,7 +93,6 @@ export const FormSignup: React.FC<Props> = ({ onCancel, userId }) => {
       <H4 align="center" transform="uppercase">
         Cadastre-se
       </H4>
-
       <Form ref={formRef} onSubmit={handleSubmit} role="form">
         <InputText name="name" label="Nome *" />
         <InputText name="email" label="e-mail *" />

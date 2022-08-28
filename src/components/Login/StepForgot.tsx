@@ -26,18 +26,15 @@ export const StepForgot: React.FC<Props> = ({ uaString }) => {
   }
   return (
     <BoxCenter>
-      <FlexContainer justify="center">{/* <LogoSteps layoutName={layoutName} /> */}</FlexContainer>
-      <FlexContainer justify="center">
-        <Card>
-          <CardContent>
-            <FlexContainer justify="center">
-              <LogoSvg height={92} />
-            </FlexContainer>
-            <Divider sx={{ mt: 2, mb: 1 }} />
-            <FormForgot onCancel={() => goTo(1)} onSuccess={handleSuccess} isWhatsapp={!!isWhatsapp} />
-          </CardContent>
-        </Card>
-      </FlexContainer>
+      <Card>
+        <FlexContainer justify="center" verticalPad={8}>
+          <LogoSvg height={72} />
+        </FlexContainer>
+        <Divider />
+        <CardContent>
+          <FormForgot onCancel={() => goTo(1)} onSuccess={handleSuccess} isWhatsapp={!!isWhatsapp} />
+        </CardContent>
+      </Card>
     </BoxCenter>
   )
 }

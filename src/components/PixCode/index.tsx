@@ -20,10 +20,11 @@ type Props = {
   txid?: string
   onClose?: () => void
   onReceivedPay?: (paid?: boolean) => void
+  fetchId?: number
 }
 
-export const PixCode: React.FC<Props> = ({ base64QRCode, stringQRCode, paymentId, onClose, onReceivedPay }) => {
-  const refId = useRef(0)
+export const PixCode: React.FC<Props> = ({ base64QRCode, stringQRCode, paymentId, onClose, onReceivedPay, fetchId = 0 }) => {
+  const refId = useRef(fetchId)
   const [tipOpen, setTipOpen] = useState(false)
   const [receivedPay, setReceivedPay] = useState(false)
 
@@ -95,7 +96,7 @@ export const PixCode: React.FC<Props> = ({ base64QRCode, stringQRCode, paymentId
               </>
             ) : (
               <>
-                <Text align="center">Aguardando informações</Text>
+                <Paragraph align="center">Aguardando informações</Paragraph>
                 <CircleLoading />
               </>
             )}

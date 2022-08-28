@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Link from 'next/link'
@@ -21,22 +22,23 @@ export const StepSignin: React.FC<Props> = ({ allowRegister = false }) => {
 
   return (
     <BoxCenter>
-      <FlexContainer justify="center">
-        <Card>
-          <CardContent>
-            <FlexContainer justify="center">
-              <LogoSvg height={92} />
-            </FlexContainer>
-            <Divider sx={{ mt: 2, mb: 1 }} />
-            <FormSignin onRegister={allowRegister ? () => goTo(4) : null} onForgot={() => goTo(2)} />
-          </CardContent>
-        </Card>
-      </FlexContainer>
-      <FlexContainer justify="center">
-        <Text textSize={14} verticalPad={10}>
-          <Link href={'/'}>página principal</Link>
-        </Text>
-      </FlexContainer>
+      <Card>
+        <FlexContainer justify="center" verticalPad={8}>
+          <LogoSvg height={72} />
+        </FlexContainer>
+        <Divider />
+        <CardContent>
+          <FormSignin onRegister={allowRegister ? () => goTo(4) : null} onForgot={() => goTo(2)} />
+        </CardContent>
+        <Divider />
+        <CardActions>
+          <FlexContainer justify="center">
+            <Text textSize={14} verticalPad={10}>
+              <Link href={'/'}>página principal</Link>
+            </Text>
+          </FlexContainer>
+        </CardActions>
+      </Card>
     </BoxCenter>
   )
 }

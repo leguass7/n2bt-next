@@ -1,4 +1,5 @@
 import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Link from 'next/link'
@@ -16,22 +17,22 @@ export const StepSignup: React.FC<Props> = () => {
   return (
     <div style={{ height: '100%' }}>
       <BoxCenter>
-        <FlexContainer justify="center">
-          <Card>
-            <CardContent>
-              <FlexContainer justify="center">
-                <LogoSvg height={92} />
-              </FlexContainer>
-              <Divider sx={{ mt: 2, mb: 1 }} />
-              <FormSignup onCancel={() => goTo(1)} />
-            </CardContent>
-          </Card>
-        </FlexContainer>
-        <FlexContainer justify="center">
-          <Text textSize={14} verticalPad={10}>
-            <Link href={'/'}>página principal</Link>
-          </Text>
-        </FlexContainer>
+        <Card sx={{ width: 400, maxWidth: '100%', ml: 1, mr: 1 }}>
+          <FlexContainer justify="center" verticalPad={8}>
+            <LogoSvg height={72} />
+          </FlexContainer>
+          <Divider />
+          <CardContent>
+            <FormSignup onCancel={() => goTo(1)} />
+          </CardContent>
+          <CardActions>
+            <FlexContainer justify="center">
+              <Text textSize={14} verticalPad={10}>
+                <Link href={'/'}>página principal</Link>
+              </Text>
+            </FlexContainer>
+          </CardActions>
+        </Card>
       </BoxCenter>
     </div>
   )

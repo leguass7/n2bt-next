@@ -9,6 +9,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 
 import { Layout } from '~/components/app/Layout'
+import { ModalPix, ModalPixCloseHandler } from '~/components/ModalPix'
 import { Paragraph } from '~/components/styled'
 import { SubscriptionItem } from '~/components/SubscriptionItem'
 import { useOnceCall } from '~/hooks/useOnceCall'
@@ -21,6 +22,7 @@ interface PageProps {
 }
 
 const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
+  const [paymentId, setPaymentId] = useState(0)
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<ISubscription[]>([])
 
@@ -44,6 +46,17 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
     [fetchData]
   )
 
+  const handlePixSubscription = useCallback(async (payId: number) => {
+    setPaymentId(payId)
+    // const response = await deleteMeSubscriptions(id)
+    // if (!response?.success) toast.error(response?.message || 'Erro ao excluir')
+    // else fetchData()
+  }, [])
+
+  const handleCloseModalPix: ModalPixCloseHandler = () => {
+    setPaymentId(0)
+  }
+
   return (
     <Layout isProtected>
       <Head>
@@ -60,15 +73,18 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
         </Paragraph>
       ) : null}
       <Grid container spacing={1}>
-        <Grid item xs sm={10} md={6} sx={{ mt: 2 }}>
-          {data?.map(subscription => {
-            return <SubscriptionItem key={`sub-item-${subscription?.id}`} {...subscription} onDelete={handleDeleteSubscription} />
-          })}
-        </Grid>
+        {data?.map(subscription => {
+          return (
+            <Grid item xs sm={10} md={6} sx={{ mt: 2 }} key={`sub-item-${subscription?.id}`}>
+              <SubscriptionItem {...subscription} onDelete={handleDeleteSubscription} onPixClick={handlePixSubscription} />
+            </Grid>
+          )
+        })}
       </Grid>
       <Typography variant="body1" align="center" sx={{ m: 2 }}>
         <Link href={'/'}>PÁGINA PRINCIPAL</Link>
       </Typography>
+      <ModalPix paymentId={paymentId} onClose={handleCloseModalPix} />
     </Layout>
   )
 }

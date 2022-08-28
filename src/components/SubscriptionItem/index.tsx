@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import PaidIcon from '@mui/icons-material/Paid'
 import QrCode2Icon from '@mui/icons-material/QrCode2'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -12,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
 import { getTournamentImage } from '~/config/constants'
+import { formatPrice } from '~/helpers'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
@@ -22,9 +24,10 @@ import { Partner } from '../User/SelectPartner/Partner'
 type Props = ISubscription & {
   disableActions?: boolean
   onDelete?: (id: number) => Promise<any>
+  onPixClick?: (id: number) => Promise<any>
 }
 
-export const SubscriptionItem: React.FC<Props> = ({ id, partner, category, disableActions, onDelete }) => {
+export const SubscriptionItem: React.FC<Props> = ({ id, partner, category, disableActions, onDelete, onPixClick, paymentId, paid, value }) => {
   const [loading, setLoading] = useState(false)
   const { isMobile } = useAppTheme()
 
@@ -35,6 +38,10 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner, category, disab
       setLoading(false)
       return r
     }
+  }
+
+  const handlePix = async () => {
+    if (paymentId && onPixClick) onPixClick(paymentId)
   }
 
   return (
@@ -51,30 +58,27 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner, category, disab
           <Partner {...partner} />
         </FlexContainer>
       </CardContent>
-      {/* <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-                  <IconButton aria-label="play/pause">
-                    <PlayArrowIcon sx={{ height: 38, width: 38 }} />
-                  </IconButton>
-                </Box> */}
-
       {disableActions ? null : (
         <>
           <Divider />
           <CardActions>
-            <IconButton
-            //onClick={fetchPixCode(paymentId)}
-            //
-            >
-              <Tooltip
-                title="Gerar pagamento"
-                //title={`Gerar pagamento${value ? ` ${formatPrice(value)}` : ''}`}
-                arrow
-              >
-                <QrCode2Icon />
-              </Tooltip>
-            </IconButton>
-            <IconButton onClick={handleDelete} disabled={!!loading}>
-              <Tooltip title={`Remover inscrição`} arrow>
+            {paid ? (
+              <IconButton color="success">
+                <Tooltip title={`Pagamento realizado${value ? ` ${formatPrice(value)}` : ''} (${paymentId})`} arrow>
+                  <PaidIcon />
+                </Tooltip>
+              </IconButton>
+            ) : (
+              <>
+                <IconButton onClick={handlePix}>
+                  <Tooltip title={`Gerar pagamento${value ? ` ${formatPrice(value)}` : ''} (${paymentId})`} arrow>
+                    <QrCode2Icon />
+                  </Tooltip>
+                </IconButton>
+              </>
+            )}
+            <IconButton onClick={handleDelete} disabled={!!loading || !!paid}>
+              <Tooltip title={`Remover inscrição (${id})`} arrow>
                 <DeleteForeverIcon />
               </Tooltip>
             </IconButton>

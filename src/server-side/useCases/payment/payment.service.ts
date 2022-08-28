@@ -1,11 +1,12 @@
-import { IResponseCob } from 'brpix-api-node'
+import type { ApiPix, IResponseCob, IResponseQrcode } from 'brpix-api-node'
 import type { DataSource } from 'typeorm'
 
 import { mergeDeep } from '~/helpers/object'
+import { removeAll } from '~/helpers/string'
 import { createApiPix } from '~/server-side/services/pix'
 
 import { Subscription } from '../subscriptions/subscriptions.entity'
-import type { IResponseGeneratePix, PaymentMeta, ResultPixPaid } from './payment.dto'
+import type { GeneratePayment, IResponseGeneratePix, PaymentMeta, ResultPixPaid } from './payment.dto'
 import { Payment } from './payment.entity'
 
 export type InfoPix = IResponseCob & { pix: ResultPixPaid[] }
@@ -46,4 +47,26 @@ export async function checkPaymentService(ds: DataSource, { paymentId, disableqr
     paid: !!payment?.paid,
     ...result
   }
+}
+
+type ResponseGenerate = Partial<IResponseQrcode> & Partial<IResponseCob> & { success: boolean; message?: string }
+export async function generatePaymentService(
+  apiPix: ApiPix,
+  { user, value, infos: infoAdicionais, paymentId, pixKey: chave, expiracao }: GeneratePayment
+): Promise<ResponseGenerate> {
+  const cob = (await apiPix.createCob({
+    calendario: { expiracao },
+    devedor: { cpf: removeAll(user?.cpf), nome: user.name },
+    valor: { original: Number(`${value}`).toFixed(2) },
+    chave: chave || 'lesbr3@gmail.com',
+    solicitacaoPagador: `ARENA BT ${paymentId}`,
+    infoAdicionais
+  })) as Partial<IResponseCob> & { responseError?: { mensagem?: string } }
+
+  if (!cob || !cob?.txid || !cob.loc) {
+    return { success: false, message: cob?.responseError?.mensagem || 'generate PIX function errror' }
+  }
+
+  const qrcode = await apiPix.qrcodeByLocation(cob.loc.id)
+  return { success: true, ...cob, ...qrcode }
 }

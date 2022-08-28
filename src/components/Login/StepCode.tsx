@@ -39,51 +39,48 @@ export const StepCode: React.FC = () => {
 
   return (
     <BoxCenter>
-      <FlexContainer justify="center">{/* <LogoSteps layoutName={layoutName} /> */}</FlexContainer>
-      <FlexContainer justify="center">
-        <Card>
-          <CardContent>
-            <FlexContainer justify="center">
-              <LogoSvg height={92} />
-            </FlexContainer>
-            <Divider sx={{ mt: 2, mb: 1 }} />
-            {success ? (
-              <>
-                <FlexContainer justify="center" verticalPad={16} style={{ maxWidth: 320 }}>
-                  <Text bold textSize={18} align="center">
-                    Sua senha foi recuperada com sucesso
-                    <br />
-                    <Text>Agora você já pode realizar o login</Text>
-                  </Text>
-                </FlexContainer>
-                <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
-                  <Button color="primary" variant="contained" type="button" onClick={handleCancel}>
-                    {'Fazer Login'}
-                  </Button>
-                </Stack>
-              </>
-            ) : (
-              <>
-                {customContext?.authorization ? (
-                  <FromPass
-                    onCancel={handleCancel}
-                    onSuccess={handleResetSuccess}
-                    onInvalid={handleInvalid}
-                    authorization={{ authorization: customContext?.authorization, userId: customContext?.userId }}
-                  />
-                ) : (
-                  <FormRecoverCode
-                    onCancel={handleCancel}
-                    onSuccess={handleCodeSuccess}
-                    onInvalid={handleInvalid}
-                    privateCode={customContext?.privateCode}
-                  />
-                )}
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </FlexContainer>
+      <Card>
+        <FlexContainer justify="center" verticalPad={8}>
+          <LogoSvg height={72} />
+        </FlexContainer>
+        <Divider />
+        <CardContent>
+          {success ? (
+            <>
+              <FlexContainer justify="center" verticalPad={16} style={{ maxWidth: 320 }}>
+                <Text bold textSize={18} align="center">
+                  Sua senha foi recuperada com sucesso
+                  <br />
+                  <Text>Agora você já pode realizar o login</Text>
+                </Text>
+              </FlexContainer>
+              <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
+                <Button color="primary" variant="contained" type="button" onClick={handleCancel}>
+                  {'Fazer Login'}
+                </Button>
+              </Stack>
+            </>
+          ) : (
+            <>
+              {customContext?.authorization ? (
+                <FromPass
+                  onCancel={handleCancel}
+                  onSuccess={handleResetSuccess}
+                  onInvalid={handleInvalid}
+                  authorization={{ authorization: customContext?.authorization, userId: customContext?.userId }}
+                />
+              ) : (
+                <FormRecoverCode
+                  onCancel={handleCancel}
+                  onSuccess={handleCodeSuccess}
+                  onInvalid={handleInvalid}
+                  privateCode={customContext?.privateCode}
+                />
+              )}
+            </>
+          )}
+        </CardContent>
+      </Card>
     </BoxCenter>
   )
 }
