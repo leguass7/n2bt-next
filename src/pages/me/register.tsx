@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { Layout } from '~/components/app/Layout'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { IUser } from '~/server-side/useCases/user/user.dto'
-import { getMe } from '~/services/api/user'
+import { getMe } from '~/services/api/me'
 
 interface PageProps {
   csrfToken?: string
