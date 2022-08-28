@@ -83,18 +83,18 @@ class UserHandler {
     return { success: !!user, userId }
   }
 
-  @Get('/me')
-  @HttpCode(200)
-  @JwtAuthGuard()
-  async me(@Req() req: AuthorizedApiRequest) {
-    const { auth } = req
-    const ds = await prepareConnection()
-    const repo = ds.getRepository(User)
-    const user = await repo.findOne({ where: { id: auth.userId } })
-    if (!user) throw new BadRequestException()
+  // @Get('/me')
+  // @HttpCode(200)
+  // @JwtAuthGuard()
+  // async me(@Req() req: AuthorizedApiRequest) {
+  //   const { auth } = req
+  //   const ds = await prepareConnection()
+  //   const repo = ds.getRepository(User)
+  //   const user = await repo.findOne({ where: { id: auth.userId } })
+  //   if (!user) throw new BadRequestException()
 
-    return { success: true, user: instanceToPlain(user) }
-  }
+  //   return { success: true, user: instanceToPlain(user) }
+  // }
 
   @Get('/find')
   @HttpCode(200)

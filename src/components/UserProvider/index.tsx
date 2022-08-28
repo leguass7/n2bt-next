@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { useSession } from 'next-auth/react'
 
 import type { IResponseUser, IUser } from '~/server-side/useCases/user/user.dto'
-import { getMe } from '~/services/api/user'
+import { getMe } from '~/services/api/me'
 
 export interface IUserContext {
   requestMe: () => Promise<IResponseUser>

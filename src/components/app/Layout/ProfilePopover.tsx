@@ -1,10 +1,12 @@
 import React, { MouseEvent, useEffect, useState } from 'react'
 
+import HomeIcon from '@mui/icons-material/Home'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
 import LogoutIcon from '@mui/icons-material/Logout'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import NotificationImportantIcon from '@mui/icons-material/NotificationImportant'
 import SettingsIcon from '@mui/icons-material/Settings'
+import { Divider } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
@@ -13,7 +15,6 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Popover from '@mui/material/Popover'
-import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
@@ -24,7 +25,7 @@ import { useAppAuth } from '~/hooks/useAppAuth'
 
 export const ProfilePopover: React.FC = () => {
   const { theme } = useAppTheme()
-  const { userData } = useAppAuth()
+  const { userData, logOut } = useAppAuth()
   const { prefetch, push, asPath } = useRouter()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
@@ -36,7 +37,7 @@ export const ProfilePopover: React.FC = () => {
 
   const handleLogout = () => {
     handlePopoverClose()
-    signOut()
+    logOut()
   }
 
   const handleProfile = () => {
@@ -79,6 +80,15 @@ export const ProfilePopover: React.FC = () => {
       >
         <List disablePadding sx={{ maxWidth: 240 }}>
           <ListItem disablePadding>
+            <ListItemButton dense onClick={() => push('/')}>
+              <ListItemIcon>
+                <HomeIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Página principal" secondary="Voltar para homepage" />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+          <ListItem disablePadding>
             <ListItemButton dense onClick={handleProfile}>
               <ListItemIcon>
                 {registerNotify ? (
@@ -110,6 +120,7 @@ export const ProfilePopover: React.FC = () => {
               </ListItem>
             </>
           ) : null}
+          <Divider />
           <ListItem disablePadding>
             <ListItemButton dense onClick={handleLogout}>
               <ListItemIcon>

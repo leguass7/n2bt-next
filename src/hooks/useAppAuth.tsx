@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { signIn, useSession } from 'next-auth/react'
 import { signOut, SignInResponse } from 'next-auth/react'
 
-import { getMe } from '~/services/api/user'
+import { getMe } from '~/services/api/me'
 import { AppStoreState } from '~/store'
 import { clearAuth, setAuth } from '~/store/reducers/auth'
 

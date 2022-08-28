@@ -3,6 +3,5 @@ import Button from '@mui/material/Button'
 
 export const CustomButton = styledMui(Button)(() => ({
   padding: `8px 0`,
-  minWidth: 260,
-  marginTop: 16
+  minWidth: 260
 }))

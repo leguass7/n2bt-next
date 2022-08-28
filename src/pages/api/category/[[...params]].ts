@@ -22,9 +22,11 @@ class CategoryHandler {
   @Pagination()
   @HttpCode(200)
   async list(@Req() req: AuthorizedPaginationApiRequest) {
-    const { query } = req
-    const { order, size = 1000 } = req?.pagination
+    const { query, auth } = req
+    const { order } = req?.pagination
     const tournamentId = +query?.tournamentId || 0
+
+    const userId = auth?.userId || 0
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(Category)
@@ -35,7 +37,15 @@ class CategoryHandler {
       .addSelect(['Tournament.id', 'Tournament.title'])
       .innerJoin('Category.tournament', 'Tournament')
       .where({ published: true, tournamentId })
-      .take(size)
+
+    if (userId) {
+      queryDb
+        .addSelect(['Subscription.id', 'Subscription.paid', 'Subscription.actived'])
+        .leftJoin('Category.subscriptions', 'Subscription', 'Subscription.userId = :userId AND Subscription.actived = :actived', {
+          userId,
+          actived: true
+        })
+    }
 
     parseOrderDto({ order, table: 'Category', orderFields }).querySetup(queryDb)
 

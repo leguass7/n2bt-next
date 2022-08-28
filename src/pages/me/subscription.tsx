@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { Divider, Grid } from '@mui/material'
+import { Button, Divider, Grid } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
@@ -10,7 +10,7 @@ import { Layout } from '~/components/app/Layout'
 import { SubscriptionItem } from '~/components/SubscriptionItem'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
-import { listMeSubscriptions } from '~/services/api/user/me'
+import { listMeSubscriptions } from '~/services/api/me'
 
 interface PageProps {
   csrfToken?: string
@@ -47,7 +47,7 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
         </Grid>
       </Grid>
       <Typography variant="body1" align="center" sx={{ m: 2 }}>
-        <Link href={'/'}>VOLTAR</Link>
+        <Link href={'/'}>PÁGINA PRINCIPAL</Link>
       </Typography>
     </Layout>
   )
