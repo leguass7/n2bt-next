@@ -107,7 +107,12 @@ class CategoryHandler {
     const { search, order } = req.pagination
     const queryText = search ? searchFields.map(field => `Category.${field} LIKE :search`) : null
 
-    const queryDb = repo.createQueryBuilder('Category').select().where({ tournamentId })
+    const queryDb = repo
+      .createQueryBuilder('Category')
+      .select()
+      .addSelect(['Tournament.title'])
+      .innerJoin('Category.tournament', 'Tournament')
+      .where({ tournamentId })
 
     if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
     parseOrderDto({ order, table: 'Category', orderFields }).querySetup(queryDb)

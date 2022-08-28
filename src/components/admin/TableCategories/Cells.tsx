@@ -4,13 +4,12 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import Switch from '@mui/material/Switch'
-import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 import { format, isValid, parseJSON } from 'date-fns'
 
 import type { ICustomCellProps } from '~/components/CustomTable'
 import { Text } from '~/components/styled'
-import { CellContainer } from '~/components/tables/cells/styles'
+import { CellContainer, CellTools } from '~/components/tables/cells/styles'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
 import { splitDateTime } from '~/helpers/dates'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
@@ -34,15 +33,19 @@ export const SwitchCell: React.FC<Props> = ({ record }) => {
 
   return (
     <CellContainer>
-      <Switch checked={checked} onChange={handleChange} />
+      <Switch size="small" checked={checked} onChange={handleChange} />
     </CellContainer>
   )
 }
 
 export const NameCell: React.FC<Props> = ({ record }) => {
+  const secondaryText = `${record?.mixGender ? 'Mista' : 'Normal'}`
   return (
     <CellContainer>
       <Text>{record?.title}</Text>
+      <Text textSize={12} textStyle="italic">
+        {secondaryText}
+      </Text>
     </CellContainer>
   )
 }
@@ -82,18 +85,19 @@ export const ActionCell: React.FC<Props> = ({ record }) => {
   }
   return (
     <CellContainer>
-      <Toolbar>
-        <Tooltip title="Alterar" arrow>
-          <IconButton size="small" onClick={handleEdit}>
+      <CellTools>
+        <IconButton onClick={handleEdit}>
+          <Tooltip title="Alterar" arrow>
             <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Alterar" arrow>
-          <IconButton size="small" onClick={handleDel}>
+          </Tooltip>
+        </IconButton>
+
+        <IconButton onClick={handleDel} disabled>
+          <Tooltip title="Alterar" arrow>
             <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      </Toolbar>
+          </Tooltip>
+        </IconButton>
+      </CellTools>
     </CellContainer>
   )
 }

@@ -7,6 +7,7 @@ import { object, string } from 'yup'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { Input } from '~/components/forms/UnForm/Input'
+import { Switch } from '~/components/forms/UnForm/Switch'
 import { validateFormData } from '~/helpers/validation'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ICategory, IResponseCategory } from '~/server-side/useCases/category/category.dto'
@@ -75,6 +76,7 @@ export const FormCategory: React.FC<FormCategoryProps> = ({ onInvalid, onSuccess
   return (
     <>
       <Form ref={formRef} onSubmit={handleSubmit} role="form" initialData={data} key={`form-${data?.id || ''}`}>
+        <Switch name="mixGender" label="Categoria mista" />
         <Input placeholder="nome" type="text" name="title" label="Nome" />
         <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
         <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 2 }}>

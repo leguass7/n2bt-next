@@ -44,7 +44,7 @@ const options: NextAuthOptions = {
       async authorize(credentials, _req) {
         const { email, password } = credentials
         const user = await checkCredentials(email, password)
-        console.log('authorize user', user)
+        // console.log('authorize user', user)
         return user ? { ...user } : null
       }
     })

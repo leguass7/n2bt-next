@@ -2,8 +2,13 @@ import type { IResponseApi } from '~/server-side/api.interface'
 
 import { Subscription } from './subscriptions.entity'
 
-export type IUser = Partial<Subscription>
+export type ISubscription = Partial<Subscription>
 
-export interface IResponseCreateSubscription extends IResponseApi {
-  subscriptionId?: string
+export interface IResponseSubscription extends IResponseApi {
+  subscriptionId?: number
+  subscription?: ISubscription
+}
+
+export interface IResponseSubscriptions extends IResponseApi {
+  subscriptions?: ISubscription[]
 }

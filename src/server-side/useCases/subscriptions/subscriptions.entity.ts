@@ -8,7 +8,7 @@ import type { User } from '~/server-side/useCases/user/user.entity'
 @Entity('subscriptions')
 export class Subscription {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
-  id: string
+  id: number
 
   @Column({ unsigned: true })
   categoryId: number
@@ -29,7 +29,7 @@ export class Subscription {
   paid?: boolean
 
   @Column({ unsigned: true, nullable: true, default: null })
-  paymentId?: string
+  paymentId?: number
 
   @Column({ type: 'uuid', nullable: true, default: null, length: 36 })
   createdBy?: string

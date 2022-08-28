@@ -7,12 +7,18 @@ import { apiService } from './api.service'
 
 // import { apiService } from './api.service'
 
-export async function createPayment(subscriptionId: string, data: Partial<Payment>): Promise<IResponseGeneratePix> {
+export async function createPayment(subscriptionId: number, data: Partial<Payment>): Promise<IResponseGeneratePix> {
   const response = await apiService.post(`/payment/pix/generate?subscriptionId=${subscriptionId}`, { ...data })
   return response
 }
 
-// export async function checkPayment(paymentId: number): Promise<IResponseCheckPayment> {
-//   const response = await apiService.get(`/payment/${paymentId}`)
-//   return response
-// }
+export async function generatePayment(subscriptionId: number): Promise<IResponseGeneratePix> {
+  const response = await apiService.get(`/payment/generate/${subscriptionId}`)
+  return response
+}
+
+type Payload = { disableqrcode?: boolean; fetchId: number }
+export async function checkPayment(paymentId: number, { fetchId, disableqrcode }: Payload): Promise<IResponseGeneratePix> {
+  const response = await apiService.post(`/payment/check/${paymentId}`, { fetchId, disableqrcode }, { params: { fetchId } })
+  return response
+}

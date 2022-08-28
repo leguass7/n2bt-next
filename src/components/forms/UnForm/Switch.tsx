@@ -49,7 +49,7 @@ export const Switch: React.FC<Props> = ({ name, label = '', onChange, ...props }
   return (
     <FormGroup>
       <FormControlLabel
-        control={<MuiSwitch {...props} id={id} inputRef={ref} checked={!!checked} defaultChecked={defaultValue} onChange={handleSelection} />}
+        control={<MuiSwitch {...props} id={id} inputRef={ref} checked={!!checked} onChange={handleSelection} />}
         htmlFor={id}
         label={label}
       />

@@ -14,8 +14,9 @@ import type { IUser } from '~/server-side/useCases/user/user.dto'
 
 export type PartnerProps = IUser & {
   onDelete?: (id?: string) => any
+  divider?: boolean
 }
-export const Partner: React.FC<PartnerProps> = ({ id, name, nick, email, image, onDelete }) => {
+export const Partner: React.FC<PartnerProps> = ({ id, name, nick, email, image, onDelete, divider }) => {
   const renderSecondaryText = (email: string) => {
     return <Text>{email}</Text>
   }
@@ -34,14 +35,18 @@ export const Partner: React.FC<PartnerProps> = ({ id, name, nick, email, image, 
 
   return (
     <ListItem
-      divider
+      divider={!!divider}
       disablePadding
       secondaryAction={
-        <Tooltip title="Remover dupla" arrow>
-          <IconButton size="large" onClick={handleDelete} disabled={!onDelete}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          {onDelete ? (
+            <IconButton size="large" onClick={handleDelete} disabled={!onDelete}>
+              <Tooltip title="Remover dupla" arrow>
+                <DeleteIcon />
+              </Tooltip>
+            </IconButton>
+          ) : null}
+        </>
       }
     >
       <ListItemAvatar>

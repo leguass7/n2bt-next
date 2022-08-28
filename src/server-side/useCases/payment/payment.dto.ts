@@ -1,4 +1,7 @@
-import { IResponseApi } from '~/server-side/api.interface'
+import type { IRequestCreateImmediateCharge } from 'brpix-api-node'
+
+import type { IResponseApi } from '~/server-side/api.interface'
+import type { IUser } from '~/server-side/useCases/user/user.dto'
 
 export enum PaymentMethod {
   PIX = 'PIX',
@@ -39,10 +42,29 @@ export interface IResponseCob {
 }
 
 export interface IResponseGeneratePix extends IResponseApi {
-  txid: string
-  status: CobStatus
-  expiresIn: Date
-  txKey: string
+  paid?: boolean
+  imageQrcode?: string
+  qrcode?: string
+  paymentId?: number
+  txid?: string
+  expires?: number
 }
 
 export type PaymentMeta = { loc?: IResponseCob['loc']; horario?: Date | string; endToEndId?: string }
+
+export type GeneratePayment = {
+  user: IUser
+  value: number
+  infos?: IRequestCreateImmediateCharge['infoAdicionais']
+  paymentId: number | string
+  pixKey?: string
+  expiracao: number
+}
+
+export type ResultPixPaid = {
+  endToEndId: string
+  txid: string
+  valor: string
+  chave: string
+  horario: Date
+}

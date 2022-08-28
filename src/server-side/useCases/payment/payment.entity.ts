@@ -10,7 +10,7 @@ import type { PaymentMeta } from './payment.dto'
 @Entity('payments')
 export class Payment {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
-  id: string
+  id: number
 
   @Index('uuid', { unique: true })
   @Column({ type: 'uuid', nullable: true, default: null, length: 64 })

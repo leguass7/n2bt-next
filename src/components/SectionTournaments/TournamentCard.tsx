@@ -11,22 +11,11 @@ import { isPast } from 'date-fns'
 import { useRouter } from 'next/router'
 import gfm from 'remark-gfm'
 
-import img02 from '~/assets/original-1ano.jpg'
-import img01 from '~/assets/primeira-speed.jpg'
+import { getTournamentImage } from '~/config/constants'
 import { validDate } from '~/helpers/date'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 
-import { MkContainer } from './styles'
-
-const images = [
-  { id: 1, image: img01 },
-  { id: 2, image: img02 }
-  //
-]
-
-const getImage = (id: number) => {
-  return images.find(f => f.id === id)?.image?.src || img01?.src
-}
+import { MkContainer } from '../styled'
 
 type Props = Partial<ITournament> & {}
 
@@ -44,7 +33,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
 
   return (
     <Card sx={{ maxWidth: 345, minWidth: 320 }}>
-      <CardMedia component="img" height="140" image={getImage(id)} alt="green iguana" />
+      <CardMedia component="img" height="140" image={getTournamentImage(id)} alt="green iguana" />
       <CardContent>
         <div style={{ maxWidth: 290 }}>
           <Typography gutterBottom variant="h5" component="div">
@@ -61,7 +50,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
             Inscrição
           </Button>
         ) : null}
-        <Button size="small" onClick={() => push(`/tournament/${id}`)}>
+        <Button size="small" onClick={() => push(`/tournament/about/${id}`)}>
           Saiba mais
         </Button>
       </CardActions>

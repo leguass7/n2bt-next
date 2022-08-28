@@ -39,7 +39,7 @@ export const handleExit = async (code: number, sig = 'UNKNOW', timeout = 500): P
 
 export async function prepareDataSource(sync?: boolean) {
   const create = async () => {
-    console.log('CREATE DATABASE')
+    // console.log('CREATE DATABASE')
     dataSource = new DataSource({
       type: 'mysql',
       url: databaseUrl,
@@ -51,7 +51,7 @@ export async function prepareDataSource(sync?: boolean) {
     })
 
     await dataSource.initialize()
-    console.log('DATABASE INITIALIZED')
+    // console.log('DATABASE INITIALIZED')
     return dataSource
   }
 
@@ -62,7 +62,7 @@ export async function prepareDataSource(sync?: boolean) {
     return create()
   }
 
-  console.log('JÁ INICIALIZADO', dataSource?.isInitialized)
+  // console.log('JÁ INICIALIZADO', dataSource?.isInitialized)
   await dataSource?.initialize()
   return dataSource
 }

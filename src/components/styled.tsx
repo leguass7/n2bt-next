@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack'
 import { styled as MuiStyled } from '@mui/material/styles'
 import styled, { css } from 'styled-components'
 
-import { FlexProps, TextProps } from '~/styles/types'
+import { FlexProps, MarginProps, TextProps } from '~/styles/types'
 
 export const Text = styled.span<TextProps & { verticalPad?: number; horizontalPad?: number }>`
   font-weight: ${({ bold }) => (bold ? 'bold' : 'normal')};
@@ -89,3 +89,30 @@ export const StyledBadge = MuiStyled(Badge, {
   border: `2px solid ${isManager ? '#ffd700' : 'transparent'}`,
   borderRadius: '100%'
 }))
+
+export const Paragraph = styled.p<TextProps & MarginProps & { width?: string }>`
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  width: ${({ width = '100%' }) => width};
+  font-size: ${({ textSize = 'inherit' }) => textSize}px;
+  text-align: ${({ align = 'left' }) => align};
+  color: ${({ textColor = 'inherit' }) => textColor};
+  font-weight: ${({ bold }) => (bold ? 'bold' : 'normal')};
+  padding-top: ${({ theme, topMargin = 0, verticalSpaced }) => (verticalSpaced && !topMargin ? theme.spacing.l : topMargin)}px;
+  padding-bottom: ${({ theme, bottomMargin = 0, verticalSpaced }) => (verticalSpaced ? theme.spacing.l : bottomMargin)}px;
+  padding-right: ${({ horizontalSpaced, theme, rightMargin = 0 }) => (horizontalSpaced ? theme.spacing.l : rightMargin)}px;
+  padding-left: ${({ horizontalSpaced, theme, leftMargin = 0 }) => (horizontalSpaced ? theme.spacing.l : leftMargin)}px;
+  a {
+    text-decoration: underline;
+  }
+`
+
+export const MkContainer = styled.div`
+  display: block;
+  p {
+    font-size: 16px;
+    line-height: 20px;
+  }
+`

@@ -10,20 +10,34 @@ class SubscriptionHandler {
   @JwtAuthGuard()
   @HttpCode(201)
   async create(@Req() req: AuthorizedApiRequest<Partial<Subscription>>) {
-    const { userId } = req.auth
+    const { body, auth } = req
+    const userId = auth?.userId
     if (!userId) throw new BadRequestException('Usuário não encontrado')
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
 
-    const override: Partial<Subscription> = { actived: true, paid: false, createdBy: userId, updatedBy: userId }
+    const { categoryId, partnerId, value } = body
+    const newSubscription: Partial<Subscription> = {
+      actived: true,
+      paid: false,
+      createdBy: userId,
+      updatedBy: userId,
+      categoryId,
+      partnerId,
+      value,
+      userId
+    }
+    const hasSubscription = await repo.findOne({ where: { categoryId, userId, actived: true } })
+    if (hasSubscription) {
+      await repo.update(hasSubscription.id, { actived: false, updatedBy: userId })
+    }
 
-    const data = repo.create({ ...req.body, userId, ...override })
-
+    const data = repo.create(newSubscription)
     const subscription = await repo.save(data)
     if (!subscription) throw new HttpException(500, 'erro na criação da inscrição')
 
-    return { success: true, subscriptionId: subscription?.id }
+    return { success: true, subscriptionId: subscription?.id, subscription }
   }
 }
 

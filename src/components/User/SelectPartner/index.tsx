@@ -53,7 +53,7 @@ export const SelectPatner: React.FC<Props> = ({ tournamentId, categoryId, onChan
         {partner ? (
           <div style={{ minWidth: 260, width: '100%' }}>
             <List>
-              <Partner {...partner} onDelete={handleDelete} />
+              <Partner {...partner} onDelete={handleDelete} divider />
             </List>
           </div>
         ) : (
