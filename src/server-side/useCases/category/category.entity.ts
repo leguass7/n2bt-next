@@ -30,6 +30,12 @@ export class Category {
   @Column({ type: 'decimal', scale: 2, precision: 10, nullable: true, default: null })
   price: number
 
+  @Column({ nullable: true, default: 2 })
+  maxSubscription?: number
+
+  @Column({ nullable: true, default: 50, type: 'float' })
+  discount?: number
+
   @Column({ type: 'uuid', nullable: true, length: 36, default: null })
   createdBy?: string
 
