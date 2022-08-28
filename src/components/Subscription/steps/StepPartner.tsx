@@ -2,22 +2,26 @@ import React, { useCallback } from 'react'
 
 import ArrowLeftIcon from '@mui/icons-material/ChevronLeft'
 import ArrowRightIcon from '@mui/icons-material/ChevronRight'
+import VerifiedIcon from '@mui/icons-material/Verified'
 import Button from '@mui/material/Button'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
+import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 
-import { LogoSvg } from '~/components/LogoSvg'
 import { usePassRoll } from '~/components/PassRollLayout'
-import { BoxCenter, Text } from '~/components/styled'
+import { BoxCenter, Paragraph, Text } from '~/components/styled'
 import { DeletePatnerHandler, SelectPatner, SelectPatnerHandler } from '~/components/User/SelectPartner'
 
 import { useSubscription } from '../SubscriptionProvider'
 import { CardContainer } from './style'
 
-interface Props {}
+interface Props {
+  icon: React.ReactNode
+}
 
-export const StepPartner: React.FC<Props> = () => {
+export const StepPartner: React.FC<Props> = ({ icon }) => {
   const { partner, setPartner, tournamentId, category } = useSubscription()
   const { goTo } = usePassRoll('subscription')
 
@@ -36,16 +40,33 @@ export const StepPartner: React.FC<Props> = () => {
     setPartner(null)
   }, [setPartner])
 
+  const renderLink = (text: string) => {
+    const site = encodeURI('https://n2bt.avatarsolucoesdigitais.com.br')
+    return (
+      <Button href={`https://wa.me?text=${site}`} target="__blank" size="small" variant="outlined">
+        {text}
+      </Button>
+    )
+  }
   return (
     <BoxCenter style={{ paddingTop: 12 }}>
       <CardContainer>
+        <CardHeader title={'Escolha da dupla'} subheader={'Faça a escolha de sua dupla antes de prosseguir'} avatar={icon} />
+        <Divider />
         <CardContent sx={{ minHeight: 340 }}>
           <Grid container direction="column" alignItems="center">
-            <LogoSvg height={92} />
-            <br />
-            <Text align="center" transform="uppercase">
-              Selecione sua dupla
-            </Text>
+            <Paragraph>
+              Intruções: <br />
+              <Text textStyle="italic">
+                1. Na busca por sua dupla, dê preferencia à contas verificadas. Você verá um ícone <VerifiedIcon fontSize="small" sx={{}} /> após o
+                nome do atleta.
+              </Text>
+              <br />
+              <Text textStyle="italic">
+                2. Caso não consiga localizar sua dupla, {renderLink('compartilhe o link')} para cadastro, assim que você confirmar o cadastro da sua
+                dupla, continue com sua inscrição.
+              </Text>
+            </Paragraph>
             <SelectPatner
               defaultPartner={partner}
               onChange={handleChange}
@@ -55,6 +76,7 @@ export const StepPartner: React.FC<Props> = () => {
             />
           </Grid>
         </CardContent>
+        <Divider />
         <CardActions style={{ justifyContent: 'flex-end' }}>
           <Button type="button" variant="contained" onClick={() => goTo(2)} startIcon={<ArrowLeftIcon />}>
             Anterior

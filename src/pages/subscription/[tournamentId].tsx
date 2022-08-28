@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 
 import { Layout } from '~/components/app/Layout'
 import { CircleLoading } from '~/components/CircleLoading'
-import { BoxCenter, H4, Paragraph } from '~/components/styled'
+import { BoxCenter, FlexContainer, H4, Paragraph } from '~/components/styled'
 import { Subscription } from '~/components/Subscription'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
@@ -32,7 +32,9 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
         <meta name="description" content={description} />
       </Head>
       <BoxCenter>
-        <H4 textSize={24}>Inscrição do torneio</H4>
+        <FlexContainer justify="center" align="center" verticalPad={10}>
+          <H4 textSize={24}>Inscrição para {tournament?.title}</H4>
+        </FlexContainer>
         {isExpired ? (
           <>
             <Paragraph align="center">Inscrições para esse torneio já foram encerradas</Paragraph>

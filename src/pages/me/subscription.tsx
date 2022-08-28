@@ -39,8 +39,8 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
         {'Minhas inscrições'}
       </Typography>
       <Divider />
-      <Grid container sx={{ flexGrow: 1 }} spacing={1}>
-        <Grid item xs sm={10} md={6} spacing={1} sx={{ mt: 2 }}>
+      <Grid container spacing={1}>
+        <Grid item xs sm={10} md={6} sx={{ mt: 2 }}>
           {data?.map(subscription => {
             return <SubscriptionItem key={`sub-item-${subscription?.id}`} {...subscription} />
           })}

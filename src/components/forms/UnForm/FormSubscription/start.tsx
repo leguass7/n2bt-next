@@ -20,7 +20,7 @@ import { useOnceCall } from '~/hooks/useOnceCall'
 import type { IUser } from '~/server-side/useCases/user/user.dto'
 import { saveMe } from '~/services/api/user'
 
-import { InputMask } from '../../InputText'
+import { InputMask, InputText } from '../../InputText'
 
 type FormData = IUser & { confirmPassword: string }
 
@@ -75,11 +75,10 @@ export const FormSubscriptionStart: React.FC<Props> = ({ onCancel }) => {
   return (
     <>
       <Form ref={formRef} onSubmit={handleSubmit} initialData={data} key={`form-${data?.id}`} role="form">
+        <InputText name="nick" label="Apelido no BT" />
         <InputDate name="birday" label="Data de nascimento *" maxDate={sub(new Date(), { years: 5 })} minDate={sub(new Date(), { years: 75 })} />
         <InputMask name="cpf" label="CPF" mask={'999.999.999-99'} alwaysShowMask={false} />
-        {/* <FlexContainer verticalPad={10}>
-          <InputSelects name="category" label="Categoria" options={categories} defaultSelected={userData?.category || 'C'} />
-        </FlexContainer> */}
+
         <FlexContainer verticalPad={10}>
           <InputSelects name="shirtSize" label="Tamanho da camisa" options={shirtSizes} defaultSelected={data?.shirtSize || 'M'} />
         </FlexContainer>
@@ -94,7 +93,7 @@ export const FormSubscriptionStart: React.FC<Props> = ({ onCancel }) => {
             </Button>
           ) : null}
           <Button color="primary" variant="outlined" type="submit" disabled={!!loadingUser || saving}>
-            Atualizar
+            Salvar alterações
           </Button>
         </Stack>
       </Form>

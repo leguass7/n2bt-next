@@ -182,7 +182,7 @@ class UserHandler {
 
     const authorization = generatePassword()
 
-    const updated = await repo.update(user.id, { reset: `${authorization}` })
+    const updated = await repo.update(user.id, { reset: `${authorization}`, emailVerified: new Date() })
     if (!updated) throw new BadRequestException('database_error')
 
     return { success: true, userId: user.id, authorization }

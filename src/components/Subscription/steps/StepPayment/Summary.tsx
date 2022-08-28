@@ -32,8 +32,6 @@ export const Summary: React.FC = () => {
     <>
       <FlexContainer justify="center" verticalPad={20}>
         <Text align="center" transform="uppercase">
-          Pagamento
-          <br />
           <Text align="center">
             Confira sua inscrição e clique <Text bold>GERAR PAGAMENTO</Text>
           </Text>

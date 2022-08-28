@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { Main, SliderItem } from '../PassRollLayout'
+import { icons } from './stepperUtils'
 import { StepCategory } from './steps/StepCategory'
 import { StepPartner } from './steps/StepPartner'
 import { StepPayment } from './steps/StepPayment'
@@ -22,16 +23,16 @@ export const Subscription: React.FC<Props> = ({ tournamentId }) => {
         <SubscriptionStepper step={step} />
         <Main name="subscription" onSliderChange={handleChange}>
           <SliderItem>
-            <StepStart />
+            <StepStart icon={icons[1]} />
           </SliderItem>
           <SliderItem>
-            <StepCategory />
+            <StepCategory icon={icons[2]} />
           </SliderItem>
           <SliderItem>
-            <StepPartner />
+            <StepPartner icon={icons[3]} />
           </SliderItem>
           <SliderItem>
-            <StepPayment />
+            <StepPayment icon={icons[4]} />
           </SliderItem>
         </Main>
       </div>

@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
-import { LogoSvg } from '~/components/LogoSvg'
+import { LogoSvg } from '~/components/svg/LogoSvg'
 import { useAppAuth } from '~/hooks/useAppAuth'
 
 import { useMenu } from './LayoutProvider'
@@ -35,7 +35,7 @@ export const LayoutAppBar: React.FC = () => {
         </IconButton>
         <Link href={'/'} passHref>
           <a>
-            <LogoSvg height={52} color="#fff" />
+            <LogoSvg height={48} color="#fff" />
           </a>
         </Link>
         <div style={{ flexGrow: 1 }}></div>

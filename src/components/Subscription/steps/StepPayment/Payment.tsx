@@ -37,11 +37,7 @@ export const Payment: React.FC = () => {
 
   return (
     <>
-      <FlexContainer justify="center" verticalPad={20}>
-        <Text align="center" transform="uppercase">
-          Pagamento
-        </Text>
-      </FlexContainer>
+      <FlexContainer justify="center" verticalPad={20}></FlexContainer>
       <PixCode base64QRCode={payment?.imageQrcode} stringQRCode={payment?.qrcode} paymentId={payment?.paymentId} txid={payment?.txid} />
       <br />
       <Button variant="contained" type="button" onClick={handleClickHome}>

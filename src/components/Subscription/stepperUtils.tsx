@@ -13,10 +13,11 @@ const QontoStepIconRoot = styled('div')<{ ownerState: { active?: boolean } }>(({
   height: 22,
   alignItems: 'center',
   ...(ownerState.active && {
-    color: '#784af4'
+    color: theme.palette.primary.main
   }),
   '& .QontoStepIcon-completedIcon': {
-    color: '#784af4',
+    color: theme.palette.primary.main,
+    // color: '#784af4',
     zIndex: 1,
     fontSize: 18
   },
@@ -44,7 +45,8 @@ export const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage: 'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)'
+      // backgroundImage: 'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)'
+      backgroundImage: `linear-gradient( 95deg, ${theme.palette.primary.main} 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)`
     }
   },
   [`&.${stepConnectorClasses.completed}`]: {
@@ -81,15 +83,15 @@ const ColorlibStepIconRoot = styled('div')<{
   })
 }))
 
+export const icons: { [index: string]: React.ReactElement } = {
+  1: <HomeIcon />,
+  2: <CategoryIcon />,
+  3: <PersonAddIcon />,
+  4: <AttachMoneyIcon />
+}
+
 export function ColorlibStepIcon(props: StepIconProps) {
   const { active, completed, className } = props
-
-  const icons: { [index: string]: React.ReactElement } = {
-    1: <HomeIcon />,
-    2: <CategoryIcon />,
-    3: <PersonAddIcon />,
-    4: <AttachMoneyIcon />
-  }
 
   return (
     <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>

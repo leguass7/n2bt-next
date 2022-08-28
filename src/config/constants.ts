@@ -20,7 +20,8 @@ export const shirtSizes: CategoryOption[] = [
   { id: 'P', label: 'P' },
   { id: 'M', label: 'M' },
   { id: 'G', label: 'G' },
-  { id: 'GG', label: 'GG' }
+  { id: 'GG', label: 'GG' },
+  { id: 'XG', label: 'XG' }
 ]
 
 export const tournamentImages = [

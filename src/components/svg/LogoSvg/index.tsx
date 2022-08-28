@@ -1,21 +1,9 @@
 import React from 'react'
 
+import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { round } from '~/helpers'
 
-import { useAppTheme } from '../AppThemeProvider/useAppTheme'
-type Colours = {
-  n?: string
-  dois?: string
-  b?: string
-  t?: string
-  text?: string
-}
-type Props = {
-  color?: string
-  colorSchema?: Colours
-  width?: number
-  height?: number
-}
+import { Props } from '../commonProps'
 
 function getSizes(width?: number, height?: number) {
   const radix = 1.88929889298893
