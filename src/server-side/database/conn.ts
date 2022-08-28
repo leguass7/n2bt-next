@@ -21,8 +21,8 @@ async function createConnection() {
     },
     entities,
     debug: false,
-    logging: ['error']
-    // logging: ['error', 'query']
+    // logging: ['error']
+    logging: ['error', 'query']
   }
   const newConn = new DataSource(optionsConfig)
   await newConn.initialize()

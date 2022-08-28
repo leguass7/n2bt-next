@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Get, HttpCode, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Req } from '@storyofams/next-api-decorators'
 import { instanceToPlain } from 'class-transformer'
 
 import { prepareConnection } from '~/server-side/database/conn'
@@ -7,6 +7,7 @@ import { Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
+import { checkPaymentService } from '~/server-side/useCases/payment/payment.service'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
 
@@ -26,6 +27,40 @@ const subsOrderFields = [
 ]
 
 class MeHandler {
+  @Delete('/subscription/:subscriptionId')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async deleteSub(@Req() req: AuthorizedPaginationApiRequest) {
+    const { query, auth } = req
+    const subscriptionId = +query?.params[1] || 0
+    const userId = auth?.userId
+    if (!subscriptionId) throw new BadRequestException('Inscrição inválida')
+    if (!userId) throw new BadRequestException('Usuário inválida')
+
+    const ds = await prepareConnection()
+    const repoSub = ds.getRepository(Subscription)
+
+    const deleteSub = async () => repoSub.update(subscriptionId, { actived: false })
+
+    const subscription = await repoSub.findOne({ where: { id: subscriptionId, userId }, relations: { payment: true } })
+    if (!subscription) throw new BadRequestException('Inscrição não encontrada')
+    if (!!subscription?.paid) throw new BadRequestException('Inscrição já está paga')
+
+    if (!!subscription?.payment) {
+      if (!!subscription?.payment?.paid) {
+        await repoSub.update(subscriptionId, { paid: true })
+        throw new BadRequestException('Pagamento já foi realizado')
+      } else {
+        const check = await checkPaymentService(ds, { userId, paymentId: subscription?.payment?.id, disableqrcode: true })
+        if (!check?.success) throw new BadRequestException(`${check?.message || 'Erro ao verificar pagamento'}`)
+        if (!!check?.paid) throw new BadRequestException('Pagamento já foi realizado')
+      }
+    }
+
+    await deleteSub()
+    return { success: true, subscriptionId }
+  }
+
   @Get('/subscription')
   @JwtAuthGuard()
   @Pagination()

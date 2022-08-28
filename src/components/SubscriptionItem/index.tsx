@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import QrCode2Icon from '@mui/icons-material/QrCode2'
@@ -15,15 +15,28 @@ import { getTournamentImage } from '~/config/constants'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
+import { CircleLoading } from '../CircleLoading'
 import { FlexContainer } from '../styled'
 import { Partner } from '../User/SelectPartner/Partner'
 
 type Props = ISubscription & {
   disableActions?: boolean
+  onDelete?: (id: number) => Promise<any>
 }
 
-export const SubscriptionItem: React.FC<Props> = ({ partner, category, disableActions }) => {
+export const SubscriptionItem: React.FC<Props> = ({ id, partner, category, disableActions, onDelete }) => {
+  const [loading, setLoading] = useState(false)
   const { isMobile } = useAppTheme()
+
+  const handleDelete = async () => {
+    if (onDelete) {
+      setLoading(true)
+      const r = await onDelete(id)
+      setLoading(false)
+      return r
+    }
+  }
+
   return (
     <Card sx={{ maxWidth: isMobile ? '100%' : 340, mb: 1 }}>
       {isMobile ? <CardMedia component="img" image={getTournamentImage(category?.tournamentId)} alt="Live from space album cover" /> : null}
@@ -60,7 +73,7 @@ export const SubscriptionItem: React.FC<Props> = ({ partner, category, disableAc
                 <QrCode2Icon />
               </Tooltip>
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleDelete} disabled={!!loading}>
               <Tooltip title={`Remover inscrição`} arrow>
                 <DeleteForeverIcon />
               </Tooltip>
@@ -68,6 +81,7 @@ export const SubscriptionItem: React.FC<Props> = ({ partner, category, disableAc
           </CardActions>
         </>
       )}
+      {loading ? <CircleLoading /> : null}
     </Card>
   )
 }
