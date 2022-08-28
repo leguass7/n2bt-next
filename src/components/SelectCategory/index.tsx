@@ -35,11 +35,11 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
 
   useOnceCall(fetchData)
 
-  const handleClick = (id: number, sel?: boolean) => {
+  const handleClick = (id: number, price: number, sel?: boolean) => {
     return () => {
       if (!sel) {
         setSelected(id)
-        if (onChange) onChange(id, { ...categories.find(f => f.id === id) })
+        if (onChange) onChange(id, { ...categories.find(f => f.id === id), price })
       }
     }
   }
@@ -55,8 +55,6 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
       }, 0)
     return [count, hasSubsIn]
   }, [categories])
-
-  console.log('paidCount', paidCount)
 
   return (
     <>
@@ -76,6 +74,13 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
               const hasSub = category?.subscriptions?.length ?? 0
               const paid = category?.subscriptions?.filter(f => !!f.paid)?.length
               const active = !!(selected === category.id)
+              const disabled = !!(paid || (paidCount > 0 && paidCount >= (category?.maxSubscription || 0)))
+
+              let value = category.price
+              if (paidCount && category.discount && !paid) {
+                value = Math.ceil(category.discount * category.price)
+              }
+
               return (
                 <div key={`cat-${category.id}`} style={{ marginBottom: 16 }}>
                   <Badge
@@ -84,13 +89,13 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
                     invisible={!hasSub}
                     componentsProps={{ badge: { style: { width: 10, height: 10 } } }}
                   >
-                    <CustomButton variant={active ? 'contained' : 'outlined'} onClick={handleClick(category.id, active)} disabled={!!paid}>
+                    <CustomButton variant={active ? 'contained' : 'outlined'} onClick={handleClick(category.id, value, active)} disabled={disabled}>
                       <Text>
                         <Text transform="uppercase" bold>
                           {category.title}
                         </Text>
                         <br />
-                        <Text textSize={18}>{formatPrice(category.price)}</Text>
+                        <Text textSize={18}>{formatPrice(value)}</Text>
                       </Text>
                     </CustomButton>
                   </Badge>

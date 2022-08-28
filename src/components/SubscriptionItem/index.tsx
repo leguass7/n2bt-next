@@ -18,7 +18,7 @@ import type { ISubscription } from '~/server-side/useCases/subscriptions/subscri
 
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { CircleLoading } from '../CircleLoading'
-import { FlexContainer } from '../styled'
+import { FlexContainer, Text } from '../styled'
 import { Partner } from '../User/SelectPartner/Partner'
 
 type Props = ISubscription & {
@@ -54,9 +54,16 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner, category, disab
         <Typography variant="subtitle1" color="text.secondary" component="div">
           {category?.tournament?.title}
         </Typography>
-        <FlexContainer justify="center" verticalPad={20}>
-          <Partner {...partner} />
-        </FlexContainer>
+        {partner?.name ? (
+          <FlexContainer justify="center" verticalPad={20}>
+            <Partner {...partner} />
+          </FlexContainer>
+        ) : null}
+        {category?.price ? (
+          <Text bold textSize={18}>
+            {formatPrice(category?.price)}
+          </Text>
+        ) : null}
       </CardContent>
       {disableActions ? null : (
         <>

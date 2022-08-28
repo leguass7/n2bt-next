@@ -84,7 +84,7 @@ export const ProfilePopover: React.FC = () => {
               <ListItemIcon>
                 <HomeIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText primary="Página principal" secondary="Voltar para homepage" />
+              <ListItemText primary="Página principal" secondary="Navegar para homepage" />
             </ListItemButton>
           </ListItem>
           <Divider />

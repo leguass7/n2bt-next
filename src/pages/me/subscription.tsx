@@ -9,6 +9,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 
 import { Layout } from '~/components/app/Layout'
+import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { ModalPix, ModalPixCloseHandler } from '~/components/ModalPix'
 import { Paragraph } from '~/components/styled'
 import { SubscriptionItem } from '~/components/SubscriptionItem'
@@ -22,6 +23,7 @@ interface PageProps {
 }
 
 const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
+  const { isMobile } = useAppTheme()
   const [paymentId, setPaymentId] = useState(0)
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<ISubscription[]>([])
@@ -75,7 +77,7 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
       <Grid container spacing={1}>
         {data?.map(subscription => {
           return (
-            <Grid item xs sm={10} md={6} sx={{ mt: 2 }} key={`sub-item-${subscription?.id}`}>
+            <Grid item xs={isMobile || null} sx={{ mt: 2 }} key={`sub-item-${subscription?.id}`}>
               <SubscriptionItem {...subscription} onDelete={handleDeleteSubscription} onPixClick={handlePixSubscription} />
             </Grid>
           )
