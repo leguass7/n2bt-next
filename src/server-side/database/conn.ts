@@ -1,20 +1,30 @@
 import 'reflect-metadata'
 import { DataSource } from 'typeorm'
+import type { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions'
 
 import { databaseUrl } from '../config'
 import { entities } from './entities'
+
 let connectionReadyPromise: Promise<DataSource> | null = null
 let dataSource: DataSource
 
 async function createConnection() {
-  const newConn = new DataSource({
+  const optionsConfig: MysqlConnectionOptions = {
     type: 'mysql',
-    entities,
     url: databaseUrl,
-    extra: { connectionLimit: 6 },
+    connectTimeout: 5000,
+    extra: {
+      acquireTimeout: 5000,
+      connectionLimit: 6,
+      queueLimit: 5000,
+      getConnection: 10
+    },
+    entities,
+    debug: false,
     // logging: ['error']
     logging: ['error', 'query']
-  })
+  }
+  const newConn = new DataSource(optionsConfig)
   await newConn.initialize()
   return newConn
 }
