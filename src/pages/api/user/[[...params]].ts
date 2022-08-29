@@ -158,7 +158,7 @@ class UserHandler {
       subject: 'N2BT - Recuperação de senha',
       to: user.email,
       html: `<p>
-      Seu c&oacute;digo para recupera&ccedil;&atilde;o de senha:<br /><br /><strong>${publicCode}</strong><br /><br />
+      Seu c&oacute;digo para recupera&ccedil;&atilde;o de senha:<br /><br /><strong style="font-size:26px">${publicCode}</strong><br /><br />
       Informe o c&oacute;digo acima no local indicado da p&aacute;gina.<br /><br />
       <p/>`
     })
@@ -178,12 +178,12 @@ class UserHandler {
     const repo = ds.getRepository(User)
 
     const user = await repo.findOne({ where: { reset: `${userCode}:${privateCode}` } })
-    if (!user) throw new BadRequestException('not_found_code')
+    if (!user) throw new BadRequestException('Código inválido')
 
     const authorization = generatePassword()
 
     const updated = await repo.update(user.id, { reset: `${authorization}`, emailVerified: new Date() })
-    if (!updated) throw new BadRequestException('database_error')
+    if (!updated) throw new BadRequestException('Erro ao atualizar')
 
     return { success: true, userId: user.id, authorization }
   }

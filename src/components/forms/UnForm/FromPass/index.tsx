@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
@@ -42,6 +43,7 @@ export const FromPass: React.FC<FromPassProps> = ({ onInvalid, onSuccess, onFail
       if (response?.success) {
         if (onSuccess) onSuccess()
       } else {
+        toast.error(response?.message || 'Erro ao enviar código')
         if (onFailed) onFailed(`${response?.message}`)
       }
     },

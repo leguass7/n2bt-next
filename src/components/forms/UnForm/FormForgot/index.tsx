@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
@@ -44,6 +45,7 @@ export const FormForgot: React.FC<FormForgotProps> = ({ isWhatsapp, onInvalid, o
       if (response?.success) {
         if (onSuccess) onSuccess(response?.code)
       } else {
+        toast.error(response?.message || 'Erro ao enviar código')
         if (onFailed) onFailed(`${response?.message}`)
       }
     },

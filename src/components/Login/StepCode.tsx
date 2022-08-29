@@ -28,6 +28,7 @@ export const StepCode: React.FC = () => {
   }
 
   const handleCodeSuccess: FormRecoverCodeProps['onSuccess'] = data => {
+    setRecoverCode(null)
     setCustomContext({ ...data })
   }
 

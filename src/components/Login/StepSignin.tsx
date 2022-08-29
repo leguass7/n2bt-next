@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -20,10 +20,17 @@ interface Props {
 
 export const StepSignin: React.FC<Props> = ({ allowRegister = false }) => {
   const [recoverCode] = useAppRecoverCode()
-  const { goTo } = usePassRoll<CustomContextSigin>('signIn')
+  const { goTo, customContext } = usePassRoll<CustomContextSigin>('signIn')
 
   useEffect(() => {
+    if (recoverCode && !customContext?.privateCode) {
+      goTo(3, { privateCode: recoverCode })
+    }
+  }, [recoverCode, goTo, customContext])
+
+  const handleForgot = useCallback(() => {
     if (recoverCode) goTo(3, { privateCode: recoverCode })
+    else goTo(2, { privateCode: '' })
   }, [recoverCode, goTo])
 
   return (
@@ -34,7 +41,7 @@ export const StepSignin: React.FC<Props> = ({ allowRegister = false }) => {
         </FlexContainer>
         <Divider />
         <CardContent>
-          <FormSignin onRegister={allowRegister ? () => goTo(4) : null} onForgot={() => goTo(2)} />
+          <FormSignin onRegister={allowRegister ? () => goTo(4) : null} onForgot={handleForgot} />
         </CardContent>
         <Divider />
         <CardActions>

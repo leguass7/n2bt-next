@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
@@ -24,6 +25,7 @@ export type FormRecoverCodeProps = {
 
 const schema = object().shape({
   userCode: string().min(6).max(6).required('Código inválido')
+  // privateCode: string().min(6).max(6).required('Chave privada inválida')
 })
 
 export const FormRecoverCode: React.FC<FormRecoverCodeProps> = ({ onInvalid, onSuccess, onFailed, onCancel, privateCode }) => {
@@ -43,6 +45,7 @@ export const FormRecoverCode: React.FC<FormRecoverCodeProps> = ({ onInvalid, onS
       if (response?.success) {
         if (onSuccess) onSuccess({ authorization: response?.authorization, userId: response?.userId })
       } else {
+        toast.error(response?.message || 'Erro ao enviar código')
         if (onFailed) onFailed(`${response?.message}`)
       }
     },
