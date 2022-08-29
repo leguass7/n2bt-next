@@ -8,6 +8,7 @@ export interface IAuthAppState {
   readonly level?: number
   readonly completed?: boolean
   readonly error?: string | null
+  readonly recoverCode?: string | null
 }
 
 const initialState: IAuthAppState = {
@@ -17,7 +18,8 @@ const initialState: IAuthAppState = {
   nick: null,
   level: 0,
   completed: false,
-  error: null
+  error: null,
+  recoverCode: null
 }
 
 export const slice = createSlice({

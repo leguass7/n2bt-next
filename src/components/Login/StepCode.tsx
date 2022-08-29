@@ -12,14 +12,17 @@ import { FromPass } from '~/components/forms/UnForm/FromPass'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { LogoSvg } from '~/components/svg/LogoSvg'
+import { useAppRecoverCode } from '~/hooks/useAppAuth'
 
 import type { CustomContextSigin } from './custom.types'
 
 export const StepCode: React.FC = () => {
+  const [, setRecoverCode] = useAppRecoverCode()
   const [success, setSuccess] = useState(false)
   const { goTo, setCustomContext, customContext } = usePassRoll<CustomContextSigin>('signIn')
 
   const handleCancel = () => {
+    setRecoverCode(null)
     setCustomContext(null)
     goTo(1)
   }

@@ -17,10 +17,6 @@ type Props = {
 const allowRegister = true
 
 export const SigninSlider: React.FC<Props> = ({ uaString }) => {
-  // const handleSliderChangeComplete = (index: number) => {
-  //   console.log('handleSliderChangeComplete', index)
-  // }
-
   return (
     <Main name="signIn">
       <SliderItem>

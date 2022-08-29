@@ -10,19 +10,23 @@ import { FormForgot } from '~/components/forms/UnForm/FormForgot'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer } from '~/components/styled'
 import { LogoSvg } from '~/components/svg/LogoSvg'
+import { useAppRecoverCode } from '~/hooks/useAppAuth'
 
 import type { CustomContextSigin } from './custom.types'
 
 type Props = { uaString?: string }
 export const StepForgot: React.FC<Props> = ({ uaString }) => {
   const ua = useUserAgent(uaString)
+  const [, setRecoverCode] = useAppRecoverCode()
   const { goTo } = usePassRoll<CustomContextSigin>('signIn')
 
   const isWhatsapp = !!ua?.source?.toLocaleLowerCase()?.match('whatsapp')
 
   const handleSuccess = (privateCode: string) => {
-    if (privateCode) goTo(3, { privateCode })
-    else toast.error('Problemas com o código de ativação')
+    if (privateCode) {
+      setRecoverCode(privateCode)
+      goTo(3, { privateCode })
+    } else toast.error('Problemas com o código de ativação')
   }
   return (
     <BoxCenter>

@@ -46,7 +46,7 @@ export function useAppAuth() {
 
   const logOut = useCallback(async () => {
     dispatch(clearAuth())
-    signOut()
+    return signOut({ callbackUrl: '/login' })
   }, [dispatch])
 
   const requestMe = useCallback(async () => {
@@ -86,4 +86,17 @@ export function useAppAuth() {
   )
 
   return { loading, logOut, completedAuth, updateAppAuth, requestMe, authenticated, userData, authorize }
+}
+
+export function useAppRecoverCode(): [string, (code?: string) => void] {
+  const dispatch = useDispatch()
+  const recoverCode = useSelector<AppStoreState, string>(state => state?.auth?.recoverCode || '')
+
+  const setRecoverCode = useCallback(
+    (code?: string) => {
+      dispatch(setAuth({ recoverCode: code }))
+    },
+    [dispatch]
+  )
+  return [recoverCode, setRecoverCode]
 }

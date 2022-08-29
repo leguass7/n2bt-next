@@ -55,10 +55,6 @@ export const FormForgot: React.FC<FormForgotProps> = ({ isWhatsapp, onInvalid, o
     setIsGmail(!!value.match('gmail.com'))
   }
 
-  // const handleGoogleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-  //   if (session.status === 'unauthenticated') signIn('google', { redirect: false })
-  // }
-
   return (
     <>
       <H4 align="center" transform="uppercase">

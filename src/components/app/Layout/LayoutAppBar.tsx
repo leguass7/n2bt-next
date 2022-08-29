@@ -23,8 +23,8 @@ export const LayoutAppBar: React.FC = () => {
 
   // const toogleMenu = () => setOpen(old => !old)
 
-  const handleLoginClick = () => {
-    logOut()
+  const handleLoginClick = async () => {
+    await logOut()
     push('/login')
   }
 

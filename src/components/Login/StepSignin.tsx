@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -10,6 +10,7 @@ import { FormSignin } from '~/components/forms/UnForm/FormSignin'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { LogoSvg } from '~/components/svg/LogoSvg'
+import { useAppRecoverCode } from '~/hooks/useAppAuth'
 
 import type { CustomContextSigin } from './custom.types'
 
@@ -18,7 +19,12 @@ interface Props {
 }
 
 export const StepSignin: React.FC<Props> = ({ allowRegister = false }) => {
+  const [recoverCode] = useAppRecoverCode()
   const { goTo } = usePassRoll<CustomContextSigin>('signIn')
+
+  useEffect(() => {
+    if (recoverCode) goTo(3, { privateCode: recoverCode })
+  }, [recoverCode, goTo])
 
   return (
     <BoxCenter>
