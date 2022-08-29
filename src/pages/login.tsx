@@ -21,7 +21,7 @@ const Login: NextPage<LoginPageProps> = ({ uaString, tournamentId }) => {
   const checkLogged = useCallback(() => {
     if (!!authenticated && !loading) {
       if (tournamentId) {
-        replace(`/subscription/${tournamentId}`)
+        replace(`/subscription?tournamentId=${tournamentId}`)
       } else if (userData?.level >= 8) {
         replace('/admin')
       } else {

@@ -28,12 +28,12 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
   const expired = isPast(expiresDate) || isPast(subExpiresDate)
 
   useEffect(() => {
-    prefetch(`/subscription/${id}`)
+    prefetch(`/subscription?tournamentId=${id}`)
   }, [prefetch, id])
 
   return (
     <Card sx={{ maxWidth: 345, minWidth: 320 }}>
-      <CardMedia component="img" height="140" image={getTournamentImage(id)} alt="green iguana" />
+      <CardMedia component="img" height="140" image={getTournamentImage(id)} alt={title} />
       <CardContent>
         <div style={{ maxWidth: 290 }}>
           <Typography gutterBottom variant="h5" component="div">
@@ -49,7 +49,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
           <Button
             size="small"
             variant="outlined"
-            href={`/subscription/${id}`}
+            href={`/subscription?tournamentId=${id}`}
             //onClick={() => push(`/subscription/${id}`)}
           >
             Inscrição
