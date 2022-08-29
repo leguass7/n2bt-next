@@ -131,7 +131,7 @@ class PaymentHandler {
     if (!subscriptionId) throw new BadRequestException('Número de inscrição não encontrado')
     if (subscription?.paid) throw new BadRequestException('Inscrição já está paga')
 
-    const price = subscription?.category?.price
+    const price = subscription?.value || subscription?.category?.price
     if (!price) throw new BadRequestException('Inscrição sem preço')
 
     const overdue = subscription?.category?.tournament?.subscriptionExpiration
