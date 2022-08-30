@@ -10,9 +10,9 @@ import Grid from '@mui/material/Grid'
 
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter } from '~/components/styled'
+import { CardContainer } from '~/styles'
 
 import { useSubscription } from '../../SubscriptionProvider'
-import { CardContainer } from '../style'
 import { Payment } from './Payment'
 import { Summary } from './Summary'
 

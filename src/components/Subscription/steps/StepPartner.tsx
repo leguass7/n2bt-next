@@ -13,9 +13,9 @@ import Grid from '@mui/material/Grid'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, Paragraph, Text } from '~/components/styled'
 import { DeletePatnerHandler, SelectPatner, SelectPatnerHandler } from '~/components/User/SelectPartner'
+import { CardContainer } from '~/styles'
 
 import { useSubscription } from '../SubscriptionProvider'
-import { CardContainer } from './style'
 
 interface Props {
   icon: React.ReactNode
