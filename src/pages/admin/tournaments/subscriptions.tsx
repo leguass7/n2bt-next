@@ -2,12 +2,18 @@ import React, { useCallback, useState } from 'react'
 
 import { GetServerSideProps, NextPage } from 'next'
 import { unstable_getServerSession } from 'next-auth'
+import dynamic from 'next/dynamic'
 
-import { TabsSubscriptions } from '~/components/admin/TabsSubscriptions'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
+import { CircleLoading } from '~/components/CircleLoading'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
 import { listCategories } from '~/services/api/category'
+
+const DynamicTabsSubscriptions = dynamic(() => import('~/components/admin/TabsSubscriptions').then(({ TabsSubscriptions }) => TabsSubscriptions), {
+  loading: () => <CircleLoading />,
+  ssr: false
+})
 
 type PageProps = {
   tournamentId?: number
@@ -29,7 +35,7 @@ const AdminTournamentSubsPage: NextPage<PageProps> = ({ tournamentId }) => {
 
   return (
     <LayoutAdmin>
-      <>{loading ? null : <TabsSubscriptions categories={categories} />}</>
+      <>{loading ? null : <DynamicTabsSubscriptions categories={categories} />}</>
     </LayoutAdmin>
   )
 }
