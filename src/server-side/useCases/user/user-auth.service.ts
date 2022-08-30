@@ -4,11 +4,11 @@ import { prepareConnection } from '~/server-side/database/conn'
 
 import { User } from './user.entity'
 
-export async function checkCredentials(email: string, password: string) {
+export async function checkCredentials(email = '', password = '') {
   try {
     const db = await prepareConnection()
     const repo = db.getRepository(User)
-    const user = await repo.findOneBy({ email })
+    const user = await repo.findOneBy({ email: email.toLowerCase().trim() })
 
     const data = {
       id: user?.id,

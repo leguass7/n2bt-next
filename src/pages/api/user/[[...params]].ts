@@ -137,13 +137,13 @@ class UserHandler {
   @IfAuth()
   @HttpCode(200)
   async forgot(@Req() req: AuthorizedApiRequest) {
-    const { email } = req.body
+    const { email = '' } = req.body
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)
 
-    const user = await repo.findOne({ where: { email } })
-    if (!user) throw new BadRequestException('not_found_user')
+    const user = await repo.findOne({ where: { email: email.toLowerCase().trim() } })
+    if (!user) throw new BadRequestException('Usuário não encontrado')
 
     const publicCode = generatePassword()
     const privateCode = generatePassword()
