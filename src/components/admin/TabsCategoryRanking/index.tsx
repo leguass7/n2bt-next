@@ -27,7 +27,7 @@ export const TabsCategoryRanking: React.FC<Props> = ({ categories }) => {
 
   return (
     <>
-      <Tabs value={tab} onChange={handleChange} aria-label="tbs de categorias" scrollButtons="auto">
+      <Tabs value={tab} onChange={handleChange} aria-label="tbs de categorias" variant="scrollable" scrollButtons allowScrollButtonsMobile>
         {categories?.map((category, i) => {
           return <Tab key={`tab-category-${category?.id}`} label={category?.title} {...a11yProps(i)} />
         })}

@@ -1,16 +1,18 @@
 import React, { useCallback, useState } from 'react'
 
 import { GetServerSideProps, NextPage } from 'next'
+import { unstable_getServerSession } from 'next-auth'
 
 import { TabsCategoryRanking } from '~/components/admin/TabsCategoryRanking'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 import { useOnceCall } from '~/hooks/useOnceCall'
+import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
 import { listCategories } from '~/services/api/category'
 
 type PageProps = {
   tournamentId?: number
 }
-const AdminTournamentsRankingPage: NextPage<PageProps> = ({ tournamentId }) => {
+const AdminTournamentRankingPage: NextPage<PageProps> = ({ tournamentId }) => {
   const [loading, setLoading] = useState(false)
   const [categories, setCategories] = useState([])
 
@@ -32,17 +34,33 @@ const AdminTournamentsRankingPage: NextPage<PageProps> = ({ tournamentId }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<PageProps> = async ({ req, query }) => {
-  const params = (query?.params || []) as string[]
-  const [tournamentId] = params.map(p => +p || 0).filter(f => !!f)
+export const getServerSideProps: GetServerSideProps<PageProps> = async context => {
+  const { query } = context
+  const tournamentId = +query?.tournamentId || 0
 
-  // const tournamentId = +query?.tournamentId || 0
+  const [authOptions] = await createOAuthOptions()
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+
+  if (!tournamentId) {
+    return {
+      redirect: { destination: `/admin/tournaments?error=${tournamentId}` },
+      props: { tournamentId }
+    }
+  }
+
+  if (!session) {
+    return {
+      redirect: { destination: `/login?tournamentId=${tournamentId}` },
+      props: { tournamentId }
+    }
+  }
+
   return {
     props: {
-      tournamentId,
-      uaString: req.headers['user-agent']
+      session,
+      tournamentId
     }
   }
 }
 
-export default AdminTournamentsRankingPage
+export default AdminTournamentRankingPage

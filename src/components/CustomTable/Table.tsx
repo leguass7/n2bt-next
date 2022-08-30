@@ -4,6 +4,7 @@ import Pagination from '@mui/material/Pagination'
 import Stack from '@mui/material/Stack'
 import Table, { TableProps } from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
+import TableContainer from '@mui/material/TableContainer'
 import styled from 'styled-components'
 
 import CustomTableContext from './CustomTableContext'
@@ -21,48 +22,48 @@ const NothingText = styled.p`
   padding: 10px;
 `
 
-const TableContainer = styled.div`
-  margin: 0 auto;
-  overflow-x: auto;
-  width: auto;
-  max-width: 100%;
+// const TableContainer = styled.div`
+//   margin: 0 auto;
+//   overflow-x: auto;
+//   width: 100%;
+//   max-width: 100%;
 
-  table tr th,
-  table tr th.MuiTableCell-root {
-    font-weight: bold;
-    /* font-weight: bold;
-    color: ${({ theme }) => theme.colors.primary};
-    .Mui-active {
-      color: ${({ theme }) => theme.colors.secondary};
-    } */
-  }
+//   table tr th,
+//   table tr th.MuiTableCell-root {
+//     font-weight: bold;
+//     /* font-weight: bold;
+//     color: ${({ theme }) => theme.colors.primary};
+//     .Mui-active {
+//       color: ${({ theme }) => theme.colors.secondary};
+//     } */
+//   }
 
-  table tr .MuiTableCell-root {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  }
+//   table tr .MuiTableCell-root {
+//     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+//   }
 
-  table tr.selected {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
+//   table tr.selected {
+//     background-color: rgba(0, 0, 0, 0.2);
+//   }
 
-  table tr.selectable {
-    cursor: pointer;
-  }
+//   table tr.selectable {
+//     cursor: pointer;
+//   }
 
-  table th.MuiTableCell-sizeSmall {
-    font-size: 12px;
-  }
+//   table th.MuiTableCell-sizeSmall {
+//     font-size: 12px;
+//   }
 
-  table th.xsmall,
-  td.xsmall {
-    font-size: 10px;
-  }
+//   table th.xsmall,
+//   td.xsmall {
+//     font-size: 10px;
+//   }
 
-  table th.small,
-  td.small {
-    font-size: 12px;
-  }
-`
+//   table th.small,
+//   td.small {
+//     font-size: 12px;
+//   }
+// `
 const SpanTotal = styled.span`
   font-size: 14px;
 `
@@ -184,7 +185,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
           <PaginationContainer>
             <Stack spacing={1}>
               <SpanTotal>
-                Total: <strong>{total}</strong>
+                Total: <b>{total}</b>
               </SpanTotal>
             </Stack>
             <Stack spacing={1}>

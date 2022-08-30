@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import HowToRegIcon from '@mui/icons-material/HowToReg'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import IconButton from '@mui/material/IconButton'
@@ -31,9 +32,15 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
   const handleCloseMenu = () => setAnchorEl(null)
 
   const handleClickRanking = () => {
-    push(`/admin/tournaments/ranking/${tournamentId}`)
+    push(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
     handleCloseMenu()
   }
+
+  const handleClickSubscriptions = () => {
+    push(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
+    handleCloseMenu()
+  }
+
   const handleDelete = () => setCustom({ deleteId: tournamentId })
   const handleEdit = () => {
     setCustom({ editId: tournamentId })
@@ -42,7 +49,8 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
 
   useEffect(() => {
     if (open) {
-      prefetch(`/admin/tournaments/ranking/${tournamentId}`)
+      prefetch(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
+      prefetch(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
     }
   }, [prefetch, open, tournamentId])
 
@@ -62,6 +70,9 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
       <Menu id="long-menu" MenuListProps={{ 'aria-labelledby': 'long-button' }} anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
         <MenuItemStyled onClick={handleClickRanking} disableRipple>
           <MilitaryTechIcon /> Ranking
+        </MenuItemStyled>
+        <MenuItemStyled onClick={handleClickSubscriptions} disableRipple>
+          <HowToRegIcon /> Inscrições
         </MenuItemStyled>
         <MenuItemStyled onClick={handleEdit} disableRipple>
           <EditIcon /> Alterar

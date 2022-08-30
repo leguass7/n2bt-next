@@ -1,5 +1,3 @@
-import { Suspense } from 'react'
-
 import { Button, Stack } from '@mui/material'
 import { differenceInMinutes } from 'date-fns'
 import type { GetServerSideProps, NextPage } from 'next'
@@ -16,7 +14,6 @@ import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
 import { createOAuthOptions } from '../api/auth/[...nextauth]'
 
-// import { Subscription } from '../../components/Subscription'
 const DynamicSubscription = dynamic(() => import('../../components/Subscription').then(({ Subscription }) => Subscription), {
   loading: () => <CircleLoading />,
   ssr: false
@@ -64,14 +61,11 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async context => {
-  console.log('Entrando em serverless function')
   const { query } = context
   const tournamentId = +query?.tournamentId || 0
 
   const [authOptions, ds] = await createOAuthOptions()
   const session = await unstable_getServerSession(context.req, context.res, authOptions)
-
-  console.log('session getServerSideProps', tournamentId)
 
   if (!tournamentId) {
     return {
@@ -87,9 +81,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async context => {
     }
   }
 
-  // const ds = await prepareConnection()
+  //
   const repo = ds.getRepository(Tournament)
-
   const tournament = await repo.findOne({ where: { id: tournamentId } })
   const isExpired = !!(tournament?.subscriptionExpiration && differenceInMinutes(tournament?.subscriptionExpiration, new Date()) <= 0)
 

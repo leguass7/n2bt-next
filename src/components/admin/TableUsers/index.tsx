@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { CircleLoading } from '~/components/CircleLoading'
 import { CustomTable } from '~/components/CustomTable'
 import type { TableFetchParams } from '~/components/CustomTable/types'
+import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
 import { paginateUsers } from '~/services/api/user'
 
 import { columns } from './columns'
@@ -25,9 +26,9 @@ export const TableUsers: React.FC = () => {
   }, [])
 
   return (
-    <>
+    <TableActionsProvider>
       <CustomTable columns={columns} pageSize={pageSize} total={total} records={records} onPagination={fetchData}></CustomTable>
       {loading && <CircleLoading />}
-    </>
+    </TableActionsProvider>
   )
 }

@@ -24,7 +24,7 @@ import { deletetCategory } from '~/services/api/category'
 
 import { FormCategory, SuccessHandler } from '../FormCategory'
 
-export interface ICategoryActions {
+export interface ISubscriptionActions {
   editId?: number
   deleteId?: number
 }
@@ -32,7 +32,7 @@ export interface ICategoryActions {
 export const Actions: React.FC = () => {
   const [tournamentId] = useAdminTournament()
   const [loading, setLoading] = useState(false)
-  const { custom, setCustom } = useTableActions<ICategoryActions>()
+  const { custom, setCustom } = useTableActions<ISubscriptionActions>()
   const { emitFetch } = useCustomTable()
 
   const handleClose = () => {
