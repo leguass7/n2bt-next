@@ -11,8 +11,7 @@ import { usePassRoll } from '~/components/PassRollLayout'
 import { SelectCategory, CategoryChangeHandler } from '~/components/SelectCategory'
 import { BoxCenter } from '~/components/styled'
 import { useSubscription } from '~/components/Subscription/SubscriptionProvider'
-
-import { CardContainer } from './style'
+import { CardContainer } from '~/styles'
 
 interface Props {
   icon: React.ReactNode

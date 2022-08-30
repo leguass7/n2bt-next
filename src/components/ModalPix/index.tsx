@@ -5,10 +5,10 @@ import Modal from '@mui/material/Modal'
 
 import type { IResponseGeneratePix } from '~/server-side/useCases/payment/payment.dto'
 import { checkPayment } from '~/services/api/payment'
+import { CardContainer } from '~/styles'
 
 import { PixCode } from '../PixCode'
 import { BoxCenter } from '../styled'
-import { CardContainer } from '../Subscription/steps/style'
 
 export type ModalPixCloseHandler = (event?: React.SyntheticEvent<any>, reason?: 'backdropClick' | 'escapeKeyDown') => void
 type Props = {

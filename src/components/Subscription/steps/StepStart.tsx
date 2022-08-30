@@ -10,8 +10,7 @@ import { FormSubscriptionStart } from '~/components/forms/UnForm/FormSubscriptio
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter } from '~/components/styled'
 import { useUserAuth } from '~/components/UserProvider'
-
-import { CardContainer } from './style'
+import { CardContainer } from '~/styles'
 
 interface Props {
   icon: React.ReactNode
