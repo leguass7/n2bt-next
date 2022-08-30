@@ -32,12 +32,12 @@ export const SectionTournaments: React.FC<Props> = ({ tournaments = [] }) => {
       <Typography variant="h2" align="center" sx={{ m: 2 }}>
         Torneios
       </Typography>
-      <Grid sx={{ flexGrow: 1 }} container spacing={2}>
-        <Grid item xs={12}>
+      <Grid sx={{ flexGrow: 1 }} container spacing={2} justifyContent="center">
+        <Grid item xs={8} justifyContent="center">
           <Grid container justifyContent="center" spacing={2}>
             {data?.map(tournament => {
               return (
-                <Grid item key={`tournament-${tournament?.id}`}>
+                <Grid item key={`tournament-${tournament?.id}`} xs={12} sm={4}>
                   <TournamentCard {...tournament} />
                 </Grid>
               )

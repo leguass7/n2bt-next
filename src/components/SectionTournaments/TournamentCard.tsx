@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -16,11 +17,14 @@ import { validDate } from '~/helpers/date'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 
 import { MkContainer } from '../styled'
+import { CollapseCharts } from './CollapseCharts'
+import { ExpandMore } from './ExpandMore'
 
 type Props = Partial<ITournament> & {}
 
 export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, subscriptionExpiration }) => {
   const { prefetch } = useRouter()
+  const [expanded, setExpanded] = useState(false)
 
   const expiresDate = validDate(expires)
   const subExpiresDate = validDate(subscriptionExpiration)
@@ -31,8 +35,12 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
     prefetch(`/subscription?tournamentId=${id}`)
   }, [prefetch, id])
 
+  const handleExpandClick = () => setExpanded(old => !old)
+
   return (
-    <Card sx={{ maxWidth: 345, minWidth: 320 }}>
+    <Card
+    //sx={{ maxWidth: 345, minWidth: 320 }}
+    >
       <CardMedia component="img" height="140" image={getTournamentImage(id)} alt={title} />
       <CardContent>
         <div style={{ maxWidth: 290 }}>
@@ -46,23 +54,18 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
       </CardContent>
       <CardActions>
         {!expired ? (
-          <Button
-            size="small"
-            variant="outlined"
-            href={`/subscription?tournamentId=${id}`}
-            //onClick={() => push(`/subscription/${id}`)}
-          >
+          <Button size="small" variant="outlined" href={`/subscription?tournamentId=${id}`}>
             Inscrição
           </Button>
         ) : null}
-        <Button
-          size="small"
-          href={`/tournament/about/${id}`}
-          //onClick={() => push(`/tournament/about/${id}`)}
-        >
+        <Button size="small" href={`/tournament/about/${id}`}>
           Saiba mais
         </Button>
+        <ExpandMore disabled expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
+          <ExpandMoreIcon />
+        </ExpandMore>
       </CardActions>
+      <CollapseCharts expanded={!!expanded} />
     </Card>
   )
 }
