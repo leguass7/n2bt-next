@@ -1,16 +1,16 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { Alert, AlertTitle } from '@mui/material'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 import Badge from '@mui/material/Badge'
 
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
-import { formatPrice } from '~/helpers'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import { listCategories } from '~/services/api/category'
 
-import { CustomButton } from './styles'
+import { Item, ItemClickHandler } from './Item'
 
 export type CategoryChangeHandler = (categoryId?: number, category?: ICategory) => any
 type Props = {
@@ -19,6 +19,7 @@ type Props = {
   defaultSelected?: number
 }
 export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaultSelected = 0 }) => {
+  // const [expanded, setExpanded] = useState<number>(0)
   const [selected, setSelected] = useState(defaultSelected)
   const [categories, setCategories] = useState<ICategory[]>([])
 
@@ -35,12 +36,10 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
 
   useOnceCall(fetchData)
 
-  const handleClick = (id: number, price: number, sel?: boolean) => {
-    return () => {
-      if (!sel) {
-        setSelected(id)
-        if (onChange) onChange(id, { ...categories.find(f => f.id === id), price })
-      }
+  const handleClick: ItemClickHandler = (id: number, { active, price, disabled }) => {
+    if (!active && !disabled) {
+      setSelected(id)
+      if (onChange) onChange(id, { ...categories.find(f => f.id === id), price })
     }
   }
 
@@ -73,31 +72,18 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
             {categories.map(category => {
               const hasSub = category?.subscriptions?.length ?? 0
               const paid = category?.subscriptions?.filter(f => !!f.paid)?.length
-              const active = !!(selected === category.id)
-              const disabled = !!(paid || (paidCount > 0 && paidCount >= (category?.maxSubscription || 0)))
-
-              let value = category.price
-              if (paidCount && category.discount && !paid) {
-                value = Math.ceil(category.discount * category.price)
-              }
+              const actived = !!(selected === category.id)
 
               return (
-                <div key={`cat-${category.id}`} style={{ marginBottom: 16 }}>
+                <div key={`cat-${category.id}`} style={{ marginBottom: 16, width: '100%' }}>
                   <Badge
                     color={paid ? 'success' : 'warning'}
                     variant="dot"
                     invisible={!hasSub}
                     componentsProps={{ badge: { style: { width: 10, height: 10 } } }}
+                    sx={{ width: '100%' }}
                   >
-                    <CustomButton variant={active ? 'contained' : 'outlined'} onClick={handleClick(category.id, value, active)} disabled={disabled}>
-                      <Text>
-                        <Text transform="uppercase" bold>
-                          {category.title}
-                        </Text>
-                        <br />
-                        <Text textSize={18}>{formatPrice(value)}</Text>
-                      </Text>
-                    </CustomButton>
+                    <Item {...category} onClick={handleClick} actived={!!actived} paidCount={paidCount} />
                   </Badge>
                 </div>
               )

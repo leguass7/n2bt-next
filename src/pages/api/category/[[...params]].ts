@@ -34,7 +34,7 @@ class CategoryHandler {
     const queryDb = repo
       .createQueryBuilder('Category')
       .select()
-      .addSelect(['Tournament.id', 'Tournament.title'])
+      .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
       .innerJoin('Category.tournament', 'Tournament')
       .where({ published: true, tournamentId })
 
