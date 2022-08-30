@@ -120,9 +120,9 @@ class UserHandler {
       .addSelect(['Subscription.id', 'Subscription.userId', 'Subscription.categoryId', 'Subscription.paid'])
       .addSelect(['Category.id', 'Category.title'])
       .addSelect(['Tournament.id', 'Tournament.title'])
-      .innerJoin('User.userSubscriptions', 'Subscription')
-      .innerJoin('Subscription.category', 'Category')
-      .innerJoin('Category.tournament', 'Tournament')
+      .leftJoin('User.userSubscriptions', 'Subscription')
+      .leftJoin('Subscription.category', 'Category')
+      .leftJoin('Category.tournament', 'Tournament')
       .orderBy('User.name', 'ASC')
       .limit(10)
 
