@@ -50,13 +50,17 @@ class UserHandler {
   @Post('/register')
   @HttpCode(201)
   async createUser(@Req() req: PublicApiRequest<IUser>) {
+    const { body } = req
+
+    if (body?.email) body.email = body.email.toLowerCase().trim()
+
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)
-    const userData = repo.create({ ...req.body })
+    const userData = repo.create({ ...body })
 
     const userExists = await repo.findOne({ where: { email: userData.email } })
     if (userExists) throw new HttpException(401, 'Usuário já existe')
-    if (!userData?.password) throw new BadRequestException('Senha não encontrada')
+    if (!userData?.password) throw new BadRequestException('Senha não obrigatória')
 
     const hashPassword = hashSync(userData.password, 14)
 
@@ -72,9 +76,10 @@ class UserHandler {
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)
     const userId = req?.auth?.userId
-    const { birday, ...data } = req?.body
+    const { birday, email, ...data } = req?.body
 
     const u: Partial<IUser> = { ...data }
+    if (email) u.email = email.toLowerCase().trim()
     if (birday) u.birday = parseISO(`${birday}`)
 
     if (!userId) throw new BadRequestException('Usuário não encontrado')
