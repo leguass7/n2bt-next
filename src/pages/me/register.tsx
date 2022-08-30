@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 
 import { CardContent } from '@mui/material'
 import Typography from '@mui/material/Typography'
@@ -8,15 +8,9 @@ import Link from 'next/link'
 
 import { Layout } from '~/components/app/Layout'
 import { FormRegister } from '~/components/forms/UnForm/FormRegister'
-import { FormSignup } from '~/components/forms/UnForm/FormSignup'
-import { FormSubscriptionStart } from '~/components/forms/UnForm/FormSubscription/start'
-import { Main, SliderItem } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer, H4 } from '~/components/styled'
 import { UserPanelTabs } from '~/components/User/UserPanel/UserPanelTabs'
 import { useAppAuth } from '~/hooks/useAppAuth'
-import { useOnceCall } from '~/hooks/useOnceCall'
-import type { IUser } from '~/server-side/useCases/user/user.dto'
-import { getMe } from '~/services/api/me'
 import { CardContainer } from '~/styles'
 
 interface PageProps {
