@@ -29,8 +29,14 @@ export class Tournament {
   @Column({ type: 'datetime', nullable: true, precision: null })
   expires: Date
 
+  @Column({ nullable: true, default: 200 })
+  limitUsers?: number
+
   @Column({ nullable: true, default: 2 })
   maxSubscription?: number
+
+  @Column({ type: 'text', nullable: true })
+  download?: string
 
   @Column({ type: 'uuid', nullable: true, length: 36 })
   createdBy?: string

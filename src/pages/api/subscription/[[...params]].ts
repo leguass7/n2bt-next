@@ -5,7 +5,7 @@ import { parseOrderDto } from '~/server-side/database/db.helper'
 import { PaginateService, Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
-import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
+import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 const searchFields = ['id', 'title']
@@ -15,6 +15,27 @@ const orderFields = [
   ['User.name', 'user']
 ]
 class SubscriptionHandler {
+  @Get('/summary')
+  @IfAuth()
+  @HttpCode(200)
+  async summary(@Req() req: AuthorizedApiRequest) {
+    const tournamentId = +req?.query?.tournamentId
+    if (!tournamentId) throw new BadRequestException('not_found_tournamentId')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const total = await repo
+      .createQueryBuilder('Subscription')
+      .select(['Subscription.id', 'Subscription.categoryId'])
+      .addSelect(['Category.id', 'Category.tournamentId'])
+      .innerJoin('Subscription.category', 'Category')
+      .where({ actived: true })
+      .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
+      .getCount()
+    return { success: true, total }
+  }
+
   @Post()
   @JwtAuthGuard()
   @HttpCode(201)

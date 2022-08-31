@@ -12,3 +12,7 @@ export interface IResponseSubscription extends IResponseApi {
 export interface IResponseSubscriptions extends IResponseApi {
   subscriptions?: ISubscription[]
 }
+
+export interface IResponseSubscriptionSummary extends IResponseApi {
+  total?: number
+}

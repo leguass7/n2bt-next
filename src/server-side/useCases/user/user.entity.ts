@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer'
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
 import { Account } from '~/server-side/useCases/account/account.entity'
 import { Arena } from '~/server-side/useCases/arena/arena.entity'
@@ -17,7 +17,6 @@ enum UserGender {
   M = 'M'
 }
 
-@Unique('users_email_key', ['email'])
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -29,7 +28,7 @@ export class User {
   @Column({ nullable: true, default: null })
   nick?: string
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   email: string
 
   @Column({ type: 'datetime', precision: null, nullable: true, default: null })

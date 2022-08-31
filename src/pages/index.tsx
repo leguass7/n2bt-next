@@ -1,3 +1,4 @@
+import { Divider } from '@mui/material'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 
@@ -20,7 +21,9 @@ const Home: NextPage<HomePageProps> = ({ tournaments }) => {
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
       <SectionLogo />
+      <Divider sx={{ mt: 2 }} />
       <SectionTournaments tournaments={tournaments} />
+      <Divider sx={{ mt: 3 }} />
     </Layout>
   )
 }

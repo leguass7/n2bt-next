@@ -24,6 +24,9 @@ export class Category {
   @Column({ nullable: true, default: false })
   published: boolean
 
+  @Column({ type: 'enum', enum: ['F', 'M', 'MF'], nullable: false, default: 'M' })
+  gender?: string
+
   @Column({ nullable: true, default: false })
   mixGender?: boolean
 
@@ -32,6 +35,9 @@ export class Category {
 
   @Column({ nullable: true, default: 50, type: 'float' })
   discount?: number
+
+  @Column({ nullable: true, default: 18 })
+  limit?: number
 
   @Column({ type: 'uuid', nullable: true, length: 36, default: null })
   createdBy?: string

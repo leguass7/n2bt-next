@@ -22,7 +22,7 @@ import { ExpandMore } from './ExpandMore'
 
 type Props = Partial<ITournament> & {}
 
-export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, subscriptionExpiration }) => {
+export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, download, subscriptionExpiration }) => {
   const { prefetch } = useRouter()
   const [expanded, setExpanded] = useState(false)
 
@@ -37,10 +37,22 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
 
   const handleExpandClick = () => setExpanded(old => !old)
 
+  const renderMore = () => {
+    if (download && !expired)
+      return (
+        <Button size="small" variant="outlined" href={`/${download}`}>
+          Regulamento
+        </Button>
+      )
+    return (
+      <Button size="small" href={`/tournament/about/${id}`}>
+        Saiba mais
+      </Button>
+    )
+  }
+
   return (
-    <Card
-    //sx={{ maxWidth: 345, minWidth: 320 }}
-    >
+    <Card>
       <CardMedia component="img" height="140" image={getTournamentImage(id)} alt={title} />
       <CardContent>
         <div style={{ maxWidth: 290 }}>
@@ -54,18 +66,16 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
       </CardContent>
       <CardActions>
         {!expired ? (
-          <Button size="small" variant="outlined" href={`/subscription?tournamentId=${id}`}>
+          <Button size="small" variant="outlined" href={`/subscription?tournamentId=${id}`} target="_blank" rel="noopener noreferrer">
             Inscrição
           </Button>
         ) : null}
-        <Button size="small" href={`/tournament/about/${id}`}>
-          Saiba mais
-        </Button>
-        <ExpandMore disabled expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
+        {renderMore()}
+        <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
-      <CollapseCharts expanded={!!expanded} />
+      <CollapseCharts tournamentId={id} expanded={!!expanded} />
     </Card>
   )
 }
