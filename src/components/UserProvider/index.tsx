@@ -23,6 +23,7 @@ type UserProviderProps = {
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [loadingUser, setLoadingUser] = useState(false)
   const [userData, setUserData] = useState<IUserContext['userData']>(null)
+
   const [userError, setUserError] = useState(false)
 
   const requestMe = useCallback(async () => {
