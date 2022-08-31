@@ -40,7 +40,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
   const renderMore = () => {
     if (download && !expired)
       return (
-        <Button size="small" variant="outlined" href={`/${download}`}>
+        <Button size="small" variant="outlined" href={`/${download}`} target="_blank" rel="noopener noreferrer">
           Regulamento
         </Button>
       )
@@ -66,7 +66,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
       </CardContent>
       <CardActions>
         {!expired ? (
-          <Button size="small" variant="outlined" href={`/subscription?tournamentId=${id}`} target="_blank" rel="noopener noreferrer">
+          <Button size="small" variant="outlined" href={`/subscription?tournamentId=${id}`}>
             Inscrição
           </Button>
         ) : null}

@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Delete, Get, HttpCode, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Req } from 'next-api-decorators'
 import { instanceToPlain } from 'class-transformer'
 
 import { prepareConnection } from '~/server-side/database/conn'

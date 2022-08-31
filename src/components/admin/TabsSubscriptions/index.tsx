@@ -28,7 +28,8 @@ export const TabsSubscriptions: React.FC<Props> = ({ categories }) => {
     <>
       <Tabs value={tab} onChange={handleChange} variant="scrollable" scrollButtons allowScrollButtonsMobile>
         {categories?.map((category, i) => {
-          return <Tab key={`tab-category-${category?.id}`} label={category?.title} {...a11yProps(i)} />
+          const label = `${category?.title} ${category?.gender}`
+          return <Tab key={`tab-category-${category?.id}`} label={label} {...a11yProps(i)} />
         })}
       </Tabs>
       {categories?.map((category, i) => {

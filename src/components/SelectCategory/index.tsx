@@ -8,7 +8,7 @@ import Badge from '@mui/material/Badge'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
-import { listCategories } from '~/services/api/category'
+import { listCategoriesSub } from '~/services/api/category'
 
 import { Item, ItemClickHandler } from './Item'
 
@@ -25,7 +25,7 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
 
   const fetchData = useCallback(async () => {
     if (tournamentId) {
-      const response = await listCategories(tournamentId)
+      const response = await listCategoriesSub(tournamentId)
       if (response?.success && response?.categories?.length) {
         setCategories(response.categories)
       } else {

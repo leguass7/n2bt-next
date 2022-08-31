@@ -22,6 +22,18 @@ const NothingText = styled.p`
   padding: 10px;
 `
 
+const CustomTableContainer = styled(TableContainer)`
+  margin: 0;
+
+  table tr.selectable {
+    cursor: pointer;
+  }
+
+  table tr.selected {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+`
+
 // const TableContainer = styled.div`
 //   margin: 0 auto;
 //   overflow-x: auto;
@@ -175,7 +187,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
       }}
     >
       {children}
-      <TableContainer>
+      <CustomTableContainer>
         <Table stickyHeader={columnNameFixed} size={tableSize}>
           <Header columns={fixedColumns} />
           <TableBody>{records && records.length ? renderRecords(records) : null}</TableBody>
@@ -195,7 +207,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
             </Stack>
           </PaginationContainer>
         ) : null}
-      </TableContainer>
+      </CustomTableContainer>
     </CustomTableContext.Provider>
   )
 }

@@ -7,7 +7,7 @@ import { FlexContainer, Text } from '~/components/styled'
 import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
 import { paginateSubscription } from '~/services/api/subscriptions'
 
-// import { Actions } from './Actions'
+import { Actions } from './Actions'
 import { columns } from './columns'
 
 const pageSize = 32
@@ -38,7 +38,7 @@ export const TableSubscriptions: React.FC<Props> = ({ categoryId }) => {
       {categoryId ? (
         <TableActionsProvider>
           <CustomTable columns={columns} pageSize={pageSize} total={total} records={records} onPagination={fetchData} multiple={false}>
-            {/* <Actions /> */}
+            <Actions />
           </CustomTable>
           {loading && <CircleLoading />}
         </TableActionsProvider>

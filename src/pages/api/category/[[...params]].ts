@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from 'next-api-decorators'
 import type { FindOptionsWhere } from 'typeorm'
 
 import { prepareConnection } from '~/server-side/database/conn'
@@ -9,6 +9,7 @@ import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { IfAuth, JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import { Category } from '~/server-side/useCases/category/category.entity'
+import { User } from '~/server-side/useCases/user/user.entity'
 
 const searchFields = ['id', 'title']
 const orderFields = [
@@ -17,6 +18,46 @@ const orderFields = [
 ]
 
 class CategoryHandler {
+  @Get('/list-sub')
+  @IfAuth()
+  @Pagination()
+  @HttpCode(200)
+  async listSub(@Req() req: AuthorizedPaginationApiRequest) {
+    const { query, auth } = req
+    const { order } = req?.pagination
+    const tournamentId = +query?.tournamentId || 0
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Category)
+
+    const userId = auth?.userId
+    const user = await ds.getRepository(User).findOne({ where: { id: userId }, select: { id: true, gender: true } })
+    if (!user) throw new BadRequestException('Usuário inválido')
+
+    const queryDb = repo
+      .createQueryBuilder('Category')
+      .select()
+      .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
+      .innerJoin('Category.tournament', 'Tournament')
+      .where({ published: true, tournamentId })
+      .andWhere(`Category.gender = :gender OR Category.gender = 'MF'`, { gender: user.gender })
+
+    if (userId) {
+      queryDb
+        .addSelect(['Subscription.id', 'Subscription.paid', 'Subscription.actived'])
+        .leftJoin('Category.subscriptions', 'Subscription', 'Subscription.userId = :userId AND Subscription.actived = :actived', {
+          userId,
+          actived: true
+        })
+    }
+
+    parseOrderDto({ order, table: 'Category', orderFields }).querySetup(queryDb)
+
+    const categories = await queryDb.getMany()
+
+    return { success: true, categories }
+  }
+
   @Get('/list')
   @IfAuth()
   @Pagination()
@@ -61,13 +102,16 @@ class CategoryHandler {
     const { auth, query } = req
     const categoryId = +query?.params[0] || 0
 
+    if (!categoryId) throw new BadRequestException('Categoria não encontrada')
+
     const ds = await prepareConnection()
     const repo = ds.getRepository(Category)
     const where: FindOptionsWhere<Category> = { id: categoryId }
-    if (auth?.level <= 8) where.published = true
+    if (auth?.level < 8) where.published = true
 
     const category = await repo.findOne({ where })
-    if (!category) throw new BadRequestException()
+    console.log('where', where, auth)
+    if (!category) throw new BadRequestException(`Erro ao localizar categoria level=${auth?.level} ${categoryId}`)
 
     return { success: true, category }
   }

@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req } from 'next-api-decorators'
 import { hashSync } from 'bcrypt'
 import { instanceToPlain } from 'class-transformer'
 import { parseISO } from 'date-fns'

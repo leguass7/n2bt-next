@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 
 import AddIcon from '@mui/icons-material/Add'
 import FeedbackIcon from '@mui/icons-material/Feedback'
+import { Badge } from '@mui/material'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -18,6 +19,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { useAdminTournament } from '~/components/app/LayoutAdmin/LayoutAdminProvider'
 import { CircleLoading } from '~/components/CircleLoading'
 import { useCustomTable } from '~/components/CustomTable'
+import { ModalPix } from '~/components/ModalPix'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
 import { deletetCategory } from '~/services/api/category'
@@ -27,6 +29,8 @@ import { FormCategory, SuccessHandler } from '../FormCategory'
 export interface ISubscriptionActions {
   editId?: number
   deleteId?: number
+  paymentId?: number
+  selectList?: number[]
 }
 
 export const Actions: React.FC = () => {
@@ -36,7 +40,7 @@ export const Actions: React.FC = () => {
   const { emitFetch } = useCustomTable()
 
   const handleClose = () => {
-    setCustom({ editId: 0, deleteId: 0 })
+    setCustom({ editId: 0, deleteId: 0, paymentId: 0 })
   }
 
   const handleAdd = () => {
@@ -66,16 +70,19 @@ export const Actions: React.FC = () => {
 
   return (
     <>
-      <FlexContainer justify="space-between">
-        <Text textSize={18} bold horizontalPad={10}>
-          Categorias cadastradas
-        </Text>
-        <Toolbar sx={{ justifyContent: 'flex-end' }}>
-          <Tooltip title="Adicionar Torneio" arrow>
-            <IconButton onClick={handleAdd}>
+      <FlexContainer justify="center">
+        <div></div>
+        <Toolbar sx={{ justifyContent: 'center' }}>
+          <Badge badgeContent={custom?.selectList?.length || 0} color="primary" showZero={false}>
+            <Button size="small" variant="contained" disabled>
+              Tranferir
+            </Button>
+          </Badge>
+          <IconButton onClick={handleAdd} disabled>
+            <Tooltip title="Adicionar Torneio" arrow>
               <AddIcon />
-            </IconButton>
-          </Tooltip>
+            </Tooltip>
+          </IconButton>
         </Toolbar>
       </FlexContainer>
       <Divider />
@@ -108,7 +115,7 @@ export const Actions: React.FC = () => {
               <>
                 <p>
                   <Text textSize={16} align="center">
-                    Todos os registros vinculados à categoria serão excluídos permanentemente.
+                    Todos os registros vinculados à inscrição serão excluídos permanentemente.
                   </Text>
                   <br />
                   <Text textSize={16} bold align="center">
@@ -131,6 +138,7 @@ export const Actions: React.FC = () => {
           </Card>
         </BoxCenter>
       </Modal>
+      <ModalPix key={`modal-pay-${custom?.paymentId}`} paymentId={custom?.paymentId} onClose={handleClose} />
     </>
   )
 }

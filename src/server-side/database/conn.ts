@@ -14,10 +14,10 @@ async function createConnection() {
     url: databaseUrl,
     connectTimeout: 5000,
     extra: {
-      acquireTimeout: 5000,
+      // acquireTimeout: 5000,
       connectionLimit: 6,
-      queueLimit: 5000,
-      getConnection: 10
+      queueLimit: 5000
+      // getConnection: 10
     },
     entities,
     debug: false,

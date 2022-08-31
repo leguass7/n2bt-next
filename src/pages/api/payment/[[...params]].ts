@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Get, HttpCode, Post, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Get, HttpCode, Post, Req } from 'next-api-decorators'
 import { differenceInMinutes } from 'date-fns'
 
 import { mergeDeep } from '~/helpers/object'

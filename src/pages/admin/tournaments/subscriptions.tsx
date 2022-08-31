@@ -24,7 +24,7 @@ const AdminTournamentSubsPage: NextPage<PageProps> = ({ tournamentId }) => {
 
   const fetchData = useCallback(async () => {
     setLoading(true)
-    const result = await listCategories(tournamentId)
+    const result = await listCategories(tournamentId, { order: 'asc', orderby: 'title' })
     setLoading(false)
     if (result?.success) {
       setCategories(result?.categories || [])

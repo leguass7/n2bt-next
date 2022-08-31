@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from 'next-api-decorators'
 import { FindOptionsWhere } from 'typeorm'
 
 import { prepareConnection } from '~/server-side/database/conn'
@@ -92,6 +92,7 @@ class TournamentHandler {
   }
 
   @Get()
+  @JwtAuthGuard()
   @HttpCode(200)
   @Pagination()
   async paginate(@Req() req: AuthorizedPaginationApiRequest) {

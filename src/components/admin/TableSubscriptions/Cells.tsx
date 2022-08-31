@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 
-import { PaidOutlined } from '@mui/icons-material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import { Avatar, AvatarGroup } from '@mui/material'
+import MoneyOffIcon from '@mui/icons-material/MoneyOff'
+import PaidOutlined from '@mui/icons-material/PaidOutlined'
+import Avatar from '@mui/material/Avatar'
+import AvatarGroup from '@mui/material/AvatarGroup'
+import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import Switch from '@mui/material/Switch'
 import Tooltip from '@mui/material/Tooltip'
@@ -26,10 +29,40 @@ import type { ISubscriptionActions } from './Actions'
 type Props = ICustomCellProps<ISubscription>
 
 export const PaidCell: React.FC<Props> = ({ record }) => {
+  const { setCustom } = useTableActions<ISubscriptionActions>()
+  const handleClick = () => setCustom({ paymentId: record?.paymentId })
   return (
-    <CellContainer>
-      <FlexContainer>{record?.paid ? <PaidOutlined fontSize={'small'} /> : null}</FlexContainer>
-    </CellContainer>
+    <>
+      <CellContainer>
+        <FlexContainer>
+          {record?.paid ? (
+            <PaidOutlined fontSize={'small'} />
+          ) : (
+            <IconButton onClick={handleClick}>
+              <Tooltip title={`Verificar pagamento ${record?.paymentId}`}>
+                <MoneyOffIcon fontSize={'small'} />
+              </Tooltip>
+            </IconButton>
+          )}
+        </FlexContainer>
+      </CellContainer>
+    </>
+  )
+}
+
+export const CheckCell: React.FC<Props> = ({ record }) => {
+  const { setCustom, custom } = useTableActions<ISubscriptionActions>()
+
+  const handleClick = (_e, checked?: boolean) => {
+    const list = (custom?.selectList || []).filter(f => f !== record?.id)
+    setCustom(old => ({ ...old, selectList: checked ? [...list, record?.id] : list }))
+  }
+
+  const active = (custom?.selectList || []).find(f => f === record?.id)
+  return (
+    <>
+      <Checkbox checked={!!active} onChange={handleClick} />
+    </>
   )
 }
 

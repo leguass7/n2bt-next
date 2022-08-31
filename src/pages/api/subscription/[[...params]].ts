@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Get, HttpCode, HttpException, Post, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Get, HttpCode, HttpException, Post, Req } from 'next-api-decorators'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'

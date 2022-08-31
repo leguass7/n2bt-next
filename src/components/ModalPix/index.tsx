@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import Card from '@mui/material/Card'
 import Modal from '@mui/material/Modal'
@@ -25,9 +26,22 @@ export const ModalPix: React.FC<Props> = ({ paymentId, onClose }) => {
       const response = await checkPayment(paymentId, { disableqrcode: false, fetchId: refId.current })
       if (response?.success) {
         setData({ ...response })
+      } else {
+        toast.error(response?.message || 'Erro')
+        if (onClose) onClose()
       }
     }
-  }, [paymentId])
+  }, [paymentId, onClose])
+
+  const handleReceivePaid = useCallback(
+    (paid?: boolean) => {
+      if (paid) {
+        toast.success('Pagamento realizado')
+        fetchData()
+      }
+    },
+    [fetchData]
+  )
 
   useEffect(() => {
     fetchData()
@@ -36,7 +50,7 @@ export const ModalPix: React.FC<Props> = ({ paymentId, onClose }) => {
   return (
     <Modal open={!!(paymentId > 0)} onClose={onClose} keepMounted={false}>
       <BoxCenter>
-        <Card sx={{ m: 1 }}>
+        <Card sx={{ m: 1, position: 'relative' }}>
           <CardContainer>
             <PixCode
               fetchId={refId.current}
@@ -45,6 +59,7 @@ export const ModalPix: React.FC<Props> = ({ paymentId, onClose }) => {
               stringQRCode={data?.qrcode}
               txid={data?.txid}
               onClose={() => onClose && onClose()}
+              onReceivedPay={handleReceivePaid}
             />
           </CardContainer>
         </Card>

@@ -15,6 +15,7 @@ import { splitDateTime } from '~/helpers/dates'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import { updateCategory } from '~/services/api/category'
 
+import { categoryGenders } from '../FormCategory'
 import type { ICategoryActions } from './Actions'
 
 type Props = ICustomCellProps<ICategory>
@@ -39,12 +40,12 @@ export const SwitchCell: React.FC<Props> = ({ record }) => {
 }
 
 export const NameCell: React.FC<Props> = ({ record }) => {
-  const secondaryText = `${record?.mixGender ? 'Mista' : 'Normal'}`
+  const genderText = categoryGenders.find(f => f.id === record.gender)?.label || '--'
   return (
     <CellContainer>
       <Text>{record?.title}</Text>
       <Text textSize={12} textStyle="italic">
-        {secondaryText}
+        {genderText}
       </Text>
     </CellContainer>
   )

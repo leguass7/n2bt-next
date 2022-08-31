@@ -1,4 +1,4 @@
-import { createMiddlewareDecorator, NextFunction } from '@storyofams/next-api-decorators'
+import { createMiddlewareDecorator, NextFunction } from 'next-api-decorators'
 import type { NextApiResponse } from 'next'
 
 import { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'

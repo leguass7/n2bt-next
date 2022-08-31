@@ -65,56 +65,58 @@ export const PixCode: React.FC<Props> = ({ base64QRCode, stringQRCode, paymentId
             </IconButton>
           </QrCodeHeader>
         ) : null}
-        {!receivedPay ? (
-          <>
-            <FlexContainer justify="center" verticalPad={16}>
-              <H4>QRCode para pagamento via PIX</H4>
-            </FlexContainer>
-            {base64QRCode ? (
-              <>
-                <QrcodeImage src={base64QRCode} alt="QRCODE" />
-                {stringQRCode ? (
-                  <>
-                    <FlexContainer justify="center" verticalPad={10}>
-                      <Toolltip
-                        open={!!tipOpen}
-                        title="Código copiado. Agora cole no seu aplicativo de pagamento"
-                        placement="bottom"
-                        arrow
-                        onMouseLeave={() => setTipOpen(false)}
-                      >
-                        <Button variant="outlined" onClick={handleClickCopy}>
-                          COPIA E COLA
-                        </Button>
-                      </Toolltip>
-                    </FlexContainer>
-                    <Paragraph align="center" textSize={12}>
-                      <code style={{ maxWidth: '100%', wordBreak: 'break-word' }}>{stringQRCode}</code>
-                    </Paragraph>
-                  </>
-                ) : null}
-              </>
-            ) : (
-              <>
-                <Paragraph align="center">Aguardando informações</Paragraph>
-                <CircleLoading />
-              </>
-            )}
-          </>
-        ) : (
-          <Paragraph align="center">
-            <Text textSize={18} align="center">
-              <CheckIcon /> PAGAMENTO REALIZADO
-            </Text>
-            <br />
-            <Text align="center" textSize={18}>
-              Inscrição concluída com sucesso. Até já{' '}
-              <span role="img" aria-label="sheep">
-                👍
-              </span>
-            </Text>
-          </Paragraph>
-        )}
+        <div style={{ position: 'relative' }}>
+          {!receivedPay ? (
+            <>
+              <FlexContainer justify="center" verticalPad={16}>
+                <H4>QRCode para pagamento via PIX</H4>
+              </FlexContainer>
+              {base64QRCode ? (
+                <>
+                  <QrcodeImage src={base64QRCode} alt="QRCODE" />
+                  {stringQRCode ? (
+                    <>
+                      <FlexContainer justify="center" verticalPad={10}>
+                        <Toolltip
+                          open={!!tipOpen}
+                          title="Código copiado. Agora cole no seu aplicativo de pagamento"
+                          placement="bottom"
+                          arrow
+                          onMouseLeave={() => setTipOpen(false)}
+                        >
+                          <Button variant="outlined" onClick={handleClickCopy}>
+                            COPIA E COLA
+                          </Button>
+                        </Toolltip>
+                      </FlexContainer>
+                      <Paragraph align="center" textSize={12}>
+                        <code style={{ maxWidth: '100%', wordBreak: 'break-word' }}>{stringQRCode}</code>
+                      </Paragraph>
+                    </>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  <Paragraph align="center">Aguardando informações</Paragraph>
+                  <CircleLoading color="#000" />
+                </>
+              )}
+            </>
+          ) : (
+            <Paragraph align="center">
+              <Text textSize={18} align="center">
+                <CheckIcon /> PAGAMENTO REALIZADO
+              </Text>
+              <br />
+              <Text align="center" textSize={18}>
+                Inscrição concluída com sucesso. Até já{' '}
+                <span role="img" aria-label="sheep">
+                  👍
+                </span>
+              </Text>
+            </Paragraph>
+          )}
+        </div>
       </QrcodeContainer>
     </PixContainer>
   )

@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from '@storyofams/next-api-decorators'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from 'next-api-decorators'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
@@ -46,24 +46,6 @@ class RankingHandler {
 
     return { success: true, rankings }
   }
-
-  // @Get('/:tournamentId')
-  // @IfAuth()
-  // @HttpCode(200)
-  // async one(@Req() req: AuthorizedApiRequest) {
-  //   const { auth, query } = req
-  //   const tournamentId = +query?.params[0] || 0
-
-  //   const ds = await prepareConnection()
-  //   const repo = ds.getRepository(Tournament)
-  //   const where: FindOptionsWhere<Tournament> = { id: tournamentId }
-  //   if (auth?.level <= 8) where.published = true
-
-  //   const tournament = await repo.findOne({ where })
-  //   if (!tournament) throw new BadRequestException()
-
-  //   return { success: true, tournament }
-  // }
 
   @Patch('/:rankingId')
   @JwtAuthGuard()

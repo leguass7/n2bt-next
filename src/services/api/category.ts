@@ -4,8 +4,13 @@ import type { ICategory, IResponseCategories, IResponseCategory } from '~/server
 
 import { apiService } from './api.service'
 
-export async function listCategories(tournamentId: number): Promise<IResponseCategories> {
-  const response = await apiService.get(`/category/list`, { params: { tournamentId } })
+export async function listCategories(tournamentId: number, params: TableFetchParams = {}): Promise<IResponseCategories> {
+  const response = await apiService.get(`/category/list`, { params: { ...params, tournamentId } })
+  return response
+}
+
+export async function listCategoriesSub(tournamentId: number): Promise<IResponseCategories> {
+  const response = await apiService.get(`/category/list-sub`, { params: { tournamentId } })
   return response
 }
 

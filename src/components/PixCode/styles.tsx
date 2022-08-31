@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const PixContainer = styled.div`
+  position: relative;
   display: flex;
   height: 100%;
   flex-direction: column;

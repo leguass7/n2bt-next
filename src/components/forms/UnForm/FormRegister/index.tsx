@@ -30,7 +30,7 @@ const schema = object().shape({
   cpf: string().test('cpf', 'CPF inválido', value => (value ? cpf.isValid(value) : true)),
   shirtSize: string().required('O tamanho da camisa é obrigatório'),
   birday: string().required('A sua data de nascimento é obrigatória'),
-  category: string().required('Categoria é requirido'),
+  // category: string().required('Categoria é requirido'),
   gender: string().required('gênero é requirido')
 })
 
@@ -47,7 +47,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
 
   const handleSubmit = useCallback(
     async (formData: FormData) => {
-      if (authenticated && userData?.id) {
+      if (authenticated && userData && userData?.id) {
         const invalid = await validateFormData(schema, { ...formData }, formRef.current)
         if (!invalid) {
           setSaving(true)
@@ -59,12 +59,6 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
             updateUserData({ ...formData })
           } else toast.error(response?.message || 'Erro ao salvar')
 
-          // if (!response || !response?.success) {
-          //   toast.error(response?.message || 'Erro ao salvar')
-          // } else {
-          //   setCreated(!!response?.userId)
-          //   toast.success('Informações gravadas')
-          // }
           setSaving(false)
         } else {
           Object.entries(invalid).forEach(([, message]) => {
@@ -73,7 +67,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
         }
       }
     },
-    [authenticated, userData.id, updateUserData]
+    [authenticated, userData, updateUserData]
   )
 
   return (
@@ -107,9 +101,9 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
             </FlexContainer>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FlexContainer verticalPad={10}>
+            {/* <FlexContainer verticalPad={10}>
               <InputSelects name="category" label="Categoria" options={categories} defaultSelected={userData?.category || 'B'} />
-            </FlexContainer>
+            </FlexContainer> */}
           </Grid>
         </Grid>
 

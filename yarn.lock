@@ -932,13 +932,6 @@
   resolved "https://registry.yarnpkg.com/@sqltools/formatter/-/formatter-1.2.3.tgz#1185726610acc37317ddab11c3c7f9066966bd20"
   integrity sha512-O3uyB/JbkAEMZaP3YqyHH7TMnex7tWyCbCI4EfJdOCoN6HIhqdJBWTM6aCCiWQ/5f5wxjgU735QAIpJbjDvmzg==
 
-"@storyofams/next-api-decorators@^1.8.2":
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/@storyofams/next-api-decorators/-/next-api-decorators-1.8.2.tgz#f0d9a5697cf41f919cfbd756296f4e9fda710fb4"
-  integrity sha512-42K8xxwNd/cIOR5+t4OfRxXTATGlGzY2T/onlvVFLmKG9ci2Y/hvFnSepOE/7fiq4FnYrUA668064KxysXEUJA==
-  dependencies:
-    reflect-metadata "^0.1.13"
-
 "@swc/helpers@0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.4.3.tgz#16593dfc248c53b699d4b5026040f88ddb497012"
@@ -4667,6 +4660,13 @@ neo-async@^2.6.0:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
+
+next-api-decorators@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/next-api-decorators/-/next-api-decorators-2.0.0.tgz#ae193f6f820279f3f874ec956a08d9e589d50f4a"
+  integrity sha512-7JJzps6Ym46rkOyL0BsACMTX0WFh4NLFd0h10uAza4HO7o7W6lyDeINJ8jAOJNUcZnNucZVd6SxiKZsPIlnvBg==
+  dependencies:
+    reflect-metadata "^0.1.13"
 
 next-auth@^4.10.3:
   version "4.10.3"

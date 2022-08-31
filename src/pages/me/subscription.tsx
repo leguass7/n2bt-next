@@ -50,9 +50,6 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
 
   const handlePixSubscription = useCallback(async (payId: number) => {
     setPaymentId(payId)
-    // const response = await deleteMeSubscriptions(id)
-    // if (!response?.success) toast.error(response?.message || 'Erro ao excluir')
-    // else fetchData()
   }, [])
 
   const handleCloseModalPix: ModalPixCloseHandler = () => {
