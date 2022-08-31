@@ -46,7 +46,7 @@ export const Item: React.FC<Props> = ({
   }
 
   const handleExpand = (_event: React.SyntheticEvent, _active: boolean) => {
-    if (onClick) onClick(id, { price, disabled })
+    if (onClick) onClick(id, { price: value, disabled })
   }
 
   const renderSecondary = () => {
