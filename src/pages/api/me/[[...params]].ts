@@ -1,5 +1,5 @@
-import { BadRequestException, createHandler, Delete, Get, HttpCode, Req } from 'next-api-decorators'
 import { instanceToPlain } from 'class-transformer'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Req } from 'next-api-decorators'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
@@ -77,8 +77,8 @@ class MeHandler {
       .createQueryBuilder('Subscription')
       .select()
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email'])
-      .addSelect(['Category.id', 'Category.title', 'Category.tournamentId', 'Category.price', 'Category.maxSubscription'])
-      .addSelect(['Tournament.id', 'Tournament.title'])
+      .addSelect(['Category.id', 'Category.title', 'Category.tournamentId', 'Category.price'])
+      .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
       .innerJoin('Subscription.partner', 'Partner')
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Category.tournament', 'Tournament')
