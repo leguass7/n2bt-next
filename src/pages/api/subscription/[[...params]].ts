@@ -6,6 +6,7 @@ import { PaginateService, Pagination } from '~/server-side/services/PaginateServ
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
+import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 const searchFields = ['id', 'title']
@@ -14,7 +15,36 @@ const orderFields = [
   ['Subscription.title', 'title'],
   ['User.name', 'user']
 ]
+
 class SubscriptionHandler {
+  @Post('/transfer')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async transfer(@Req() req: AuthorizedApiRequest<IRequestSubscriptionTransfer>) {
+    const { query, body, auth } = req
+    const tournamentId = +query?.tournamentId
+    if (!tournamentId) throw new BadRequestException('Torneio não encontrado')
+
+    const toCategory = body?.to || []
+    if (!toCategory?.length) throw new BadRequestException('Lista de transferência inválida')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const result = Promise.all(
+      toCategory.map(async ({ categoryId, subscriptionId, userId }) => {
+        return repo
+          .createQueryBuilder('Subscription')
+          .where('id = :subscriptionId', { subscriptionId })
+          .andWhere('userId = :userId', { userId })
+          .update({ categoryId, updatedBy: auth.userId, updatedAt: new Date() })
+          .execute()
+      })
+    )
+
+    return { success: true, data: result }
+  }
+
   @Get('/summary')
   @IfAuth()
   @HttpCode(200)

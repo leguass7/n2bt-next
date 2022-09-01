@@ -11,11 +11,11 @@ import type { ICustomCellProps } from '~/components/CustomTable'
 import { Text } from '~/components/styled'
 import { CellContainer, CellTools } from '~/components/tables/cells/styles'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
+import { categoryGenders } from '~/config/constants'
 import { splitDateTime } from '~/helpers/dates'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import { updateCategory } from '~/services/api/category'
 
-import { categoryGenders } from '../FormCategory'
 import type { ICategoryActions } from './Actions'
 
 type Props = ICustomCellProps<ICategory>

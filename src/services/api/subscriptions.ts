@@ -1,6 +1,11 @@
 import { TableFetchParams } from '~/components/CustomTable/types'
 import type { IResponsePaginated } from '~/server-side/services/PaginateService'
-import type { IResponseSubscription, IResponseSubscriptionSummary, ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type {
+  IRequestSubscriptionTransfer,
+  IResponseSubscription,
+  IResponseSubscriptionSummary,
+  ISubscription
+} from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 import { apiService } from './api.service'
@@ -17,6 +22,11 @@ export async function paginateSubscription(categoryId: number, params: TableFetc
 
 export async function getSubscriptionSummary(tournamentId: number, params: TableFetchParams = {}): Promise<IResponseSubscriptionSummary> {
   const response = await apiService.get('/subscription/summary', { params: { tournamentId, ...params } })
+  return response
+}
+
+export async function transferSubscriptions(tournamentId: number, data: IRequestSubscriptionTransfer): Promise<IResponseSubscriptionSummary> {
+  const response = await apiService.post('/subscription/transfer', data, { params: { tournamentId } })
   return response
 }
 

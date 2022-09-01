@@ -30,6 +30,7 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
 
   const description = tournament?.description || 'Beach Tennis, Aulas, Torneios e muito mais'
 
+  tournament.maxSubscription
   return (
     <Layout>
       <Head>
@@ -53,7 +54,7 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
             </Stack>
           </>
         ) : (
-          <DynamicSubscription tournamentId={tournamentId} />
+          <DynamicSubscription tournamentId={tournamentId} maxSubscription={tournament?.maxSubscription} />
         )}
       </BoxCenter>
     </Layout>
@@ -91,7 +92,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async context => {
       session,
       isExpired,
       tournamentId,
-      tournament: { title: tournament?.title, description: tournament?.description }
+      tournament: { title: tournament?.title, description: tournament?.description, maxSubscription: tournament?.maxSubscription }
     }
   }
 }

@@ -10,27 +10,31 @@ import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import { listCategoriesSub } from '~/services/api/category'
 
+import { CircleLoading } from '../CircleLoading'
 import { Item, ItemClickHandler } from './Item'
 
 export type CategoryChangeHandler = (categoryId?: number, category?: ICategory) => any
 type Props = {
   tournamentId: number
+  maxSubscription: number
   onChange?: CategoryChangeHandler
   defaultSelected?: number
 }
-export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaultSelected = 0 }) => {
-  // const [expanded, setExpanded] = useState<number>(0)
+export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaultSelected = 0, maxSubscription }) => {
+  const [loading, setLoading] = useState(false)
   const [selected, setSelected] = useState(defaultSelected)
   const [categories, setCategories] = useState<ICategory[]>([])
 
   const fetchData = useCallback(async () => {
     if (tournamentId) {
+      setLoading(true)
       const response = await listCategoriesSub(tournamentId)
       if (response?.success && response?.categories?.length) {
         setCategories(response.categories)
       } else {
         toast.error('Nenhuma categoria para torneio')
       }
+      setLoading(false)
     }
   }, [tournamentId])
 
@@ -65,6 +69,14 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
           </Alert>
         </FlexContainer>
       ) : null}
+      {maxSubscription && paidCount >= maxSubscription ? (
+        <FlexContainer verticalPad={10} justify="center">
+          <Alert severity="warning" sx={{ width: '100%' }}>
+            <AlertTitle>Limite de inscrições</AlertTitle>
+            Você já realizou o máximo de <strong>{maxSubscription}</strong> inscrições.
+          </Alert>
+        </FlexContainer>
+      ) : null}
 
       <BoxCenter>
         {categories?.length ? (
@@ -92,6 +104,7 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
         ) : (
           <Text>Nenhuma categoria para esse torneio</Text>
         )}
+        {loading ? <CircleLoading /> : null}
       </BoxCenter>
     </>
   )

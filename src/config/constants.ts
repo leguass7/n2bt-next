@@ -33,3 +33,9 @@ export const tournamentImages = [
 export const getTournamentImage = (tournamentId: number) => {
   return tournamentImages.find(f => f.id === tournamentId)?.image?.src || tournamentImages[0]?.image?.src
 }
+
+export const categoryGenders: CategoryOption[] = [
+  { id: 'F', label: 'Feminino' },
+  { id: 'M', label: 'Masculino' },
+  { id: 'MF', label: 'Mista' }
+]

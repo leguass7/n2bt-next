@@ -110,7 +110,7 @@ class CategoryHandler {
     if (auth?.level < 8) where.published = true
 
     const category = await repo.findOne({ where })
-    console.log('where', where, auth)
+
     if (!category) throw new BadRequestException(`Erro ao localizar categoria level=${auth?.level} ${categoryId}`)
 
     return { success: true, category }

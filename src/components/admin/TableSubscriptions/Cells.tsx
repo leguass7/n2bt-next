@@ -54,11 +54,16 @@ export const CheckCell: React.FC<Props> = ({ record }) => {
   const { setCustom, custom } = useTableActions<ISubscriptionActions>()
 
   const handleClick = (_e, checked?: boolean) => {
-    const list = (custom?.selectList || []).filter(f => f !== record?.id)
-    setCustom(old => ({ ...old, selectList: checked ? [...list, record?.id] : list }))
+    setCustom(old => {
+      const list = old?.selectList?.filter(f => f.subscriptionId !== record?.id) || []
+      return {
+        ...old,
+        selectList: checked ? [...list, { subscriptionId: record.id, userId: record.userId }] : list
+      }
+    })
   }
 
-  const active = (custom?.selectList || []).find(f => f === record?.id)
+  const active = (custom?.selectList || []).find(f => f.subscriptionId === record?.id)
   return (
     <>
       <Checkbox checked={!!active} onChange={handleClick} />

@@ -33,7 +33,16 @@ export const TabsSubscriptions: React.FC<Props> = ({ categories }) => {
         })}
       </Tabs>
       {categories?.map((category, i) => {
-        return <TabPanel key={`tabpanel-category-${category?.id}`} value={tab} index={i} categoryId={category?.id} categoryName={category?.title} />
+        return (
+          <TabPanel
+            key={`tabpanel-category-${category?.id}`}
+            value={tab}
+            index={i}
+            categoryId={category?.id}
+            categoryName={category?.title}
+            tournamentId={category?.tournamentId}
+          />
+        )
       })}
     </>
   )

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import AddIcon from '@mui/icons-material/Add'
@@ -16,32 +16,38 @@ import Stack from '@mui/material/Stack'
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 
-import { useAdminTournament } from '~/components/app/LayoutAdmin/LayoutAdminProvider'
 import { CircleLoading } from '~/components/CircleLoading'
 import { useCustomTable } from '~/components/CustomTable'
 import { ModalPix } from '~/components/ModalPix'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
+import type { TransferCategoryType } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { deletetCategory } from '~/services/api/category'
+import { transferSubscriptions } from '~/services/api/subscriptions'
 
 import { FormCategory, SuccessHandler } from '../FormCategory'
+import { FormTranferCategory, FormData } from '../FormTranferCategory'
 
 export interface ISubscriptionActions {
   editId?: number
   deleteId?: number
   paymentId?: number
-  selectList?: number[]
+  selectList?: Partial<TransferCategoryType>[]
 }
 
-export const Actions: React.FC = () => {
-  const [tournamentId] = useAdminTournament()
+type Props = {
+  tournamentId: number
+}
+export const Actions: React.FC<Props> = ({ tournamentId }) => {
+  const [tranferOpen, setTransferOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const { custom, setCustom } = useTableActions<ISubscriptionActions>()
   const { emitFetch } = useCustomTable()
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setCustom({ editId: 0, deleteId: 0, paymentId: 0 })
-  }
+    setTransferOpen(false)
+  }, [setCustom])
 
   const handleAdd = () => {
     setCustom({ editId: -1 })
@@ -51,6 +57,10 @@ export const Actions: React.FC = () => {
     toast.success('Categoria salva com sucesso')
     handleClose()
     emitFetch()
+  }
+
+  const handleClickTransfer = () => {
+    setTransferOpen(true)
   }
 
   const handleDelete = async () => {
@@ -66,6 +76,23 @@ export const Actions: React.FC = () => {
     }
   }
 
+  const handleTransferSubmit = useCallback(
+    async ({ categoryId }: FormData = {}) => {
+      if (categoryId && custom?.selectList?.length) {
+        const prepared = custom.selectList.map(f => ({ ...f, categoryId })) as TransferCategoryType[]
+        const response = await transferSubscriptions(tournamentId, { to: prepared })
+        if (response?.success) {
+          toast.success('Inscrições tranferidas com sucesso')
+          handleClose()
+          emitFetch()
+        } else {
+          toast.error(response?.message || 'Erro ao tranferir')
+        }
+      }
+    },
+    [custom, tournamentId, emitFetch, handleClose]
+  )
+
   const title = custom?.editId > 0 ? `Alterar` : `Criar`
 
   return (
@@ -74,7 +101,7 @@ export const Actions: React.FC = () => {
         <div></div>
         <Toolbar sx={{ justifyContent: 'center' }}>
           <Badge badgeContent={custom?.selectList?.length || 0} color="primary" showZero={false}>
-            <Button size="small" variant="contained" disabled>
+            <Button size="small" variant="contained" onClick={handleClickTransfer} disabled={!custom?.selectList?.length}>
               Tranferir
             </Button>
           </Badge>
@@ -86,6 +113,18 @@ export const Actions: React.FC = () => {
         </Toolbar>
       </FlexContainer>
       <Divider />
+      <Modal open={!!tranferOpen} onClose={handleClose} keepMounted={false}>
+        <BoxCenter spacing={1}>
+          <Card sx={{ maxWidth: '100%', minWidth: 500 }}>
+            <CardHeader title={`Transferir inscrições selecionadas`} />
+            <Divider />
+            <CardContent>
+              <FormTranferCategory tournamentId={tournamentId} onCancel={handleClose} onSubmit={handleTransferSubmit} />
+            </CardContent>
+          </Card>
+        </BoxCenter>
+      </Modal>
+
       <Modal open={!!custom?.editId} onClose={handleClose} keepMounted={false}>
         <BoxCenter spacing={1}>
           <Card sx={{ maxWidth: '100%', minWidth: 500 }}>

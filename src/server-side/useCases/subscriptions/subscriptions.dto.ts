@@ -16,3 +16,12 @@ export interface IResponseSubscriptions extends IResponseApi {
 export interface IResponseSubscriptionSummary extends IResponseApi {
   total?: number
 }
+
+export type TransferCategoryType = {
+  subscriptionId: number
+  userId: string
+  categoryId: number
+}
+export interface IRequestSubscriptionTransfer {
+  to: TransferCategoryType[]
+}

@@ -6,10 +6,11 @@ import { Form } from '@unform/web'
 import { object, string } from 'yup'
 
 import { CircleLoading } from '~/components/CircleLoading'
-import { CategoryOption, InputSelects } from '~/components/forms/InputSelects'
+import { InputSelects } from '~/components/forms/InputSelects'
 import { Input } from '~/components/forms/UnForm/Input'
 import { Switch } from '~/components/forms/UnForm/Switch'
 import { FlexContainer } from '~/components/styled'
+import { categoryGenders } from '~/config/constants'
 import { validateFormData } from '~/helpers/validation'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ICategory, IResponseCategory } from '~/server-side/useCases/category/category.dto'
@@ -18,12 +19,6 @@ import { getCategory, storeCategory } from '~/services/api/category'
 type FormData = Partial<ICategory> & {}
 
 type SuccessReason = 'edit' | 'create'
-
-export const categoryGenders: CategoryOption[] = [
-  { id: 'F', label: 'Feminino' },
-  { id: 'M', label: 'Masculino' },
-  { id: 'MF', label: 'Mista' }
-]
 
 export type SuccessHandler = (reason: SuccessReason, response?: IResponseCategory) => void
 

@@ -12,10 +12,11 @@ import { columns } from './columns'
 
 const pageSize = 32
 type Props = {
+  tournamentId: number
   categoryId: number
 }
 
-export const TableSubscriptions: React.FC<Props> = ({ categoryId }) => {
+export const TableSubscriptions: React.FC<Props> = ({ categoryId, tournamentId }) => {
   const [loading, setLoading] = useState(false)
   const [records, setRecords] = useState([])
   const [total, setTotal] = useState(0)
@@ -38,7 +39,7 @@ export const TableSubscriptions: React.FC<Props> = ({ categoryId }) => {
       {categoryId ? (
         <TableActionsProvider>
           <CustomTable columns={columns} pageSize={pageSize} total={total} records={records} onPagination={fetchData} multiple={false}>
-            <Actions />
+            <Actions tournamentId={tournamentId} />
           </CustomTable>
           {loading && <CircleLoading />}
         </TableActionsProvider>
