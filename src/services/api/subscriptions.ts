@@ -30,6 +30,10 @@ export async function transferSubscriptions(tournamentId: number, data: IRequest
   return response
 }
 
+export async function updateSubscription(subscriptionId: number, data: Partial<ISubscription>): Promise<IResponseSubscription> {
+  const response = await apiService.patch(`/subscription/${subscriptionId}`, data)
+  return response
+}
 // export async function listSubscriptions(byPartner?: boolean): Promise<IResponseSubscriptions> {
 //   const url = byPartner ? '/subscription/partner' : '/subscription'
 //   const response = await apiService.get(url)

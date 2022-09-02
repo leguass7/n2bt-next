@@ -53,6 +53,9 @@ export class Subscription {
   @JoinColumn({ name: 'partnerId', referencedColumnName: 'id', foreignKeyConstraintName: 'subscriptions_partnerId_fkey' })
   partner?: User
 
+  @Column({ type: 'datetime', precision: null, nullable: true, default: null })
+  verified?: Date
+
   @ManyToOne('User', 'createdSubscriptions', { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'createdBy', referencedColumnName: 'id', foreignKeyConstraintName: 'subscriptions_createdBy_fkey' })
   createdUser?: User

@@ -29,7 +29,7 @@ import { alpha } from '~/helpers/colors'
 import { splitDateTime } from '~/helpers/dates'
 import { normalizeImageSrc, stringAvatar } from '~/helpers/string'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
-import { updateCategory } from '~/services/api/category'
+import { updateSubscription } from '~/services/api/subscriptions'
 
 import type { ISubscriptionActions } from './Actions'
 
@@ -91,10 +91,10 @@ export const PriceCell: React.FC<Props> = ({ record }) => {
 }
 
 export const SwitchCell: React.FC<Props> = ({ record }) => {
-  const [checked, setChecked] = useState(!!record?.actived)
+  const [checked, setChecked] = useState(!!record?.verified)
 
   const save = async (published: boolean) => {
-    await updateCategory(record?.id, { published })
+    await updateSubscription(record?.id, { verified: published ? new Date() : null })
   }
 
   const handleChange = (evt: any, chk?: boolean) => {
@@ -104,7 +104,7 @@ export const SwitchCell: React.FC<Props> = ({ record }) => {
 
   return (
     <CellContainer>
-      <Switch size="small" checked={checked} onChange={handleChange} />
+      <Switch size="small" checked={checked} onChange={handleChange} color="success" />
     </CellContainer>
   )
 }
