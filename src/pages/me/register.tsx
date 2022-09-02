@@ -31,7 +31,7 @@ const MeRegisterPage: NextPage<PageProps> = ({}) => {
 
       <BoxCenter>
         <FlexContainer justify="center" align="center" verticalPad={10}>
-          <H4 textSize={24}>Bem-vindo {userData?.name}</H4>
+          <H4 textSize={24}>Bem-vindo {userData?.name ?? null}</H4>
         </FlexContainer>
         <CardContainer>
           <UserPanelTabs value={tab} onChange={setTab} />
