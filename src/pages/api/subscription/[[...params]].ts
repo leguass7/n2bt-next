@@ -9,11 +9,11 @@ import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
-const searchFields = ['id', 'title']
+const searchFields = ['Subscription.id', 'User.name', 'Partner.name']
 const orderFields = [
   ['Subscription.id', 'id'],
-  ['Subscription.title', 'title'],
-  ['User.name', 'user']
+  ['User.name', 'user'],
+  ['Partner.name', 'partner']
 ]
 
 class SubscriptionHandler {
@@ -127,7 +127,7 @@ class SubscriptionHandler {
     if (!categoryId) throw new BadRequestException('not_found_categoryId')
 
     const { search, order } = req.pagination
-    const queryText = search ? searchFields.map(field => `Subscription.${field} LIKE :search`) : null
+    const queryText = search ? searchFields.map(field => `${field} LIKE :search`) : null
 
     const queryDb = repo
       .createQueryBuilder('Subscription')
