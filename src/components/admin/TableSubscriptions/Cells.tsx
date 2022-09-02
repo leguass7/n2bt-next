@@ -7,7 +7,7 @@ import MaleIcon from '@mui/icons-material/Male'
 import MoneyOffIcon from '@mui/icons-material/MoneyOff'
 import PaidOutlined from '@mui/icons-material/PaidOutlined'
 import VerifiedIcon from '@mui/icons-material/Verified'
-import { Icon } from '@mui/material'
+import { Button, Icon } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import Checkbox from '@mui/material/Checkbox'
@@ -17,7 +17,9 @@ import Tooltip from '@mui/material/Tooltip'
 import { format, isValid, parseJSON } from 'date-fns'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
+import { SimpleModal } from '~/components/Common/SimpleModal'
 import type { ICustomCellProps } from '~/components/CustomTable'
+import { FormRegister } from '~/components/forms/UnForm/FormRegister'
 import { FlexContainer, Text } from '~/components/styled'
 import { CellContainer, CellTools } from '~/components/tables/cells/styles'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
@@ -109,8 +111,12 @@ export const SwitchCell: React.FC<Props> = ({ record }) => {
 
 export const NameCell: React.FC<Props> = ({ record }) => {
   const { user, partner } = record
+  const [open, setOpen] = useState<string>(null)
 
   const { theme } = useAppTheme()
+  const handleClose = () => {
+    setOpen(null)
+  }
 
   const GerderIco = {
     M: MaleIcon,
@@ -141,19 +147,26 @@ export const NameCell: React.FC<Props> = ({ record }) => {
         </AvatarGroup>
         <div>
           <FlexContainer justify="flex-start">
-            <Text title={user?.name}>{user?.nick || user?.name}</Text>
+            <Button size="small" onClick={() => setOpen(user?.id)} color="inherit">
+              <Text title={user?.nick || user?.name}>{user?.name}</Text>
+            </Button>
             {renderGenderIcon(GerderIco[user?.gender] || null)}
             {user?.completed ? renderGenderIcon(VerifiedIcon) : null}
           </FlexContainer>
           <FlexContainer justify="flex-start">
-            <Text textSize={12} textColor={alpha('#ffffff', 0.7)}>
-              {partner?.name}
-            </Text>
+            <Button size="small" onClick={() => setOpen(partner?.id)} color="inherit">
+              <Text textSize={12} textColor={alpha('#ffffff', 0.7)}>
+                {partner?.name}
+              </Text>
+            </Button>
             {renderGenderIcon(GerderIco[partner?.gender] || null)}
             {partner?.completed ? renderGenderIcon(VerifiedIcon) : null}
           </FlexContainer>
         </div>
       </FlexContainer>
+      <SimpleModal open={!!open} onToggle={handleClose} title="Editar usuário">
+        <FormRegister userId={open} onCancel={handleClose} />
+      </SimpleModal>
     </CellContainer>
   )
 }

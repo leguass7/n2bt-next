@@ -146,7 +146,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel, userId }) => {
             </Button>
           ) : null}
           <Button color="primary" variant="contained" type="submit" disabled={!!loadingUser || loading}>
-            Enviar
+            Salvar
           </Button>
         </Stack>
       </Form>
