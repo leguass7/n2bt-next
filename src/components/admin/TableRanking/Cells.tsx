@@ -75,9 +75,7 @@ export const ActionCell: React.FC<Props> = ({ record }) => {
     setCustom({ editId: record?.id })
   }
 
-  const handleDel = () => {
-    setCustom({ deleteId: record?.id })
-  }
+  const handleDel = () => setCustom({ deleteId: record?.id })
   return (
     <CellContainer>
       <CellTools>
@@ -87,7 +85,7 @@ export const ActionCell: React.FC<Props> = ({ record }) => {
           </Tooltip>
         </IconButton>
 
-        <IconButton onClick={handleDel} disabled>
+        <IconButton onClick={handleDel}>
           <Tooltip title="Remover" arrow>
             <DeleteIcon />
           </Tooltip>

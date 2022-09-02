@@ -84,9 +84,10 @@ export const FormCategory: React.FC<FormCategoryProps> = ({ onInvalid, onSuccess
           <InputSelects name="gender" label="Gênero" options={categoryGenders} defaultSelected={data?.gender || 'M'} />
         </FlexContainer>
         <Input placeholder="nome" type="text" name="title" label="Nome" />
-        <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
         <Input placeholder="preço" type="text" name="price" label="Valor da inscrição" />
         <Input placeholder="Desconto" type="text" name="discount" label="Desconto" />
+        <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
+
         <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 2 }}>
           {onCancel ? (
             <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onCancel}>
