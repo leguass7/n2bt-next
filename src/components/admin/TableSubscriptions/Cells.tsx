@@ -112,10 +112,13 @@ export const NameCell: React.FC<Props> = ({ record }) => {
 
   const { theme } = useAppTheme()
 
-  const IconGenderUser = user?.gender === 'M' ? MaleIcon : FemaleIcon
-  const IconGenderPartner = user?.gender === 'M' ? MaleIcon : FemaleIcon
+  const GerderIco = {
+    M: MaleIcon,
+    F: FemaleIcon
+  }
 
   const renderGenderIcon = (I: typeof Icon) => {
+    if (!I) return null
     return (
       <Text textColor={alpha(theme.colors.text, 0.7)}>
         <I sx={{ width: 16, height: 16 }} fontSize="small" />
@@ -139,12 +142,14 @@ export const NameCell: React.FC<Props> = ({ record }) => {
         <div>
           <FlexContainer justify="flex-start">
             <Text title={user?.name}>{user?.nick || user?.name}</Text>
-            {renderGenderIcon(IconGenderUser)}
+            {renderGenderIcon(GerderIco[user?.gender] || null)}
             {user?.completed ? renderGenderIcon(VerifiedIcon) : null}
           </FlexContainer>
           <FlexContainer justify="flex-start">
-            <Text>{partner?.name}</Text>
-            {renderGenderIcon(IconGenderPartner)}
+            <Text textSize={12} textColor={alpha('#ffffff', 0.7)}>
+              {partner?.name}
+            </Text>
+            {renderGenderIcon(GerderIco[partner?.gender] || null)}
             {partner?.completed ? renderGenderIcon(VerifiedIcon) : null}
           </FlexContainer>
         </div>

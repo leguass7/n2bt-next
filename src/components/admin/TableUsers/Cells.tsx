@@ -54,7 +54,7 @@ export const ActionCell: React.FC<Props> = ({ record }) => {
   const { setCustom } = useTableActions<ICustomAction>()
   const { emitFetch } = useCustomTableFilter()
   const [open, setOpen] = useState(false)
-  const { id, name } = record
+  const { id } = record
 
   // const handleDelete = () => {
   //   setCustom({ deleteId: record?.id })

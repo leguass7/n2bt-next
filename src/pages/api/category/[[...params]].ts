@@ -39,7 +39,7 @@ class CategoryHandler {
       .select()
       .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
       .innerJoin('Category.tournament', 'Tournament')
-      .where({ published: true, tournamentId })
+      .where({ tournamentId })
       .andWhere(`Category.gender = :gender OR Category.gender = 'MF'`, { gender: user.gender })
 
     if (userId) {
@@ -67,17 +67,20 @@ class CategoryHandler {
     const { order } = req?.pagination
     const tournamentId = +query?.tournamentId || 0
 
-    const userId = auth?.userId || 0
+    const userId = auth?.userId
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(Category)
+
+    const where: any = { tournamentId }
+    if (auth.level < 8) where.published = true
 
     const queryDb = repo
       .createQueryBuilder('Category')
       .select()
       .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
       .innerJoin('Category.tournament', 'Tournament')
-      .where({ published: true, tournamentId })
+      .where(where)
 
     if (userId) {
       queryDb

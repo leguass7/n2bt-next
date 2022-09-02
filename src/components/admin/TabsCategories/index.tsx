@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { SxProps } from '@mui/material'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 
@@ -25,8 +26,11 @@ export const TabsCategories: React.FC<Props> = ({ name, categories = [], onChang
   return (
     <Tabs value={tab} onChange={onChange} variant="scrollable" scrollButtons allowScrollButtonsMobile>
       {categories?.map((category, i) => {
+        const sxProps: SxProps = {
+          textDecoration: category?.published ? 'none' : 'line-through'
+        }
         const label = `${category?.title} ${category?.gender}`
-        return <Tab key={`tab-category-${category?.id}`} label={label} {...a11yProps(i, name)} />
+        return <Tab key={`tab-category-${category?.id}`} label={label} {...a11yProps(i, name)} sx={sxProps} />
       })}
     </Tabs>
   )

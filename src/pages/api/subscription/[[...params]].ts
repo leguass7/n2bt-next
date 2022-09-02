@@ -122,7 +122,7 @@ class SubscriptionHandler {
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
       .innerJoin('Subscription.partner', 'Partner')
-      .where({ categoryId })
+      .where({ categoryId, actived: true })
 
     if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
     parseOrderDto({ order, table: 'Subscription', orderFields }).querySetup(queryDb)
