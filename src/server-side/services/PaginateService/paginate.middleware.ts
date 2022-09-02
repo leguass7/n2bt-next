@@ -1,5 +1,5 @@
-import { createMiddlewareDecorator, NextFunction } from 'next-api-decorators'
 import type { NextApiResponse } from 'next'
+import { createMiddlewareDecorator, NextFunction } from 'next-api-decorators'
 
 import { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 
