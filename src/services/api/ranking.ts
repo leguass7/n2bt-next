@@ -1,6 +1,13 @@
+import type { TableFetchParams } from '~/components/CustomTable/types'
+import type { IResponsePaginated } from '~/server-side/services/PaginateService'
 import type { IRanking, IResponseUserRanking } from '~/server-side/useCases/ranking/ranking.dto'
 
 import { apiService } from './api.service'
+
+export async function paginateRanking(categoryId: number, params: TableFetchParams = {}): Promise<IResponsePaginated<IRanking>> {
+  const response = await apiService.get('/ranking', { params: { categoryId, ...params } })
+  return response
+}
 
 export async function listRankings(categoryId: number): Promise<IResponseUserRanking> {
   const response = await apiService.get(`/ranking/list`, { params: { categoryId } })

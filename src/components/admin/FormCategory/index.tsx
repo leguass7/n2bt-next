@@ -85,6 +85,8 @@ export const FormCategory: React.FC<FormCategoryProps> = ({ onInvalid, onSuccess
         </FlexContainer>
         <Input placeholder="nome" type="text" name="title" label="Nome" />
         <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
+        <Input placeholder="preço" type="text" name="price" label="Valor da inscrição" />
+        <Input placeholder="Desconto" type="text" name="discount" label="Desconto" />
         <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 2 }}>
           {onCancel ? (
             <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onCancel}>

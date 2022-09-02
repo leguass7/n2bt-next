@@ -2,12 +2,21 @@ import React, { useCallback, useState } from 'react'
 
 import { GetServerSideProps, NextPage } from 'next'
 import { unstable_getServerSession } from 'next-auth'
+import dynamic from 'next/dynamic'
 
-import { TabsCategoryRanking } from '~/components/admin/TabsCategoryRanking'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
+import { CircleLoading } from '~/components/CircleLoading'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
 import { listCategories } from '~/services/api/category'
+
+const DynamicTabsCategoryRanking = dynamic(
+  () => import('~/components/admin/TabsCategoryRanking').then(({ TabsCategoryRanking }) => TabsCategoryRanking),
+  {
+    loading: () => <CircleLoading />,
+    ssr: false
+  }
+)
 
 type PageProps = {
   tournamentId?: number
@@ -18,18 +27,18 @@ const AdminTournamentRankingPage: NextPage<PageProps> = ({ tournamentId }) => {
 
   const fetchData = useCallback(async () => {
     setLoading(true)
-    const result = await listCategories(tournamentId)
+    const result = await listCategories(tournamentId, { order: 'asc', orderby: 'title' })
     setLoading(false)
     if (result?.success) {
       setCategories(result?.categories || [])
     }
   }, [tournamentId])
 
-  useOnceCall(() => fetchData())
+  useOnceCall(fetchData)
 
   return (
     <LayoutAdmin>
-      <>{loading ? null : <TabsCategoryRanking categories={categories} />}</>
+      <>{loading ? null : <DynamicTabsCategoryRanking categories={categories} />}</>
     </LayoutAdmin>
   )
 }
