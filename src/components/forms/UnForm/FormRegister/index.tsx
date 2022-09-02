@@ -17,7 +17,7 @@ import { validateFormData } from '~/helpers/validation'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { IUser } from '~/server-side/useCases/user/user.dto'
-import { saveMe } from '~/services/api/user'
+import { findOneUser, saveMe, updateUser } from '~/services/api/user'
 
 import { InputSelects } from '../../InputSelects'
 import { InputMask, InputText } from '../../InputText'
@@ -38,9 +38,14 @@ const schema = object().shape({
 
 export type Props = {
   onCancel?: () => void
+  userId?: string
 }
 
-export const FormRegister: React.FC<Props> = ({ onCancel }) => {
+/**
+ * @function FormRegister
+ * Se não tiver userId, pega as informações do usuário logado
+ */
+export const FormRegister: React.FC<Props> = ({ onCancel, userId }) => {
   const { loading: loadingUser, userData, updateUserData, requestMe, authenticated } = useUserAuth()
 
   const formRef = useRef()
@@ -54,7 +59,9 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
     if (!authenticated) return
     setLoading(true)
 
-    const { success = false, user, message = 'Usuário não encontrado' } = await requestMe()
+    const find = userId ? () => findOneUser({ id: userId }) : requestMe
+    const { success = false, user, message = 'Usuário não encontrado' } = await find()
+
     if (isMounted()) {
       setLoading(false)
       if (!success) toast.error(message)
@@ -62,7 +69,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
     }
 
     if (user) setData({ ...user })
-  }, [requestMe, isMounted, authenticated])
+  }, [requestMe, isMounted, authenticated, userId])
 
   useOnceCall(fetchData)
 
@@ -73,7 +80,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
         if (!invalid) {
           setLoading(true)
 
-          const response = await saveMe(formData)
+          const response = userId ? await updateUser(userId, formData) : await saveMe(formData)
 
           if (response?.success) {
             toast.success('Informações gravadas')
@@ -88,7 +95,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
         }
       }
     },
-    [authenticated, userData, updateUserData]
+    [authenticated, userData, updateUserData, userId]
   )
 
   return (
