@@ -14,6 +14,8 @@ import { FlexContainer } from '~/components/styled'
 import { useUserAuth } from '~/components/UserProvider'
 import { genders, shirtSizes } from '~/config/constants'
 import { validateFormData } from '~/helpers/validation'
+import { useIsMounted } from '~/hooks/useIsMounted'
+import { useOnceCall } from '~/hooks/useOnceCall'
 import { IUser } from '~/server-side/useCases/user/user.dto'
 import { saveMe } from '~/services/api/user'
 
@@ -39,18 +41,37 @@ export type Props = {
 }
 
 export const FormRegister: React.FC<Props> = ({ onCancel }) => {
-  const { loading: loadingUser, authenticated, userData, updateUserData } = useUserAuth()
-
-  const [saving, setSaving] = useState(false)
+  const { loading: loadingUser, userData, updateUserData, requestMe, authenticated } = useUserAuth()
 
   const formRef = useRef()
+
+  const [data, setData] = useState<Partial<IUser>>({})
+
+  const [loading, setLoading] = useState(false)
+  const isMounted = useIsMounted()
+
+  const fetchData = useCallback(async () => {
+    if (!authenticated) return
+    setLoading(true)
+
+    const { success = false, user, message = 'Usuário não encontrado' } = await requestMe()
+    if (isMounted()) {
+      setLoading(false)
+      if (!success) toast.error(message)
+      setLoading(false)
+    }
+
+    if (user) setData({ ...user })
+  }, [requestMe, isMounted, authenticated])
+
+  useOnceCall(fetchData)
 
   const handleSubmit = useCallback(
     async (formData: FormData) => {
       if (authenticated && userData && userData?.id) {
         const invalid = await validateFormData(schema, { ...formData }, formRef.current)
         if (!invalid) {
-          setSaving(true)
+          setLoading(true)
 
           const response = await saveMe(formData)
 
@@ -59,7 +80,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
             updateUserData({ ...formData })
           } else toast.error(response?.message || 'Erro ao salvar')
 
-          setSaving(false)
+          setLoading(false)
         } else {
           Object.entries(invalid).forEach(([, message]) => {
             toast.error(message)
@@ -72,7 +93,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
 
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit} initialData={userData} role="form">
+      <Form ref={formRef} onSubmit={handleSubmit} initialData={data} key={`form-${data.id}`} role="form">
         <Grid container>
           <Grid item xs={12} sm={6}>
             <InputText name="name" label="Nome *" />
@@ -113,16 +134,16 @@ export const FormRegister: React.FC<Props> = ({ onCancel }) => {
 
         <Stack direction="row" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
           {onCancel ? (
-            <Button color="primary" variant="outlined" type="button" disabled={!!loadingUser || saving} onClick={onCancel}>
+            <Button color="primary" variant="outlined" type="button" disabled={!!loadingUser || loading} onClick={onCancel}>
               Voltar
             </Button>
           ) : null}
-          <Button color="primary" variant="contained" type="submit" disabled={!!loadingUser || saving}>
+          <Button color="primary" variant="contained" type="submit" disabled={!!loadingUser || loading}>
             Enviar
           </Button>
         </Stack>
       </Form>
-      {loadingUser || saving ? <CircleLoading /> : null}
+      {loadingUser || loading ? <CircleLoading /> : null}
     </>
   )
 }

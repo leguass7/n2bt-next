@@ -12,6 +12,7 @@ import { Text } from '~/components/styled'
 import { CellContainer, CellTools } from '~/components/tables/cells/styles'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
 import { categoryGenders } from '~/config/constants'
+import { formatPrice } from '~/helpers'
 import { splitDateTime } from '~/helpers/dates'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import { updateCategory } from '~/services/api/category'
@@ -46,6 +47,19 @@ export const NameCell: React.FC<Props> = ({ record }) => {
       <Text>{record?.title}</Text>
       <Text textSize={12} textStyle="italic">
         {genderText}
+      </Text>
+    </CellContainer>
+  )
+}
+
+export const PriceCell: React.FC<Props> = ({ record }) => {
+  const [, total] = formatPrice(record?.price * record?.discount)?.split(String.fromCharCode(160)) || [, 0]
+
+  return (
+    <CellContainer>
+      <Text>{record?.price}</Text>
+      <Text textSize={10} textStyle="italic">
+        {record?.discount || 0} = <Text textSize={10}>{total}</Text>
       </Text>
     </CellContainer>
   )

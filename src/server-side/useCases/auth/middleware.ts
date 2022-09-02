@@ -48,7 +48,6 @@ export const IfAuth = createMiddlewareDecorator(async (req: AuthorizedApiRequest
 
     next()
   } catch (error) {
-    console.log('error', error)
     next()
   }
 })

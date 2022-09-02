@@ -1,7 +1,7 @@
-import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req } from 'next-api-decorators'
 import { hashSync } from 'bcrypt'
 import { instanceToPlain } from 'class-transformer'
 import { parseISO } from 'date-fns'
+import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req } from 'next-api-decorators'
 
 import { generatePassword } from '~/helpers/string'
 import { prepareConnection } from '~/server-side/database/conn'

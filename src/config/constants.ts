@@ -1,6 +1,7 @@
 import imgOriginal from '~/assets/original-1ano.jpg'
 import imgSpeed from '~/assets/primeira-speed.jpg'
 import type { CategoryOption } from '~/components/forms/InputSelects'
+import { brighten } from '~/helpers/colors'
 
 export const categories: CategoryOption[] = [
   { id: 'D', label: 'D' },
@@ -39,3 +40,8 @@ export const categoryGenders: CategoryOption[] = [
   { id: 'M', label: 'Masculino' },
   { id: 'MF', label: 'Mista' }
 ]
+
+export const genderColors = {
+  M: brighten('#00f', 1.5),
+  F: brighten('#f00', 1.5)
+}
