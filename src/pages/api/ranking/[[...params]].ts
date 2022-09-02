@@ -2,6 +2,7 @@ import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post,
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
+import { PaginateService } from '~/server-side/services/PaginateService'
 import { Pagination } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
@@ -9,10 +10,10 @@ import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import type { IRanking } from '~/server-side/useCases/ranking/ranking.dto'
 import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 
-// const searchFields = ['id', 'title']
+const searchFields = ['Ranking.userId', 'User.name']
 const orderFields = [
   ['Ranking.id', 'id'],
-  ['Ranking.title', 'title']
+  ['User.name', 'user']
 ]
 
 class RankingHandler {
@@ -77,6 +78,36 @@ class RankingHandler {
     if (!deleted) throw new BadRequestException()
 
     return { success: true, rankingId, affected: deleted?.affected }
+  }
+
+  @Get()
+  @HttpCode(200)
+  @Pagination()
+  async paginate(@Req() req: AuthorizedPaginationApiRequest) {
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Ranking)
+
+    const categoryId = +req?.query?.categoryId
+    if (!categoryId) throw new BadRequestException('Categoria inválida')
+
+    const { search, order } = req.pagination
+    const queryText = search ? searchFields.map(field => `${field} LIKE :search`) : null
+
+    const queryDb = repo
+      .createQueryBuilder('Ranking')
+      .select()
+      .addSelect(['Category.id', 'Category.title'])
+      .addSelect(['User.id', 'User.name', 'User.image', 'User.email', 'User.nick', 'User.gender', 'User.completed'])
+      .innerJoin('Ranking.category', 'Category')
+      .innerJoin('Ranking.user', 'User')
+      .where({ categoryId })
+
+    if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
+    parseOrderDto({ order, table: 'Ranking', orderFields }).querySetup(queryDb)
+
+    const paginateService = new PaginateService('Ranking')
+    const paginated = await paginateService.paginate(queryDb, req.pagination)
+    return { success: true, ...paginated }
   }
 
   // @Get()

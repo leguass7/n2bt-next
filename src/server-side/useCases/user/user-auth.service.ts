@@ -28,7 +28,12 @@ export async function getUserCredentials(id: string) {
   try {
     const db = await prepareConnection()
     const repo = db.getRepository(User)
-    const user = await repo.findOneBy({ id })
+
+    const user = await repo
+      .createQueryBuilder('User')
+      .select(['User.id', 'User.email', 'User.image', 'User.name', 'User.level'])
+      .where('User.id = :id', { id })
+      .getOne()
 
     const data = {
       id: user?.id,

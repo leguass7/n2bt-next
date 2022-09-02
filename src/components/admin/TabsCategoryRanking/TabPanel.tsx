@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 import { useRouter } from 'next/router'
 
-import { TableSubscriptions } from '~/components/admin/TableSubscriptions'
+import { TableRanking } from '~/components/admin/TableRanking'
 
 type TabPanelProps = {
   tournamentId: number
@@ -25,10 +25,10 @@ export const TabPanel: React.FC<TabPanelProps> = ({ value, index, categoryId, ca
       {value === index && (
         <Card sx={{ overflowX: 'auto', maxWidth: '100%' }}>
           <CardHeader
-            subheader={`Inscrições - ${categoryName}`}
+            subheader={`Ranking - ${categoryName}`}
             action={
               <Toolbar sx={{ justifyContent: 'flex-end' }}>
-                <Tooltip title="Adicionar atleta" arrow>
+                <Tooltip title="Voltar" arrow>
                   <IconButton size="large" onClick={() => push('/admin/tournaments')}>
                     <ArrowBackIcon />
                   </IconButton>
@@ -37,7 +37,7 @@ export const TabPanel: React.FC<TabPanelProps> = ({ value, index, categoryId, ca
             }
           />
           <Divider />
-          <TableSubscriptions categoryId={categoryId} tournamentId={tournamentId} />
+          <TableRanking categoryId={categoryId} tournamentId={tournamentId} />
         </Card>
       )}
     </div>

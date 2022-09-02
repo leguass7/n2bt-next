@@ -1,8 +1,8 @@
 import { ApiPix, IApiPixConfig } from 'brpix-api-node'
 import { FindOptionsWhere } from 'typeorm'
 
-import { dev } from '~/config'
-// const dev = false
+// import { dev } from '~/config'
+const dev = false
 import { prepareConnection } from '~/server-side/database/conn'
 import { ConfigValue } from '~/server-side/useCases/config/config.dto'
 import { Config } from '~/server-side/useCases/config/config.entity'
