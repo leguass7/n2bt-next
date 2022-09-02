@@ -17,8 +17,9 @@ import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 
 import { CircleLoading } from '~/components/CircleLoading'
-import { useCustomTable } from '~/components/CustomTable'
+import { useCustomTable, useCustomTableFilter } from '~/components/CustomTable'
 import { ModalPix } from '~/components/ModalPix'
+import { SearchBar } from '~/components/SearchBar'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
 import type { TransferCategoryType } from '~/server-side/useCases/subscriptions/subscriptions.dto'
@@ -42,7 +43,7 @@ export const Actions: React.FC<Props> = ({ tournamentId }) => {
   const [tranferOpen, setTransferOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const { custom, setCustom } = useTableActions<ISubscriptionActions>()
-  const { emitFetch } = useCustomTable()
+  const { emitFetch, setFilter } = useCustomTableFilter()
 
   const handleClose = useCallback(() => {
     setCustom({ editId: 0, deleteId: 0, paymentId: 0 })
@@ -76,6 +77,13 @@ export const Actions: React.FC<Props> = ({ tournamentId }) => {
     }
   }
 
+  const handleSearchText = useCallback(
+    (search?: string) => {
+      setFilter({ search })
+    },
+    [setFilter]
+  )
+
   const handleTransferSubmit = useCallback(
     async ({ categoryId }: FormData = {}) => {
       if (categoryId && custom?.selectList?.length) {
@@ -97,19 +105,21 @@ export const Actions: React.FC<Props> = ({ tournamentId }) => {
 
   return (
     <>
-      <FlexContainer justify="center">
-        <div></div>
+      <FlexContainer justify="space-around">
+        <div style={{ width: 360, maxWidth: '100%' }}>
+          <SearchBar onChangeText={handleSearchText} />
+        </div>
         <Toolbar sx={{ justifyContent: 'center' }}>
           <Badge badgeContent={custom?.selectList?.length || 0} color="primary" showZero={false}>
             <Button size="small" variant="contained" onClick={handleClickTransfer} disabled={!custom?.selectList?.length}>
               Tranferir
             </Button>
           </Badge>
-          <IconButton onClick={handleAdd} disabled>
+          {/* <IconButton onClick={handleAdd} disabled>
             <Tooltip title="Adicionar Torneio" arrow>
               <AddIcon />
             </Tooltip>
-          </IconButton>
+          </IconButton> */}
         </Toolbar>
       </FlexContainer>
       <Divider />
