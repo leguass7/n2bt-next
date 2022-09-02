@@ -11,14 +11,15 @@ import { SubscriptionStepper } from './SubscriptionStepper'
 
 interface Props {
   tournamentId: number
+  maxSubscription: number
 }
 
-export const Subscription: React.FC<Props> = ({ tournamentId }) => {
+export const Subscription: React.FC<Props> = ({ tournamentId, maxSubscription }) => {
   const [step, setStep] = useState(0)
   const handleChange = (index: number) => setStep(index - 1)
 
   return (
-    <SubscriptionProvider tournamentId={tournamentId}>
+    <SubscriptionProvider tournamentId={tournamentId} maxSubscription={maxSubscription}>
       <div style={{ width: '100%' }}>
         <SubscriptionStepper step={step} />
         <Main name="subscription" onSliderChange={handleChange}>

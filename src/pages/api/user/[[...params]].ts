@@ -1,8 +1,9 @@
-import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req } from 'next-api-decorators'
 import { hashSync } from 'bcrypt'
 import { instanceToPlain } from 'class-transformer'
 import { parseISO } from 'date-fns'
+import { BadRequestException, createHandler, Get, HttpCode, HttpException, InternalServerErrorException, Patch, Post, Req } from 'next-api-decorators'
 
+import { formatDate } from '~/helpers/date'
 import { generatePassword } from '~/helpers/string'
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
@@ -12,7 +13,7 @@ import { Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedApiRequest, PublicApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
-import { IUser } from '~/server-side/useCases/user/user.dto'
+import { IUser, IUserFilter } from '~/server-side/useCases/user/user.dto'
 import { User } from '~/server-side/useCases/user/user.entity'
 
 const searchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
@@ -47,6 +48,27 @@ class UserHandler {
     return { success: true, ...paginated }
   }
 
+  @Get('/find-one')
+  @HttpCode(200)
+  @JwtAuthGuard()
+  async findUser(@Req() req: AuthorizedApiRequest<any, IUserFilter>) {
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+
+    const { id, name, cpf, email } = req.query
+
+    const hasFilter = Object.keys(req.query)?.length > 1 // for params array inside req.query
+    let user: User = null
+
+    if (hasFilter) {
+      const where = { id, name, cpf, email }
+      user = await repo.findOne({ where })
+      if (!user) throw new InternalServerErrorException('Usuário não encontrado')
+    }
+
+    return { success: true, user, auth: req.auth }
+  }
+
   @Post('/register')
   @HttpCode(201)
   async createUser(@Req() req: PublicApiRequest<IUser>) {
@@ -67,6 +89,30 @@ class UserHandler {
     const user = await repo.save({ ...userData, password: hashPassword })
 
     return { success: !!user, userId: user?.id }
+  }
+
+  @Patch('/:userId')
+  @JwtAuthGuard()
+  @HttpCode(201)
+  async updateUser(@Req() req: AuthorizedApiRequest<IUser>) {
+    const { body, query } = req
+
+    const userId = query?.params
+    if (!userId) throw new BadRequestException('Usuário não encontrado')
+
+    if (body?.email) body.email = body.email.toLowerCase().trim()
+    if (body.birday) body.birday = formatDate(body.birday, 'yyyy-MM-dd HH:mm:ss')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+    const userData = repo.create({ ...body })
+
+    const userExists = await repo.findOne({ where: { id: userId } })
+    if (!userExists) throw new HttpException(401, 'Usuário não existe')
+
+    const user = await repo.update(userId, { ...userData })
+
+    return { success: !!user, userId }
   }
 
   @Patch()

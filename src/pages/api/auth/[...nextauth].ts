@@ -46,14 +46,13 @@ const options: NextAuthOptions = {
       async authorize(credentials, _req) {
         const { email, password } = credentials
         const user = await checkCredentials(email, password)
-        // console.log('authorize user', user)
         return user ? { ...user } : null
       }
     })
   ],
   callbacks: {
     async jwt({ token, user }) {
-      const u = await getUserCredentials(user?.id)
+      const u = await getUserCredentials(user?.id || token?.sub)
       token.level = u?.level
       return token
     }
@@ -62,10 +61,6 @@ const options: NextAuthOptions = {
 }
 
 const authHandler: NextApiHandler = async (req, res) => {
-  // const opt = { ...options }
-  // // const ds = await prepareDataSource()
-  // const ds = await prepareConnection()
-  // opt.adapter = CustomAdapter(ds, prepareConnection)
   const [opt] = await createOAuthOptions()
   return NextAuth(req, res, opt)
 }

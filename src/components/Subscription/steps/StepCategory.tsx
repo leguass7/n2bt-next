@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const StepCategory: React.FC<Props> = ({ icon }) => {
-  const { tournamentId, setCategory, category } = useSubscription()
+  const { tournamentId, setCategory, category, maxSubscription } = useSubscription()
   const { goTo } = usePassRoll('subscription')
 
   const handleChange: CategoryChangeHandler = (id, cat) => {
@@ -32,7 +32,7 @@ export const StepCategory: React.FC<Props> = ({ icon }) => {
         <Divider />
         <CardContent>
           <Grid container direction="column" alignItems="center">
-            <SelectCategory tournamentId={tournamentId} onChange={handleChange} defaultSelected={category?.id} />
+            <SelectCategory maxSubscription={maxSubscription} tournamentId={tournamentId} onChange={handleChange} defaultSelected={category?.id} />
           </Grid>
         </CardContent>
         <Divider />

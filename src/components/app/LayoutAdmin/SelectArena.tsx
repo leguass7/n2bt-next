@@ -7,6 +7,7 @@ import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Popover from '@mui/material/Popover'
+import { useRouter } from 'next/router'
 
 import { useAppArena } from '~/hooks/useAppArena'
 import { useOnceCall } from '~/hooks/useOnceCall'
@@ -43,6 +44,7 @@ const ListArenas: React.FC<ListArenasProps> = ({ onClick }) => {
 }
 
 export const SelectArena: React.FC = () => {
+  const { pathname } = useRouter()
   const [arenaId, , arenas] = useAdminArena()
   const { requestListArenas } = useAppArena()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -61,6 +63,10 @@ export const SelectArena: React.FC = () => {
   useOnceCall(() => {
     requestListArenas()
   })
+
+  if (['/admin/tournaments/ranking', '/admin/tournaments/subscriptions'].includes(pathname)) {
+    return <div style={{ flexGrow: 1 }} />
+  }
 
   return (
     <div style={{ flexGrow: 1 }}>

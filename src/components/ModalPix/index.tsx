@@ -38,9 +38,11 @@ export const ModalPix: React.FC<Props> = ({ paymentId, onClose }) => {
       if (paid) {
         toast.success('Pagamento realizado')
         fetchData()
+      } else if (!data?.imageQrcode) {
+        if (onClose) onClose()
       }
     },
-    [fetchData]
+    [fetchData, data, onClose]
   )
 
   useEffect(() => {

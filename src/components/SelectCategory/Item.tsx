@@ -7,6 +7,7 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import Radio from '@mui/material/Radio'
 import gfm from 'remark-gfm'
 
+import { categoryGenders } from '~/config/constants'
 import { formatPrice } from '~/helpers'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 
@@ -33,7 +34,8 @@ export const Item: React.FC<Props> = ({
   discount = 1,
   paidCount = 0,
   subscriptions = [],
-  tournament
+  tournament,
+  gender
 }) => {
   // const hasSub = subscriptions?.length ?? 0
   const paid = subscriptions?.filter(f => !!f.paid)?.length
@@ -54,19 +56,28 @@ export const Item: React.FC<Props> = ({
     return <Text textSize={12}>Quem pode participar?</Text>
   }
 
+  const genderLabel = categoryGenders.find(f => f.id === gender)?.label || '--'
+
   return (
     <Accordion expanded={!!actived} onChange={handleExpand} sx={{ width: '100%' }}>
       <AccordionSummary>
         <FlexContainer justify="flex-start" gap={10}>
           <Radio checked={!!actived} disabled={!!disabled} />
-          <Text style={{ filter: 'grayscale(100%)' }}>
+
+          <Text style={{ filter: 'grayscale(100%)', flex: 1 }}>
             <Text transform="uppercase" textSize={18}>
               {title}
             </Text>
+            <Text>
+              <br />
+              {genderLabel}
+            </Text>
           </Text>
-          <Text>{formatPrice(value)}</Text>
-          <Text style={{ flex: 1 }} />
-          <Text>{renderSecondary()}</Text>
+
+          <FlexContainer justify="flex-end" gap={10}>
+            <Text>{formatPrice(value)}</Text>
+            <Text>{renderSecondary()}</Text>
+          </FlexContainer>
         </FlexContainer>
       </AccordionSummary>
       <AccordionDetails>

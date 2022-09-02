@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 // import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 // import DeleteIcon from '@mui/icons-material/Delete'
@@ -8,7 +8,9 @@ import Tooltip from '@mui/material/Tooltip'
 import Link from 'next/link'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
-import type { ICustomCellProps } from '~/components/CustomTable'
+import { SimpleModal } from '~/components/Common/SimpleModal'
+import { ICustomCellProps, useCustomTableFilter } from '~/components/CustomTable'
+import { FormRegister } from '~/components/forms/UnForm/FormRegister'
 import { Text } from '~/components/styled'
 import { CellContainer, CellTools } from '~/components/tables/cells/styles'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
@@ -50,13 +52,22 @@ export const DateCell: React.FC<Props> = ({ record }) => {
 
 export const ActionCell: React.FC<Props> = ({ record }) => {
   const { setCustom } = useTableActions<ICustomAction>()
+  const { emitFetch } = useCustomTableFilter()
+  const [open, setOpen] = useState(false)
+  const { id } = record
 
   // const handleDelete = () => {
   //   setCustom({ deleteId: record?.id })
   // }
 
   const editArchitecture = () => {
-    setCustom({ editId: record?.id })
+    setCustom({ editId: id })
+  }
+
+  const toggle = () => {
+    editArchitecture()
+    setOpen(old => !old)
+    emitFetch()
   }
 
   // const copyArchitecture = () => {
@@ -77,11 +88,14 @@ export const ActionCell: React.FC<Props> = ({ record }) => {
           </IconButton>
         </Tooltip> */}
         <Tooltip title={'editar'} arrow>
-          <IconButton size="medium" onClick={editArchitecture}>
+          <IconButton size="medium" onClick={toggle}>
             <EditIcon />
           </IconButton>
         </Tooltip>
       </CellTools>
+      <SimpleModal open={open} onToggle={toggle} title="Editar usuário">
+        <FormRegister userId={id} />
+      </SimpleModal>
     </CellContainer>
   )
 }

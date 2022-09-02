@@ -6,6 +6,7 @@ import { PaginateService, Pagination } from '~/server-side/services/PaginateServ
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
+import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 const searchFields = ['id', 'title']
@@ -14,7 +15,36 @@ const orderFields = [
   ['Subscription.title', 'title'],
   ['User.name', 'user']
 ]
+
 class SubscriptionHandler {
+  @Post('/transfer')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async transfer(@Req() req: AuthorizedApiRequest<IRequestSubscriptionTransfer>) {
+    const { query, body, auth } = req
+    const tournamentId = +query?.tournamentId
+    if (!tournamentId) throw new BadRequestException('Torneio não encontrado')
+
+    const toCategory = body?.to || []
+    if (!toCategory?.length) throw new BadRequestException('Lista de transferência inválida')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const result = Promise.all(
+      toCategory.map(async ({ categoryId, subscriptionId, userId }) => {
+        return repo
+          .createQueryBuilder('Subscription')
+          .where('id = :subscriptionId', { subscriptionId })
+          .andWhere('userId = :userId', { userId })
+          .update({ categoryId, updatedBy: auth.userId, updatedAt: new Date() })
+          .execute()
+      })
+    )
+
+    return { success: true, data: result }
+  }
+
   @Get('/summary')
   @IfAuth()
   @HttpCode(200)
@@ -87,12 +117,12 @@ class SubscriptionHandler {
       .createQueryBuilder('Subscription')
       .select()
       .addSelect(['Category.id', 'Category.title'])
-      .addSelect(['User.id', 'User.name', 'User.image', 'User.email', 'User.nick', 'User.gender'])
-      .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender'])
+      .addSelect(['User.id', 'User.name', 'User.image', 'User.email', 'User.nick', 'User.gender', 'User.completed'])
+      .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender', 'Partner.completed'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
       .innerJoin('Subscription.partner', 'Partner')
-      .where({ categoryId })
+      .where({ categoryId, actived: true })
 
     if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
     parseOrderDto({ order, table: 'Subscription', orderFields }).querySetup(queryDb)

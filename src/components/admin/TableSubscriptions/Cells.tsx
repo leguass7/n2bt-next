@@ -2,8 +2,12 @@ import React, { useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import FemaleIcon from '@mui/icons-material/Female'
+import MaleIcon from '@mui/icons-material/Male'
 import MoneyOffIcon from '@mui/icons-material/MoneyOff'
 import PaidOutlined from '@mui/icons-material/PaidOutlined'
+import VerifiedIcon from '@mui/icons-material/Verified'
+import { Icon } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import Checkbox from '@mui/material/Checkbox'
@@ -17,8 +21,9 @@ import type { ICustomCellProps } from '~/components/CustomTable'
 import { FlexContainer, Text } from '~/components/styled'
 import { CellContainer, CellTools } from '~/components/tables/cells/styles'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
+import { genderColors } from '~/config/constants'
 import { formatPrice } from '~/helpers'
-import { brighten } from '~/helpers/colors'
+import { alpha } from '~/helpers/colors'
 import { splitDateTime } from '~/helpers/dates'
 import { normalizeImageSrc, stringAvatar } from '~/helpers/string'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
@@ -54,11 +59,16 @@ export const CheckCell: React.FC<Props> = ({ record }) => {
   const { setCustom, custom } = useTableActions<ISubscriptionActions>()
 
   const handleClick = (_e, checked?: boolean) => {
-    const list = (custom?.selectList || []).filter(f => f !== record?.id)
-    setCustom(old => ({ ...old, selectList: checked ? [...list, record?.id] : list }))
+    setCustom(old => {
+      const list = old?.selectList?.filter(f => f.subscriptionId !== record?.id) || []
+      return {
+        ...old,
+        selectList: checked ? [...list, { subscriptionId: record.id, userId: record.userId }] : list
+      }
+    })
   }
 
-  const active = (custom?.selectList || []).find(f => f === record?.id)
+  const active = (custom?.selectList || []).find(f => f.subscriptionId === record?.id)
   return (
     <>
       <Checkbox checked={!!active} onChange={handleClick} />
@@ -102,29 +112,47 @@ export const NameCell: React.FC<Props> = ({ record }) => {
 
   const { theme } = useAppTheme()
 
-  const colors = {
-    M: brighten('#00f', 1.5),
-    F: brighten(theme.colors.errors, 1.5)
+  const GerderIco = {
+    M: MaleIcon,
+    F: FemaleIcon
+  }
+
+  const renderGenderIcon = (I: typeof Icon) => {
+    if (!I) return null
+    return (
+      <Text textColor={alpha(theme.colors.text, 0.7)}>
+        <I sx={{ width: 16, height: 16 }} fontSize="small" />
+      </Text>
+    )
   }
   return (
     <CellContainer>
       <FlexContainer justify="flex-start" gap={8}>
         <AvatarGroup>
           [
-          <Avatar src={normalizeImageSrc(user?.image)} sx={{ bgcolor: colors[user?.gender] }}>
+          <Avatar src={normalizeImageSrc(user?.image)} sx={{ bgcolor: genderColors[user?.gender] }}>
             {stringAvatar(user?.name)}
           </Avatar>
           ,
-          <Avatar src={normalizeImageSrc(partner?.image)} sx={{ bgcolor: colors[partner?.gender] }}>
+          <Avatar src={normalizeImageSrc(partner?.image)} sx={{ bgcolor: genderColors[partner?.gender] }}>
             {stringAvatar(partner?.name)}
           </Avatar>
           ]
         </AvatarGroup>
-        <Text>
-          <Text>{user?.name}</Text>
-          <br />
-          <Text>{partner?.name}</Text>
-        </Text>
+        <div>
+          <FlexContainer justify="flex-start">
+            <Text title={user?.name}>{user?.nick || user?.name}</Text>
+            {renderGenderIcon(GerderIco[user?.gender] || null)}
+            {user?.completed ? renderGenderIcon(VerifiedIcon) : null}
+          </FlexContainer>
+          <FlexContainer justify="flex-start">
+            <Text textSize={12} textColor={alpha('#ffffff', 0.7)}>
+              {partner?.name}
+            </Text>
+            {renderGenderIcon(GerderIco[partner?.gender] || null)}
+            {partner?.completed ? renderGenderIcon(VerifiedIcon) : null}
+          </FlexContainer>
+        </div>
       </FlexContainer>
     </CellContainer>
   )

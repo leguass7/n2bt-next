@@ -4,6 +4,16 @@ import type { User } from './user.entity'
 
 export type IUser = Partial<User>
 
+export interface IUserFilter {
+  id?: string
+  actived?: boolean
+  cpf?: string
+  email?: string
+  level?: number
+  name?: string
+  phone?: string
+}
+
 export interface IResponseUserStore extends IResponseApi {
   userId?: string
   // createdId?: string

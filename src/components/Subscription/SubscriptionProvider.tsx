@@ -11,6 +11,7 @@ import { createSubscription } from '~/services/api/subscriptions'
 
 export interface ISubscriptionProviderContext {
   subscription: ISubscription
+  maxSubscription: number
   setSubscription: Dispatch<SetStateAction<ISubscription>>
   tournamentId?: number
   category?: ICategory | null
@@ -28,9 +29,10 @@ const SubscriptionProviderContext = createContext({} as ISubscriptionProviderCon
 type Props = {
   children?: React.ReactNode
   tournamentId: number
+  maxSubscription?: number
 }
 
-export const SubscriptionProvider: React.FC<Props> = ({ children, tournamentId }) => {
+export const SubscriptionProvider: React.FC<Props> = ({ children, tournamentId, maxSubscription }) => {
   const [category, setCategory] = useState<ICategory>(null)
   const [partner, setPartner] = useState<IUser>(null)
   const [subscription, setSubscription] = useState<ISubscription>(null)
@@ -64,6 +66,7 @@ export const SubscriptionProvider: React.FC<Props> = ({ children, tournamentId }
     <SubscriptionProviderContext.Provider
       value={{
         tournamentId,
+        maxSubscription,
         category,
         setCategory,
         partner,
@@ -94,9 +97,11 @@ export function useSubscription() {
   const saveSubscription = useContextSelector(SubscriptionProviderContext, ({ saveSubscription }) => saveSubscription)
   const generatePixPayment = useContextSelector(SubscriptionProviderContext, ({ generatePixPayment }) => generatePixPayment)
   const clearSubscription = useContextSelector(SubscriptionProviderContext, ({ clearSubscription }) => clearSubscription)
+  const maxSubscription = useContextSelector(SubscriptionProviderContext, ({ maxSubscription }) => maxSubscription)
 
   return {
     tournamentId,
+    maxSubscription,
     setCategory,
     category,
     partner,

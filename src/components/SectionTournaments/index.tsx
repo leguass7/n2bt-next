@@ -7,6 +7,7 @@ import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { listTournaments } from '~/services/api/tournament'
 
+import { CircleLoading } from '../CircleLoading'
 import { TournamentCard } from './TournamentCard'
 
 // import { Container } from './styles';
@@ -14,10 +15,13 @@ type Props = {
   tournaments?: ITournament[]
 }
 export const SectionTournaments: React.FC<Props> = ({ tournaments = [] }) => {
+  const [loading, setLoading] = useState(false)
   const [data, setData] = useState<ITournament[]>(tournaments)
 
   const fetchData = useCallback(async () => {
+    setLoading(true)
     const response = await listTournaments({ size: 500, order: 'desc', orderby: 'createdAt' })
+    setLoading(false)
     if (response.success) setData(response?.tournaments || [])
   }, [])
 
@@ -45,6 +49,7 @@ export const SectionTournaments: React.FC<Props> = ({ tournaments = [] }) => {
           </Grid>
         </Grid>
       </Grid>
+      {loading ? <CircleLoading relative /> : null}
     </section>
   )
 }
