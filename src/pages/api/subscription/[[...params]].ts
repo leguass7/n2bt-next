@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Get, HttpCode, HttpException, Post, Req } from 'next-api-decorators'
+import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req } from 'next-api-decorators'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
@@ -64,6 +64,22 @@ class SubscriptionHandler {
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
       .getCount()
     return { success: true, total }
+  }
+
+  @Patch('/:subscriptionId')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async update(@Req() req: AuthorizedApiRequest) {
+    const { auth, query, body } = req
+    const subscriptionId = +query?.params[0] || 0
+    if (!subscriptionId) throw new BadRequestException()
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+    const subscription = await repo.update(subscriptionId, { ...body, updatedAt: new Date(), updatedBy: auth.userId })
+    if (!subscription) throw new BadRequestException()
+
+    return { success: true, subscriptionId, affected: subscription?.affected }
   }
 
   @Post()

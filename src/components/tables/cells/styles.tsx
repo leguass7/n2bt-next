@@ -10,6 +10,7 @@ export const CellContainer = styled.div`
   justify-content: center;
   align-content: center;
   border: 0;
+  padding: 0;
 `
 
 export const Span = styled.span<TextProps>`
