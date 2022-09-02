@@ -39,7 +39,7 @@ class CategoryHandler {
       .select()
       .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
       .innerJoin('Category.tournament', 'Tournament')
-      .where({ actived: true, tournamentId })
+      .where({ published: true, tournamentId })
       .andWhere(`Category.gender = :gender OR Category.gender = 'MF'`, { gender: user.gender })
 
     if (userId) {
