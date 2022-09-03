@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import AddIcon from '@mui/icons-material/Add'
+// import AddIcon from '@mui/icons-material/Add'
 import FeedbackIcon from '@mui/icons-material/Feedback'
-import { Badge } from '@mui/material'
+import Badge from '@mui/material/Badge'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -17,7 +17,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 
 import { CircleLoading } from '~/components/CircleLoading'
-import { useCustomTable, useCustomTableFilter } from '~/components/CustomTable'
+import { useCustomTableFilter } from '~/components/CustomTable'
 import { ModalPix } from '~/components/ModalPix'
 import { SearchBar } from '~/components/SearchBar'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
@@ -50,9 +50,9 @@ export const Actions: React.FC<Props> = ({ tournamentId }) => {
     setTransferOpen(false)
   }, [setCustom])
 
-  const handleAdd = () => {
-    setCustom({ editId: -1 })
-  }
+  // const handleAdd = () => {
+  //   setCustom({ editId: -1 })
+  // }
 
   const handleSuccess: SuccessHandler = () => {
     toast.success('Categoria salva com sucesso')

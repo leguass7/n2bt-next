@@ -7,10 +7,11 @@ import MaleIcon from '@mui/icons-material/Male'
 import MoneyOffIcon from '@mui/icons-material/MoneyOff'
 import PaidOutlined from '@mui/icons-material/PaidOutlined'
 import VerifiedIcon from '@mui/icons-material/Verified'
-import { Button, Icon } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
+import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
+import Icon from '@mui/material/Icon'
 import IconButton from '@mui/material/IconButton'
 import Switch from '@mui/material/Switch'
 import Tooltip from '@mui/material/Tooltip'
@@ -18,7 +19,7 @@ import { format, isValid, parseJSON } from 'date-fns'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { SimpleModal } from '~/components/Common/SimpleModal'
-import type { ICustomCellProps } from '~/components/CustomTable'
+import { ICustomCellProps } from '~/components/CustomTable'
 import { FormRegister } from '~/components/forms/UnForm/FormRegister'
 import { FlexContainer, Text } from '~/components/styled'
 import { CellContainer, CellTools } from '~/components/tables/cells/styles'
@@ -31,13 +32,20 @@ import { normalizeImageSrc, stringAvatar } from '~/helpers/string'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { updateSubscription } from '~/services/api/subscriptions'
 
+// import { PaymentIcon } from '../PaymentIcon'
 import type { ISubscriptionActions } from './Actions'
 
 type Props = ICustomCellProps<ISubscription>
 
 export const PaidCell: React.FC<Props> = ({ record }) => {
+  // const { emitFetch } = useCustomTableFilter()
   const { setCustom } = useTableActions<ISubscriptionActions>()
   const handleClick = () => setCustom({ paymentId: record?.paymentId })
+  // return (
+  //   <CellContainer>
+  //     <PaymentIcon value={record?.value} id={record.id} paid={!!record.paid} paymentId={record?.paymentId} updateSubscriptionHandler={emitFetch} />
+  //   </CellContainer>
+  // )
   return (
     <>
       <CellContainer>

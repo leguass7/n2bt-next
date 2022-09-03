@@ -17,6 +17,41 @@ const orderFields = [
 ]
 
 class SubscriptionHandler {
+  @Get('/list')
+  @JwtAuthGuard()
+  @Pagination()
+  @HttpCode(200)
+  async list(@Req() req: AuthorizedPaginationApiRequest) {
+    const { query, pagination } = req
+
+    const categoryId = +query?.categoryId
+    if (!categoryId) throw new BadRequestException('Categoria não encontrada')
+
+    const { search, order } = pagination
+    const queryText = search ? searchFields.map(field => `${field} LIKE :search`) : null
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const queryDb = repo
+      .createQueryBuilder('Subscription')
+      .select()
+      .addSelect(['Category.id', 'Category.title'])
+      .addSelect(['User.id', 'User.name', 'User.image', 'User.email', 'User.nick', 'User.gender', 'User.completed'])
+      .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender', 'Partner.completed'])
+      .innerJoin('Subscription.category', 'Category')
+      .innerJoin('Subscription.user', 'User')
+      .innerJoin('Subscription.partner', 'Partner')
+      .where({ categoryId, actived: true })
+
+    if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
+    parseOrderDto({ order, table: 'Subscription', orderFields }).querySetup(queryDb)
+
+    const subscriptions = await queryDb.getMany()
+
+    return { success: true, subscriptions }
+  }
+
   @Post('/transfer')
   @JwtAuthGuard()
   @HttpCode(200)

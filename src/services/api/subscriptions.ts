@@ -3,6 +3,7 @@ import type { IResponsePaginated } from '~/server-side/services/PaginateService'
 import type {
   IRequestSubscriptionTransfer,
   IResponseSubscription,
+  IResponseSubscriptions,
   IResponseSubscriptionSummary,
   ISubscription
 } from '~/server-side/useCases/subscriptions/subscriptions.dto'
@@ -34,6 +35,15 @@ export async function updateSubscription(subscriptionId: number, data: Partial<I
   const response = await apiService.patch(`/subscription/${subscriptionId}`, data)
   return response
 }
+
+export type AdminSubscriptionsParams = {
+  categoryId?: number
+}
+export async function listAdminSubscriptions(params?: AdminSubscriptionsParams): Promise<IResponseSubscriptions> {
+  const response = await apiService.get('/subscription/list', { params })
+  return response
+}
+
 // export async function listSubscriptions(byPartner?: boolean): Promise<IResponseSubscriptions> {
 //   const url = byPartner ? '/subscription/partner' : '/subscription'
 //   const response = await apiService.get(url)

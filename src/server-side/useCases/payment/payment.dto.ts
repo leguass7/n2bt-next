@@ -68,3 +68,13 @@ export type ResultPixPaid = {
   chave: string
   horario: Date
 }
+
+export interface ResponseApiPixEndToEnd {
+  data: {
+    endToEndId: string
+    valor: string
+    chave: string
+    horario: Date
+  }
+  success: true
+}
