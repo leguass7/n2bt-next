@@ -28,7 +28,7 @@ export const TabPanel: React.FC<TabPanelProps> = ({ value, index, categoryId, ca
             subheader={`Inscrições - ${categoryName}`}
             action={
               <Toolbar sx={{ justifyContent: 'flex-end' }}>
-                <Tooltip title="Adicionar atleta" arrow>
+                <Tooltip title="Voltar para torneios" arrow>
                   <IconButton size="large" onClick={() => push('/admin/tournaments')}>
                     <ArrowBackIcon />
                   </IconButton>

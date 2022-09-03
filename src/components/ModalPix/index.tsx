@@ -18,12 +18,15 @@ type Props = {
 }
 export const ModalPix: React.FC<Props> = ({ paymentId, onClose }) => {
   const refId = useRef(0)
+
   const [data, setData] = useState<IResponseGeneratePix>()
 
   const fetchData = useCallback(async () => {
     if (paymentId) {
       refId.current += 1
+
       const response = await checkPayment(paymentId, { disableqrcode: false, fetchId: refId.current })
+
       if (response?.success) {
         setData({ ...response })
       } else {

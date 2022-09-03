@@ -6,32 +6,11 @@ import { prepareConnection } from '~/server-side/database/conn'
 import { createApiPix } from '~/server-side/services/pix'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
-import { PaymentMethod } from '~/server-side/useCases/payment/payment.dto'
+import { PaymentMethod, ResponseApiPixEndToEnd } from '~/server-side/useCases/payment/payment.dto'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { checkPaymentService, generatePaymentService } from '~/server-side/useCases/payment/payment.service'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
-
-// export async function generate(
-//   apiPix: ApiPix,
-//   { user, value, infos: infoAdicionais, paymentId, pixKey: chave, expiracao }: GeneratePayment
-// ): Promise<ResponseGenerate> {
-//   const cob = (await apiPix.createCob({
-//     calendario: { expiracao },
-//     devedor: { cpf: removeAll(user?.cpf), nome: user.name },
-//     valor: { original: Number(`${value}`).toFixed(2) },
-//     chave: chave || 'lesbr3@gmail.com',
-//     solicitacaoPagador: `ARENA BT ${paymentId}`,
-//     infoAdicionais
-//   })) as Partial<IResponseCob> & { responseError?: { mensagem?: string } }
-
-//   if (!cob || !cob?.txid || !cob.loc) {
-//     return { success: false, message: cob?.responseError?.mensagem || 'generate PIX function errror' }
-//   }
-
-//   const qrcode = await apiPix.qrcodeByLocation(cob.loc.id)
-//   return { success: true, ...cob, ...qrcode }
-// }
 
 class PaymentHandler {
   @Post('/check/:paymentId')
@@ -57,52 +36,6 @@ class PaymentHandler {
       ...check
     }
   }
-  // @Post('/check/:paymentId')
-  // @IfAuth()
-  // @HttpCode(200)
-  // async check(@Req() req: AuthorizedApiRequest<{ disableqrcode?: boolean }>) {
-  //   const { auth, query, body } = req
-  //   const paymentId = +query?.params[1] || 0
-  //   const disableqrcode = !!body?.disableqrcode
-
-  //   const ds = await prepareConnection()
-  //   const repoPay = ds.getRepository(Payment)
-  //   const payment = await repoPay.findOne({ where: { id: paymentId } })
-  //   if (!payment) throw new BadRequestException('Pagamento não encontrado')
-
-  //   const paymentMeta = { ...payment?.meta } as PaymentMeta
-
-  //   const apiPix = await createApiPix()
-  //   const cob = await apiPix.consultCob(payment.txid)
-  //   const result: IResponseGeneratePix = { imageQrcode: '', qrcode: '', txid: payment?.txid, paymentId: payment.id }
-
-  //   // salvar caso seja pago
-  //   if (cob?.status === 'CONCLUIDA') {
-  //     // FIXME: Melhorar lógica (deixar mais compreensível)
-  //     const pixInfo = { ...cob } as InfoPix
-  //     const pix = pixInfo?.pix.find(f => f.txid === payment.txid)
-  //     const payday = pix ? pix.horario : undefined
-  //     const meta = pix ? mergeDeep({}, paymentMeta, { endToEndId: pix?.endToEndId, horario: pix?.horario }) : undefined
-  //     await repoPay.update(payment.id, { paid: true, payday, meta, updatedBy: auth.userId })
-  //     await ds
-  //       .getRepository(Subscription)
-  //       .createQueryBuilder()
-  //       .update({ paid: true, updatedBy: auth.userId })
-  //       .where({ paymentId: payment.id })
-  //       .execute()
-  //     result.paid = !!payment?.paid
-  //   } else if (paymentMeta?.loc?.id && !disableqrcode) {
-  //     const pay = await apiPix.qrcodeByLocation(paymentMeta?.loc?.id)
-  //     result.imageQrcode = pay?.imagemQrcode
-  //     result.qrcode = pay?.qrcode
-  //   }
-
-  //   return {
-  //     success: true,
-  //     paid: !!payment?.paid,
-  //     ...result
-  //   }
-  // }
 
   @Get('/generate/:subscriptionId')
   @JwtAuthGuard()
@@ -177,61 +110,41 @@ class PaymentHandler {
     }
   }
 
-  // @Post('/pix/generate')
-  // @JwtAuthGuard()
-  // @HttpCode(201)
-  // async createPayment(@Req() req: AuthorizedApiRequest<Partial<Payment>, IPixQuery>): Promise<IResponseGeneratePix> {
-  //   const { userId } = req.auth
-  //   if (!userId) throw new BadRequestException('Usuário não encontrado, por favor, logue novamente')
+  @Post('/:paymentId')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async manualPayment(@Req() req: AuthorizedApiRequest) {
+    const { auth, body, query } = req
+    const paymentId = +query?.paymentId
+    const e2eId = body?.e2eId as string
+    const userId = auth?.userId
+    if (!userId) throw new BadRequestException('Usuário inválido')
 
-  //   // Pegar id da inscrição
-  //   const subscriptionId = +req.query?.subscriptionId
-  //   if (!subscriptionId) throw new BadRequestException('Não encontramos sua inscrição, por favor, tente novamente')
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Payment)
 
-  //   // Definir overdue
+    const payment = await repo.findOne({ where: { id: paymentId } })
+    if (!payment) throw new BadRequestException('Pagamento inválido')
 
-  //   const ds = await prepareConnection()
-  //   const repo = ds.getRepository(Payment)
+    const apiPix = await createApiPix()
+    const response = await apiPix.requestApi<ResponseApiPixEndToEnd>('get', `/v2/pix/${e2eId}`)
+    if (!response?.success) throw new BadRequestException('Identificador não localizado')
 
-  //   const overrides = { userId, updatedBy: userId, createdBy: userId }
+    const payData = response?.data
+    const updatedBy = auth.userId
 
-  //   // criar pagamento
-  //   const paymentData = repo.create({ ...req.body, ...overrides })
+    await repo.update(paymentId, {
+      updatedBy,
+      value: Number(payData?.valor),
+      txid: payData.endToEndId,
+      paid: true,
+      payday: payData?.horario
+    })
 
-  //   const payment = await repo.save(paymentData)
-  //   if (!payment) throw new InternalServerErrorException('Erro na criação do pagamento')
+    await ds.getRepository(Subscription).createQueryBuilder().update({ paid: true, updatedBy: userId }).where({ paymentId: payment.id }).execute()
 
-  //   // update subscription with payment id
-  //   const subscriptionRepo = ds.getRepository(Subscription)
-  //   const subscription = await subscriptionRepo.findOne({ where: { id: subscriptionId }, relations: ['category'] })
-  //   if (!subscription) throw new InternalServerErrorException('Erro na atualização da inscrição')
-  //   await subscriptionRepo.update(subscriptionId, { paymentId: payment.id })
-
-  //   // pegar dados do usuário
-  //   const userRepo = ds.getRepository(User)
-  //   const user = await userRepo.findOne({ where: { id: userId } })
-  //   if (!user?.cpf) throw new BadRequestException('O CPF é necessário para gerar o pix, por favor, atualize suas informações')
-
-  //   return {
-  //     expiresIn: addHours(new Date(), 1),
-  //     status: 'ATIVA',
-  //     txid: '217398127398712 qualquer coisa',
-  //     txKey: '1283829784 chave qualquer'
-  //   }
-
-  // gerar cobrança
-
-  // const expiracao = differenceInSeconds(subscription.category.tournament.expires,new Date())
-
-  // const pixApi = await createApiPix()
-
-  // pixApi.createCob({
-  //   devedor: { cpf: user.cpf },
-  //   valor: { original: Number(`${subscription?.value || 0}`).toFixed(2) },
-  //   calendario: { expiracao: 3600 },
-  //   solicitacaoPagador: `N2 BT ${payment.id}`
-  // })
-  // }
+    return { success: true, paymentId, e2eId, paid: true }
+  }
 }
 
 export default createHandler(PaymentHandler)
