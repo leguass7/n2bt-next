@@ -40,8 +40,14 @@ export async function updateSubscription(subscriptionId: number, data: Partial<I
   return response
 }
 
+// admin
 export async function listAdminSubscriptions(params?: AdminSubscriptionsParams): Promise<IResponseSubscriptions> {
   const response = await apiService.get('/subscription/list', { params })
+  return response
+}
+
+export async function searchAdminSubscriptionUsers(params?: Record<string, any>): Promise<IResponseSubscriptions> {
+  const response = await apiService.get('/subscription/search', { params })
   return response
 }
 

@@ -12,6 +12,7 @@ import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/sub
 import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
+const userSearchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
 const searchFields = ['Subscription.id', 'User.name', 'Partner.name']
 const orderFields = [
   ['Subscription.id', 'id'],
@@ -151,6 +152,44 @@ class SubscriptionHandler {
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
       .getCount()
     return { success: true, total }
+  }
+
+  @Get('/search')
+  @IfAuth()
+  @HttpCode(200)
+  async search(@Req() req: AuthorizedApiRequest) {
+    const { query } = req
+    const categoryId = +query?.categoryId
+    if (!categoryId) throw new BadRequestException('Categoria inválida')
+
+    const search = `${query?.search}`
+    if (!search) return { success: true, users: [] }
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const userFields = userSearchFields.map(u => `User.${u}`)
+    const queryText = search ? [...userFields.map(field => `${field} LIKE :search`)] : null
+
+    const queryDb = repo
+      .createQueryBuilder('Subscription')
+      .select(['Subscription.id', 'Subscription.categoryId'])
+      .addSelect(userFields)
+      .addSelect(['Category.id', 'Category.tournamentId', 'Category.title'])
+      .innerJoin('Subscription.category', 'Category')
+      .innerJoin('Subscription.user', 'User')
+      .where({ actived: true })
+      .andWhere('Subscription.categoryId = :categoryId', { categoryId })
+      .limit(10)
+
+    queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
+
+    const subscriptions = await queryDb.getMany()
+    const users = subscriptions.map(({ user }) => {
+      return user
+    })
+
+    return { success: true, users }
   }
 
   @Patch('/:subscriptionId')

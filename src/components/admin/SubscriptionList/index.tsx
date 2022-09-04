@@ -8,9 +8,9 @@ import { useOnceCall } from '~/hooks/useOnceCall'
 import { listAdminSubscriptions } from '~/services/api/subscriptions'
 
 import { ItemSubscription } from './ItemSubscription'
+import { PairTools } from './PairTools'
 import { prepareDto, PreparedSubscription } from './utils'
 
-// import { Container } from './styles';
 export type OnLoadParams = {
   pairs?: number
   users?: number
@@ -22,7 +22,7 @@ type Props = {
   tournamentId: number
   onLoad?: OnLoadHanlder
 }
-export const SubscriptionList: React.FC<Props> = ({ categoryId, onLoad }) => {
+export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, onLoad }) => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<PreparedSubscription[]>([])
 
@@ -55,7 +55,11 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, onLoad }) => {
               <Card sx={{ minHeight: 150 }}>
                 <CardContent sx={{ padding: 1 }}>
                   <ItemSubscription {...subscription} updateListHandler={fetchData} />
-                  {subscription?.pair ? <ItemSubscription {...subscription?.pair} updateListHandler={fetchData} /> : null}
+                  {subscription?.pair ? (
+                    <ItemSubscription {...subscription?.pair} updateListHandler={fetchData} />
+                  ) : (
+                    <PairTools categoryId={categoryId} tournamentId={tournamentId} subscriptionId={subscription?.id} onSuccess={fetchData} />
+                  )}
                 </CardContent>
               </Card>
             </Grid>
