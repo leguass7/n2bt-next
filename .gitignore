@@ -37,3 +37,10 @@ next-env.d.ts
 
 .env
 *_remove*
+
+docs/cert/**/*
+*.pem
+*.p12
+Cópia_*
+Copy_*
+backup
