@@ -31,17 +31,17 @@ export class ApiService {
     }
   }
 
-  // async getFileByDownload(url: string, params: QueryPagination = {}) {
-  //   try {
-  //     const u = normalizeUrl(url, params)
-  //     const response = await fetch(`${this.options.baseUrl}${u}`, {
-  //       method: 'GET'
-  //     }).then(res => (res.status === 200 ? res.blob() : null))
-  //     return response
-  //   } catch (error) {
-  //     return null
-  //   }
-  // }
+  async getFileByDownload(url: string, params: Record<string, any> = {}) {
+    try {
+      const u = normalizeUrl(url, params)
+      const response = await fetch(`${this.options.baseUrl}${u}`, {
+        method: 'GET'
+      }).then(res => (res.status === 200 ? res.blob() : null))
+      return response
+    } catch (error) {
+      return null
+    }
+  }
 
   async get(url: string, { params }: RequestParams = {}) {
     return this.fetcher('GET', normalizeUrl(url, params))

@@ -44,6 +44,11 @@ export async function listAdminSubscriptions(params?: AdminSubscriptionsParams):
   return response
 }
 
+export async function getDownloadSubscriptions(tournamentId: number, params: TableFetchParams = {}) {
+  const response = await apiService.getFileByDownload('/subscription/download', { tournamentId, ...params })
+  return response || null
+}
+
 // export async function listSubscriptions(byPartner?: boolean): Promise<IResponseSubscriptions> {
 //   const url = byPartner ? '/subscription/partner' : '/subscription'
 //   const response = await apiService.get(url)

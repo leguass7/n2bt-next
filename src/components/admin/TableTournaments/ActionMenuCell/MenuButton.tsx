@@ -1,25 +1,31 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
+import DownloadIcon from '@mui/icons-material/Download'
 import EditIcon from '@mui/icons-material/Edit'
 import GroupIcon from '@mui/icons-material/Group'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import { Divider } from '@mui/material'
+import { Divider, ListItemIcon, ListItemText } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import { useRouter } from 'next/router'
 
 import { MenuItemStyled } from '~/components/tables/cells/styles'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
+import { fileDownload } from '~/helpers/dom'
+import { getDownloadSubscriptions } from '~/services/api/subscriptions'
 
 import type { ITournamentActions } from '../Actions'
 
+type FunctionItem = (...any: any[]) => any
 type Props = {
   tournamentId: number
 }
 export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
+  const [downloading, setDownloading] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { push, prefetch } = useRouter()
   const { setCustom } = useTableActions<ITournamentActions>()
@@ -33,25 +39,34 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
   }
   const handleCloseMenu = () => setAnchorEl(null)
 
-  const handleClickRanking = () => {
-    push(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
-    handleCloseMenu()
+  const withClick = (fn: FunctionItem, wait?: boolean): React.MouseEventHandler<HTMLLIElement> => {
+    return async e => {
+      e.preventDefault()
+      e.stopPropagation()
+      if (fn) {
+        if (wait) await fn()
+        else fn()
+      }
+
+      handleCloseMenu()
+    }
   }
 
-  const handleClickSubscriptions = () => {
-    push(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
-    handleCloseMenu()
-  }
-
-  const handleClickSubCards = () => {
-    push(`/admin/tournaments/sub-cards?tournamentId=${tournamentId}`)
-    handleCloseMenu()
-  }
-
+  const handleClickRanking = () => push(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
+  const handleClickSubscriptions = () => push(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
+  const handleClickSubCards = () => push(`/admin/tournaments/sub-cards?tournamentId=${tournamentId}`)
   const handleDelete = () => setCustom({ deleteId: tournamentId })
+
   const handleEdit = () => {
     setCustom({ editId: tournamentId })
     handleCloseMenu()
+  }
+
+  const handleDownload: React.MouseEventHandler<HTMLLIElement> = async () => {
+    setDownloading(true)
+    const file = await getDownloadSubscriptions(tournamentId)
+    if (file) fileDownload(file, `download.xlsx`)
+    setDownloading(false)
   }
 
   useEffect(() => {
@@ -76,20 +91,25 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
         <MoreVertIcon />
       </IconButton>
       <Menu id="long-menu" MenuListProps={{ 'aria-labelledby': 'long-button' }} anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
-        <MenuItemStyled onClick={handleClickRanking} disableRipple>
+        <MenuItemStyled onClick={withClick(handleClickRanking)} disableRipple>
           <MilitaryTechIcon /> Ranking
         </MenuItemStyled>
-        <MenuItemStyled onClick={handleClickSubscriptions} disableRipple>
+        <MenuItemStyled onClick={withClick(handleClickSubscriptions)} disableRipple>
           <HowToRegIcon /> Inscrições
         </MenuItemStyled>
-        <MenuItemStyled onClick={handleClickSubCards} disableRipple>
+        <MenuItemStyled onClick={withClick(handleClickSubCards)} disableRipple>
           <GroupIcon /> Inscrições agrupadas
         </MenuItemStyled>
         <Divider />
-        <MenuItemStyled onClick={handleEdit} disableRipple>
+        <MenuItemStyled onClick={withClick(handleDownload, true)} disableRipple disabled={!!downloading}>
+          <ListItemIcon>{downloading ? <CircularProgress size={22} /> : <DownloadIcon />}</ListItemIcon>
+          <ListItemText primary="Baixar inscrições" secondary="Download no Excel" />
+        </MenuItemStyled>
+        <Divider />
+        <MenuItemStyled onClick={withClick(handleEdit)} disableRipple>
           <EditIcon /> Alterar
         </MenuItemStyled>
-        <MenuItemStyled onClick={handleDelete} disableRipple disabled>
+        <MenuItemStyled onClick={withClick(handleDelete)} disableRipple disabled>
           <DeleteIcon /> Remover
         </MenuItemStyled>
       </Menu>

@@ -25,3 +25,14 @@ export type TransferCategoryType = {
 export interface IRequestSubscriptionTransfer {
   to: TransferCategoryType[]
 }
+
+export interface SubscriptionSheetDto {
+  name: string
+  phone?: string
+  category: string
+  gender?: string
+  paid?: any
+  paymentId?: number
+  amount?: number | string
+  shirtSize?: string
+}
