@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 
+import GroupIcon from '@mui/icons-material/Group'
+import { Button, Stack } from '@mui/material'
 import CardContent from '@mui/material/CardContent'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
@@ -57,6 +59,11 @@ export const CollapseCharts: React.FC<Props> = ({ expanded, tournamentId }) => {
             <Text textSize={18}>Inscrições realizadas</Text>
           </Paragraph>
         </FlexContainer>
+        <Stack direction={'row'} spacing={1} justifyContent="center" sx={{ mt: 1 }}>
+          <Button href={`/tournament/subscriptions/${tournamentId}`} startIcon={<GroupIcon />}>
+            Duplas inscritas
+          </Button>
+        </Stack>
       </CardContent>
     </Collapse>
   )

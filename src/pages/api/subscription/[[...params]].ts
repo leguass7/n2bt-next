@@ -25,13 +25,13 @@ class SubscriptionHandler {
   @Pagination()
   @HttpCode(200)
   async download(@Req() req: AuthorizedPaginationApiRequest, @Res() res: NextApiResponse) {
-    const { query, pagination } = req
+    const { query } = req
 
     const tournamentId = +query?.tournamentId
     if (!tournamentId) throw new BadRequestException('Torneio não informado')
 
-    const { search, order } = pagination
-    const queryText = search ? searchFields.map(field => `${field} LIKE :search`) : null
+    // const { search } = pagination
+    // const queryText = search ? searchFields.map(field => `${field} LIKE :search`) : null
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)

@@ -11,6 +11,10 @@ import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions
 
 import { apiService } from './api.service'
 
+export type AdminSubscriptionsParams = {
+  categoryId?: number
+}
+
 export async function createSubscription(data: Partial<Subscription>): Promise<IResponseSubscription> {
   const response = await apiService.post('/subscription', data)
   return response
@@ -36,9 +40,6 @@ export async function updateSubscription(subscriptionId: number, data: Partial<I
   return response
 }
 
-export type AdminSubscriptionsParams = {
-  categoryId?: number
-}
 export async function listAdminSubscriptions(params?: AdminSubscriptionsParams): Promise<IResponseSubscriptions> {
   const response = await apiService.get('/subscription/list', { params })
   return response
