@@ -102,18 +102,18 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
     ]
   }
 
-  const renderName = (name = '', nick = '') => {
+  const renderName = (name = '', nick = '', email = '') => {
     const limit = isMobile ? 20 : 27
     const len = name.length
     if (len > limit) {
       return (
-        <Text>
+        <Text title={email}>
           <>{nick ? <>{`${nick} ${name.substring(0, limit - 10)}...`}</> : <>{`${name.substring(0, limit)}...`}</>}</>
         </Text>
       )
     }
 
-    return <Text>{name}</Text>
+    return <Text title={email}>{name}</Text>
   }
 
   return (
@@ -155,7 +155,11 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
               {renderAvatar()}
             </AvatarGroup>
           </ListItemAvatar>
-          <ListItemText primary={renderName(user?.name)} secondary={renderName(partner?.name)} sx={{ paddingLeft: 1 }} />
+          <ListItemText
+            primary={renderName(user?.name, user?.nick, user?.email)}
+            secondary={renderName(partner?.name, partner?.nick, partner?.email)}
+            sx={{ paddingLeft: 1 }}
+          />
         </ListItem>
       </List>
 

@@ -11,6 +11,7 @@ export function prepareDto(data: ISubscription[]): PreparedSubscription[] {
 
   withPartner.forEach(({ partner, ...sub }) => {
     const has = result.find(f => f.userId === sub.userId || f.userId === sub.partnerId)
+    // const has = result.find(f => f.userId === sub.userId)
     if (has) return
     const add: PreparedSubscription = { ...sub, partner, key: `sub-${sub.id}` }
     const foundPair = data.find(f => {
