@@ -15,6 +15,7 @@ import type { AuthorizedApiRequest, PublicApiRequest } from '~/server-side/useCa
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { IUser, IUserFilter } from '~/server-side/useCases/user/user.dto'
 import { User } from '~/server-side/useCases/user/user.entity'
+import { checkCompleteData } from '~/server-side/useCases/user/user.helper'
 
 const searchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
 const otherSearch = ['Category.title']
@@ -110,14 +111,16 @@ class UserHandler {
     const userExists = await repo.findOne({ where: { id: userId } })
     if (!userExists) throw new HttpException(401, 'Usuário não existe')
 
-    const user = await repo.update(userId, { ...userData })
+    const completed = checkCompleteData(userData)
+
+    const user = await repo.update(userId, { ...userData, completed })
 
     return { success: !!user, userId }
   }
 
   @Patch()
   @JwtAuthGuard()
-  @HttpCode(201)
+  @HttpCode(200)
   async saveMe(@Req() req: AuthorizedApiRequest<IUser>) {
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)
@@ -131,21 +134,12 @@ class UserHandler {
     if (!userId) throw new BadRequestException('Usuário não encontrado')
     const user = await repo.update(userId, u)
 
+    const toCheck = await repo.findOne({ where: { id: userId } })
+    const completed = checkCompleteData(toCheck)
+    await repo.update(userId, { completed })
+
     return { success: !!user, userId }
   }
-
-  // @Get('/me')
-  // @HttpCode(200)
-  // @JwtAuthGuard()
-  // async me(@Req() req: AuthorizedApiRequest) {
-  //   const { auth } = req
-  //   const ds = await prepareConnection()
-  //   const repo = ds.getRepository(User)
-  //   const user = await repo.findOne({ where: { id: auth.userId } })
-  //   if (!user) throw new BadRequestException()
-
-  //   return { success: true, user: instanceToPlain(user) }
-  // }
 
   @Get('/find')
   @HttpCode(200)
