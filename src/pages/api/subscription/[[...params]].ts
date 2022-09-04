@@ -1,11 +1,14 @@
-import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req } from 'next-api-decorators'
+import type { NextApiResponse } from 'next'
+import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req, Res } from 'next-api-decorators'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
 import { PaginateService, Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
+import { factoryXlsxService } from '~/server-side/services/XlsxService'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
+import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
 import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
@@ -17,6 +20,55 @@ const orderFields = [
 ]
 
 class SubscriptionHandler {
+  @Get('/download')
+  @JwtAuthGuard()
+  @Pagination()
+  @HttpCode(200)
+  async download(@Req() req: AuthorizedPaginationApiRequest, @Res() res: NextApiResponse) {
+    const { query, pagination } = req
+
+    const tournamentId = +query?.tournamentId
+    if (!tournamentId) throw new BadRequestException('Torneio não informado')
+
+    const { search, order } = pagination
+    const queryText = search ? searchFields.map(field => `${field} LIKE :search`) : null
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const queryDb = repo
+      .createQueryBuilder('Subscription')
+      .select()
+      .addSelect(['Category.id', 'Category.title'])
+      .addSelect(['User.id', 'User.name', 'User.image', 'User.email', 'User.nick', 'User.gender', 'User.completed', 'User.phone', 'User.shirtSize'])
+      .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender', 'Partner.completed'])
+      .innerJoin('Subscription.category', 'Category')
+      .innerJoin('Subscription.user', 'User')
+      .innerJoin('Subscription.partner', 'Partner')
+      .where({ actived: true })
+      .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
+
+    queryDb.addOrderBy('Category.title', 'ASC')
+    queryDb.addOrderBy('User.name', 'ASC')
+    // if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
+    // parseOrderDto({ order, table: 'Subscription', orderFields }).querySetup(queryDb)
+    const subscriptions = await queryDb.getMany()
+
+    const sheet = factoryXlsxService()
+    const data = subscriptions.map(subscriptionToSheetDto)
+    if (!data?.length) throw new BadRequestException('Arquivo vazio')
+
+    const result = await sheet.createDownloadResource('xlsx', data)
+
+    const stream = typeof result.resource === 'string' ? Buffer.from(result.resource, result.encode) : result.resource
+
+    res.writeHead(200, {
+      'Content-Type': result.mimeType,
+      'Content-Length': stream.length
+    })
+    return res.end(stream)
+  }
+
   @Get('/list')
   @JwtAuthGuard()
   @Pagination()

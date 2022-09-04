@@ -30,7 +30,7 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
       setLoading(true)
       const response = await listCategoriesSub(tournamentId)
       if (response?.success && response?.categories?.length) {
-        setCategories(response.categories)
+        setCategories(response.categories.filter(f => !!f?.published))
       } else {
         toast.error('Nenhuma categoria para torneio')
       }

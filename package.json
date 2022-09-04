@@ -1,13 +1,18 @@
 {
   "name": "n2bt-next",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
+    "release": "standard-version --no-verify --skip.tag --release-as patch",
+    "release:alpha": "standard-version --no-verify --skip.tag --release-as patch --prerelease alpha",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "sync": "ts-node-dev --project tsconfig-sync.json -r tsconfig-paths/register --transpile-only --ignore-watch node_modules --no-notify ./src/server-side/database/sync.ts"
+  },
+  "standard-version": {
+    "infile": "docs/CHANGELOG.md"
   },
   "dependencies": {
     "@emotion/react": "^11.10.0",
