@@ -11,11 +11,18 @@ import { ItemSubscription } from './ItemSubscription'
 import { prepareDto, PreparedSubscription } from './utils'
 
 // import { Container } from './styles';
+export type OnLoadParams = {
+  pairs?: number
+  users?: number
+}
+
+export type OnLoadHanlder = (params: OnLoadParams) => void
 type Props = {
   categoryId: number
   tournamentId: number
+  onLoad?: OnLoadHanlder
 }
-export const SubscriptionList: React.FC<Props> = ({ categoryId }) => {
+export const SubscriptionList: React.FC<Props> = ({ categoryId, onLoad }) => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<PreparedSubscription[]>([])
 
@@ -23,12 +30,19 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId }) => {
     setLoading(true)
     const response = await listAdminSubscriptions({ categoryId })
     if (response?.success) {
-      setData(prepareDto(response?.subscriptions || []))
+      const d = prepareDto(response?.subscriptions || [])
+      setData(d)
+      const params: OnLoadParams = {
+        pairs: d.filter(f => !!f?.pair)?.length || 0,
+        users: d?.length || 0
+      }
+      if (onLoad) onLoad(params)
     } else {
       toast.error(response?.message || 'Erro')
     }
+
     setLoading(false)
-  }, [categoryId])
+  }, [categoryId, onLoad])
 
   useOnceCall(fetchData)
 
