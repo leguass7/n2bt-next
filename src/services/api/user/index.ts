@@ -35,3 +35,15 @@ export async function findUser(params: any = {}): Promise<IResponseUsers> {
   const response = await apiService.get('/user/find', { params })
   return response
 }
+
+// aDMIN
+
+export async function getDownloadUsers(params: TableFetchParams = {}) {
+  const response = await apiService.getFileByDownload('/user/download', { ...params })
+  return response || null
+}
+
+export async function deleteUser(userId: string): Promise<IResponseUserStore> {
+  const response = await apiService.delete(`/user/${userId}`)
+  return response
+}

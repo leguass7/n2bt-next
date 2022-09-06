@@ -6,6 +6,7 @@ import type { TableFetchParams } from '~/components/CustomTable/types'
 import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
 import { paginateUsers } from '~/services/api/user'
 
+import { Actions } from './Actions'
 import { columns } from './columns'
 
 const pageSize = 12
@@ -27,7 +28,9 @@ export const TableUsers: React.FC = () => {
 
   return (
     <TableActionsProvider>
-      <CustomTable columns={columns} pageSize={pageSize} total={total} records={records} onPagination={fetchData}></CustomTable>
+      <CustomTable columns={columns} pageSize={pageSize} total={total} records={records} onPagination={fetchData}>
+        <Actions />
+      </CustomTable>
       {loading && <CircleLoading />}
     </TableActionsProvider>
   )

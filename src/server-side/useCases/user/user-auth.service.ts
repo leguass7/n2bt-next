@@ -35,14 +35,19 @@ export async function getUserCredentials(id: string) {
       .where('User.id = :id', { id })
       .getOne()
 
-    const data = {
-      id: user?.id,
-      email: user?.email,
-      image: user?.image,
-      name: user?.name,
-      level: user?.level
+    if (user) {
+      const data = {
+        id: user?.id,
+        email: user?.email,
+        image: user?.image,
+        name: user?.name,
+        level: user?.level
+      }
+      repo.createQueryBuilder('User').update({ lastAcess: new Date() }).where({ id }).execute()
+      return data
     }
-    return data
+
+    return null
   } catch (err) {
     return null
   }

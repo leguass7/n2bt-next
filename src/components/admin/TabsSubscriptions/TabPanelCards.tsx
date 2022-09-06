@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 
 import { FlexContainer, Paragraph, Text } from '~/components/styled'
 
-import { SubscriptionList, OnLoadHanlder, OnLoadParams } from '../SubscriptionList'
+import { SubscriptionList, OnLoadHanlder, OnLoadParams } from '../SubscriptionList/index'
 
 type TabPanelCardsProps = {
   tournamentId: number

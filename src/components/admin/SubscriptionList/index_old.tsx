@@ -9,7 +9,7 @@ import { listAdminSubscriptions } from '~/services/api/subscriptions'
 
 import { ItemSubscription } from './ItemSubscription_old'
 import { PairTools } from './PairTools'
-import { prepareDto, Pair } from './utils'
+import { prepareDto1, PreparedSubscription } from './utils'
 
 export type OnLoadParams = {
   pairs?: number
@@ -24,16 +24,16 @@ type Props = {
 }
 export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, onLoad }) => {
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<Pair[]>([])
+  const [data, setData] = useState<PreparedSubscription[]>([])
 
   const fetchData = useCallback(async () => {
     setLoading(true)
     const response = await listAdminSubscriptions({ categoryId })
     if (response?.success) {
-      const d = prepareDto(response?.subscriptions || [])
+      const d = prepareDto1(response?.subscriptions || [])
       setData(d)
       const params: OnLoadParams = {
-        pairs: d.filter(f => !!f?.partnerSubscription)?.length || 0,
+        pairs: d.filter(f => !!f?.pair)?.length || 0,
         users: d?.length || 0
       }
       if (onLoad) onLoad(params)
@@ -50,20 +50,15 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, on
     <Grid container spacing={1} sx={{ mt: 1 }}>
       {data?.map(subscription => {
         return (
-          <React.Fragment key={subscription?.id}>
+          <React.Fragment key={subscription?.key}>
             <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
               <Card sx={{ minHeight: 150 }}>
                 <CardContent sx={{ padding: 1 }}>
-                  <ItemSubscription {...subscription?.userSubscription} updateListHandler={fetchData} />
-                  {subscription?.partnerSubscription ? (
-                    <ItemSubscription {...subscription?.partnerSubscription} updateListHandler={fetchData} />
+                  <ItemSubscription {...subscription} updateListHandler={fetchData} />
+                  {subscription?.pair ? (
+                    <ItemSubscription {...subscription?.pair} updateListHandler={fetchData} />
                   ) : (
-                    <PairTools
-                      categoryId={categoryId}
-                      tournamentId={tournamentId}
-                      subscriptionId={subscription?.userSubscription?.id}
-                      onSuccess={fetchData}
-                    />
+                    <PairTools categoryId={categoryId} tournamentId={tournamentId} subscriptionId={subscription?.id} onSuccess={fetchData} />
                   )}
                 </CardContent>
               </Card>

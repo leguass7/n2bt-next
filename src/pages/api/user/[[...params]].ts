@@ -1,7 +1,18 @@
 import { hashSync } from 'bcrypt'
 import { instanceToPlain } from 'class-transformer'
 import { parseISO } from 'date-fns'
-import { BadRequestException, createHandler, Get, HttpCode, HttpException, InternalServerErrorException, Patch, Post, Req } from 'next-api-decorators'
+import {
+  BadRequestException,
+  createHandler,
+  Delete,
+  Get,
+  HttpCode,
+  HttpException,
+  InternalServerErrorException,
+  Patch,
+  Post,
+  Req
+} from 'next-api-decorators'
 
 import { formatDate } from '~/helpers/date'
 import { generatePassword } from '~/helpers/string'
@@ -13,6 +24,8 @@ import { Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedApiRequest, PublicApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
+import { Payment } from '~/server-side/useCases/payment/payment.entity'
+import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { IUser, IUserFilter } from '~/server-side/useCases/user/user.dto'
 import { User } from '~/server-side/useCases/user/user.entity'
 import { checkCompleteData } from '~/server-side/useCases/user/user.helper'
@@ -26,29 +39,6 @@ const orderFields = [
 ]
 
 class UserHandler {
-  @Get()
-  @HttpCode(200)
-  @JwtAuthGuard()
-  @Pagination()
-  async users(@Req() req: AuthorizedPaginationApiRequest) {
-    const ds = await prepareConnection()
-    const repo = ds.getRepository(User)
-
-    const { search, order } = req.pagination
-    const queryText = search ? searchFields.map(field => `User.${field} LIKE :search`) : null
-
-    const query = repo.createQueryBuilder('User').select()
-    // .addSelect(['Company.id', 'Company.name'])
-    // .innerJoin('Jobtitle.company', 'Company');
-
-    if (queryText) query.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
-    parseOrderDto({ order, table: 'User', orderFields }).querySetup(query)
-
-    const paginateService = new PaginateService('users')
-    const paginated = await paginateService.paginate(query, req.pagination)
-    return { success: true, ...paginated }
-  }
-
   @Get('/find-one')
   @HttpCode(200)
   @JwtAuthGuard()
@@ -94,12 +84,12 @@ class UserHandler {
 
   @Patch('/:userId')
   @JwtAuthGuard()
-  @HttpCode(201)
+  @HttpCode(200)
   async updateUser(@Req() req: AuthorizedApiRequest<IUser>) {
     const { body, query } = req
 
     const userId = query?.params
-    if (!userId) throw new BadRequestException('Usuário não encontrado')
+    if (!userId) throw new BadRequestException('Usuário inválido')
 
     if (body?.email) body.email = body.email.toLowerCase().trim()
     if (body.birday) body.birday = formatDate(body.birday, 'yyyy-MM-dd HH:mm:ss')
@@ -116,6 +106,30 @@ class UserHandler {
     const user = await repo.update(userId, { ...userData, completed })
 
     return { success: !!user, userId }
+  }
+
+  @Delete('/:userId')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async deleteUser(@Req() req: AuthorizedApiRequest<IUser>) {
+    const { query } = req
+
+    const userId = query?.params
+    if (!userId) throw new BadRequestException('Usuário não encontrado')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+
+    const totalSubscriptions = await ds.getRepository(Subscription).createQueryBuilder().select().where({ userId }).getCount()
+    const totalPayments = await ds.getRepository(Payment).createQueryBuilder().select().where({ userId }).getCount()
+
+    if (totalSubscriptions > 0 || totalPayments > 0) {
+      throw new HttpException(403, `Usuário não pode ser excluído ${totalSubscriptions} ${totalPayments}`)
+    }
+
+    const result = await repo.createQueryBuilder('User').delete().where('id = :userId', { userId }).execute()
+
+    return { success: !!result?.affected, userId, affected: result?.affected }
   }
 
   @Patch()
@@ -250,6 +264,35 @@ class UserHandler {
     if (!updated || !updated?.affected) throw new BadRequestException('database_error')
 
     return { success: true, userId: user.id, affected: updated?.affected }
+  }
+
+  @Get()
+  @JwtAuthGuard()
+  @Pagination()
+  @HttpCode(200)
+  async users(@Req() req: AuthorizedPaginationApiRequest) {
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(User)
+
+    const { search, order } = req.pagination
+
+    const fields = searchFields.map(f => `User.${f}`)
+    const queryText = search ? [...fields.map(field => `${field} LIKE :search`)] : null
+
+    const query = repo
+      .createQueryBuilder('User')
+      .select()
+      .loadRelationCountAndMap('User.totalSubscriptions', 'User.userSubscriptions', 'Subscription')
+      .loadRelationCountAndMap('User.totalPayments', 'User.payments', 'Payment')
+    // .addSelect(['Company.id', 'Company.name'])
+    // .innerJoin('Jobtitle.company', 'Company');
+
+    if (queryText) query.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
+    parseOrderDto({ order, table: 'User', orderFields }).querySetup(query)
+
+    const paginateService = new PaginateService('users')
+    const paginated = await paginateService.paginate(query, req.pagination)
+    return { success: true, ...paginated }
   }
 }
 

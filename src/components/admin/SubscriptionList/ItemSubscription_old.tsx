@@ -22,14 +22,12 @@ import { BoxCenter, Text } from '~/components/styled'
 import { formatPrice } from '~/helpers'
 import { normalizeImageSrc, stringAvatar } from '~/helpers/string'
 import type { IResponseGeneratePix } from '~/server-side/useCases/payment/payment.dto'
-import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { checkPayment } from '~/services/api/payment'
 import { CardContainer } from '~/styles'
 
 import { FormManualPaid } from '../FormManualPaid'
 import { PaymentIcon } from '../PaymentIcon'
-
-export type PreparedSubscription = ISubscription & { key?: string; partnerSubscription?: ISubscription }
+import type { PreparedSubscription } from './utils'
 
 export type ItemSubscriptionProps = PreparedSubscription & {
   onClickPix?: (paymentId: number) => void

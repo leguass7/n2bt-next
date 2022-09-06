@@ -71,6 +71,9 @@ export class User {
   @Column({ nullable: true })
   reset?: string
 
+  @Column({ nullable: true, type: 'datetime', precision: null, default: null })
+  lastAcess?: Date
+
   // relations sigin
   @OneToMany(() => Session, session => session.user)
   sessions?: Session[]

@@ -37,6 +37,7 @@ const schema = object().shape({
 })
 
 export type Props = {
+  onSuccess?: (formData?: FormData) => any
   onCancel?: () => void
   userId?: string
 }
@@ -45,7 +46,7 @@ export type Props = {
  * @function FormRegister
  * Se não tiver userId, pega as informações do usuário logado
  */
-export const FormRegister: React.FC<Props> = ({ onCancel, userId }) => {
+export const FormRegister: React.FC<Props> = ({ onCancel, userId, onSuccess }) => {
   const { loading: loadingUser, userData, updateUserData, requestMe, authenticated } = useUserAuth()
 
   const formRef = useRef()
@@ -85,6 +86,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel, userId }) => {
           if (response?.success) {
             toast.success('Informações gravadas')
             updateUserData({ ...formData })
+            if (onSuccess) onSuccess(formData)
           } else toast.error(response?.message || 'Erro ao salvar')
 
           setLoading(false)
@@ -95,7 +97,7 @@ export const FormRegister: React.FC<Props> = ({ onCancel, userId }) => {
         }
       }
     },
-    [authenticated, userData, updateUserData, userId]
+    [authenticated, userData, updateUserData, userId, onSuccess]
   )
 
   return (

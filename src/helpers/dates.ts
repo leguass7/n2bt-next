@@ -1,4 +1,4 @@
-import { format, parse, parseJSON } from 'date-fns'
+import { format, isValid, parse, parseJSON } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
 
 export function formatInTimeZone(date: Date, fmt = 'yyyy-MM-dd', tz = 'UTC') {
@@ -27,4 +27,16 @@ export const splitDateTime = (date: string | Date) => {
     return format(transformInDate, 'dd/MM/yyyy HH:mm ')?.split(' ')
   }
   return ['--', '--']
+}
+
+export const tryDate = (date: string | Date): Date => {
+  try {
+    if (typeof date === 'string') {
+      const d = parse(date, 'yyyy-MM-dd', new Date())
+      if (isValid(d)) return d
+    }
+  } catch (error) {
+    return null
+  }
+  return date as Date
 }
