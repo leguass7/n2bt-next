@@ -115,7 +115,7 @@ class PaymentHandler {
   @HttpCode(200)
   async manualPayment(@Req() req: AuthorizedApiRequest) {
     const { auth, body, query } = req
-    const paymentId = +query?.paymentId
+    const paymentId = +(query?.paymentId || query?.params[0])
     const e2eId = body?.e2eId as string
     const userId = auth?.userId
     if (!userId) throw new BadRequestException('Usuário inválido')
