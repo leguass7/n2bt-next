@@ -16,7 +16,7 @@ const userSearchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
 const searchFields = ['Subscription.id', 'User.name', 'Partner.name']
 const orderFields = [
   ['Subscription.id', 'id'],
-  ['User.name', 'user'],
+  ['User.name', 'user', 'name'],
   ['Partner.name', 'partner']
 ]
 
@@ -246,11 +246,14 @@ class SubscriptionHandler {
   @HttpCode(200)
   @Pagination()
   async paginate(@Req() req: AuthorizedPaginationApiRequest) {
+    const { query } = req
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
 
-    const categoryId = +req?.query?.categoryId
-    if (!categoryId) throw new BadRequestException('not_found_categoryId')
+    const categoryId = +query?.categoryId
+    if (!categoryId) throw new BadRequestException('categoria inválida')
+
+    const onlyConfirmed = ['1', 'true'].includes(query?.onlyConfirmed) ? true : false
 
     const { search, order } = req.pagination
     const queryText = search ? searchFields.map(field => `${field} LIKE :search`) : null
@@ -265,6 +268,8 @@ class SubscriptionHandler {
       .innerJoin('Subscription.user', 'User')
       .innerJoin('Subscription.partner', 'Partner')
       .where({ categoryId, actived: true })
+
+    if (onlyConfirmed) queryDb.andWhere(`Subscription.verified IS NOT NULL`)
 
     if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
     parseOrderDto({ order, table: 'Subscription', orderFields }).querySetup(queryDb)

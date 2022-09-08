@@ -56,11 +56,7 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({ id, user, pa
           secondaryAction={
             <>
               {createdBy !== userId ? (
-                <IconButton
-                  //onClick={fetchDelete}
-                  title={`Deletar inscrição '${id}'`}
-                  disabled
-                >
+                <IconButton title={`Deletar inscrição '${id}'`} disabled>
                   <DeleteForeverIcon />
                 </IconButton>
               ) : null}

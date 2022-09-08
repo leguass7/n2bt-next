@@ -3,7 +3,6 @@ import { toast } from 'react-toastify'
 
 import MaleIcon from '@mui/icons-material//Male'
 import FemaleIcon from '@mui/icons-material/Female'
-import { IconButton } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Card from '@mui/material/Card'
@@ -11,6 +10,7 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { Text } from '~/components/styled'
@@ -38,7 +38,7 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, onlyVerified, ca
       return true
     }
     setLoading(true)
-    const response = await paginateSubscription(categoryId, { page: 1, size: 1000 })
+    const response = await paginateSubscription(categoryId, { page: 1, size: 1000, order: 'asc', orderby: 'name', onlyConfirmed: true })
     if (response?.success) {
       setData(prepareDto(response?.data?.filter(filter) || []))
     } else {

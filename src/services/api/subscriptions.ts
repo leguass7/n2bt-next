@@ -11,6 +11,9 @@ import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions
 
 import { apiService } from './api.service'
 
+export type PaginateSubscription = TableFetchParams & {
+  onlyConfirmed?: boolean
+}
 export type AdminSubscriptionsParams = {
   categoryId?: number
 }
@@ -20,7 +23,7 @@ export async function createSubscription(data: Partial<Subscription>): Promise<I
   return response
 }
 
-export async function paginateSubscription(categoryId: number, params: TableFetchParams = {}): Promise<IResponsePaginated<ISubscription>> {
+export async function paginateSubscription(categoryId: number, params: PaginateSubscription = {}): Promise<IResponsePaginated<ISubscription>> {
   const response = await apiService.get('/subscription', { params: { categoryId, ...params } })
   return response
 }
