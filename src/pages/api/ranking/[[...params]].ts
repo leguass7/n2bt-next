@@ -1,4 +1,5 @@
 import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from 'next-api-decorators'
+import type { DeepPartial } from 'typeorm'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
@@ -9,6 +10,7 @@ import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import type { IRanking } from '~/server-side/useCases/ranking/ranking.dto'
 import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
+import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 const searchFields = ['Ranking.userId', 'User.name']
 const orderFields = [
@@ -17,6 +19,51 @@ const orderFields = [
 ]
 
 class RankingHandler {
+  @Get('/generate')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async autoGenerate(@Req() req: AuthorizedPaginationApiRequest) {
+    const { query, auth } = req
+
+    const categoryId = +query?.categoryId || 0
+    if (!categoryId) throw new BadRequestException('categoria inválida')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Ranking)
+    const repoSub = ds.getRepository(Subscription)
+
+    const rankings = await repo.find({ where: { categoryId } })
+    const subscriptions = await repoSub
+      .createQueryBuilder('Subscription')
+      .select()
+      .addSelect(['Category.id', 'Category.tournamentId'])
+      .innerJoin('Subscription.category', 'Category')
+      .where(`Subscription.actived = '1' AND Subscription.verified IS NOT NULL AND Subscription.categoryId = :categoryId`, { categoryId })
+      .getMany()
+
+    const toCreate: DeepPartial<Ranking>[] = (
+      await Promise.all(
+        subscriptions.map(async sub => {
+          const found = rankings.find(rank => rank.categoryId === sub.categoryId && rank.userId === sub.userId)
+          if (!found) {
+            const newRank: DeepPartial<Ranking> = {
+              categoryId: sub.categoryId,
+              tournamentId: sub.category.tournamentId,
+              userId: sub.userId,
+              createdBy: auth.userId
+            }
+            return newRank
+          }
+          return null
+        })
+      )
+    ).filter(f => !!f)
+
+    const created = await repo.save(repo.create(toCreate))
+
+    return { success: true, created }
+  }
+
   @Get('/list')
   @Pagination()
   @HttpCode(200)
@@ -46,6 +93,22 @@ class RankingHandler {
     const rankings = await queryDb.getMany()
 
     return { success: true, rankings }
+  }
+
+  @Get('/:rankingId')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async getOne(@Req() req: AuthorizedApiRequest) {
+    const { query } = req
+    const rankingId = +query?.params[0] || 0
+    if (!rankingId) throw new BadRequestException('Ranking inválido')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Ranking)
+    const ranking = await repo.findOne({ where: { id: rankingId } })
+    if (!ranking) throw new BadRequestException()
+
+    return { success: true, rankingId, ranking }
   }
 
   @Patch('/:rankingId')

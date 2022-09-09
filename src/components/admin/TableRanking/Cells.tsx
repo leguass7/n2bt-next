@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/DeleteForever'
 import EditIcon from '@mui/icons-material/Edit'
 import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 
+import { SimpleModal } from '~/components/Common/SimpleModal'
 import type { ICustomCellProps } from '~/components/CustomTable'
+import { FormRegister } from '~/components/forms/UnForm/FormRegister'
 import { FlexContainer, Text } from '~/components/styled'
 import { CellContainer, CellTools } from '~/components/tables/cells/styles'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
@@ -50,7 +53,12 @@ export const CheckCell: React.FC<Props> = ({ record }) => {
 }
 
 export const NameCell: React.FC<Props> = ({ record }) => {
+  const [open, setOpen] = useState<string>(null)
   const { user } = record
+
+  const handleClose = () => {
+    setOpen(null)
+  }
 
   return (
     <CellContainer>
@@ -60,10 +68,20 @@ export const NameCell: React.FC<Props> = ({ record }) => {
         </Avatar>
         <div>
           <FlexContainer justify="flex-start">
-            <Text title={user?.name}>{user?.nick || user?.name}</Text>
+            <Button size="small" onClick={() => setOpen(user?.id)} color="inherit" variant="text">
+              <Text title={user?.nick || user?.name}>{user?.name}</Text>
+            </Button>
+          </FlexContainer>
+          <FlexContainer justify="flex-start">
+            <Text textSize={12} textStyle="italic">
+              {user?.email}
+            </Text>
           </FlexContainer>
         </div>
       </FlexContainer>
+      <SimpleModal open={!!open} onToggle={handleClose} title="Editar usuário">
+        <FormRegister userId={open} onCancel={handleClose} />
+      </SimpleModal>
     </CellContainer>
   )
 }
@@ -79,7 +97,7 @@ export const ActionCell: React.FC<Props> = ({ record }) => {
   return (
     <CellContainer>
       <CellTools>
-        <IconButton onClick={handleEdit} disabled>
+        <IconButton onClick={handleEdit}>
           <Tooltip title="Alterar" arrow>
             <EditIcon />
           </Tooltip>

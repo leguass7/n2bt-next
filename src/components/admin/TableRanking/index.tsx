@@ -11,7 +11,7 @@ import { paginateRanking } from '~/services/api/ranking'
 import { Actions } from './Actions'
 import { columns } from './columns'
 
-const pageSize = 32
+const pageSize = 64
 
 type Props = {
   tournamentId: number

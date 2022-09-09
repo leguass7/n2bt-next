@@ -2,20 +2,31 @@ import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import AddIcon from '@mui/icons-material/Add'
-import { Alert, AlertTitle, Button, Modal, Stack } from '@mui/material'
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+import Badge from '@mui/material/Badge'
+import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
+import CircularProgress from '@mui/material/CircularProgress'
 import Divider from '@mui/material/Divider'
-import IconButton from '@mui/material/IconButton'
+import Modal from '@mui/material/Modal'
+import Stack from '@mui/material/Stack'
 import Toolbar from '@mui/material/Toolbar'
-import Tooltip from '@mui/material/Tooltip'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { useCustomTable } from '~/components/CustomTable'
 import { SearchFetchHandler, SearchUserDrawer, SelectHandler } from '~/components/SearchUserDrawer'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
-import { storeRanking } from '~/services/api/ranking'
+import { autoGenerateRanking, storeRanking } from '~/services/api/ranking'
 import { deleteRanking } from '~/services/api/ranking'
 import { findUser } from '~/services/api/user'
+
+import { FormRanking, SuccessHandler } from '../FormRanking'
 
 export interface IRankingActions {
   editId?: number
@@ -73,20 +84,76 @@ export const Actions: React.FC<Props> = ({ tournamentId, categoryId, userList })
     }
   }
 
+  const handleGenerate = async () => {
+    setLoading(true)
+    const response = await autoGenerateRanking(categoryId)
+    setLoading(false)
+    if (!response?.success) {
+      toast.error(response?.message || 'Erro ao gerar')
+    } else {
+      toast.success('Ranking gerado com sucesso')
+      emitFetch()
+    }
+  }
+
+  const handleSuccess: SuccessHandler = () => {
+    toast.success('Ranking salvo com sucesso')
+    handleClose()
+    emitFetch()
+  }
+
+  const handleDeleteBulk = async () => {
+    setLoading(true)
+    await Promise.all(
+      custom?.selectList?.map(async deleteId => {
+        const r = await deleteRanking(deleteId)
+        if (!r?.success) toast.error(r?.message || `Erro ao excluir ${deleteId}`)
+        return r
+      })
+    )
+    setLoading(false)
+    setCustom({ selectList: [] })
+    emitFetch()
+  }
+
   const handleClickAdd = () => setOpen(true)
 
-  // const title = custom?.editId > 0 ? `Alterar` : `Criar`
+  const title = custom?.editId > 0 ? `Alterar` : `Criar`
 
   return (
     <>
       <FlexContainer justify="center">
         <div></div>
-        <Toolbar sx={{ justifyContent: 'center' }}>
-          <IconButton onClick={handleClickAdd}>
-            <Tooltip title="Adicionar atleta ao Ranking" arrow>
-              <AddIcon />
-            </Tooltip>
-          </IconButton>
+        <Toolbar sx={{ justifyContent: 'center', gap: 1 }}>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={handleClickAdd}
+            endIcon={loading ? <CircularProgress size={12} /> : <AddIcon fontSize="small" />}
+          >
+            Adicionar
+          </Button>
+          <Button
+            size="small"
+            variant="contained"
+            color="secondary"
+            endIcon={loading ? <CircularProgress size={12} /> : <AutoFixHighIcon fontSize="small" />}
+            onClick={handleGenerate}
+            disabled={!!loading}
+          >
+            Gerar
+          </Button>
+          <Badge badgeContent={custom?.selectList?.length || 0} color="error" showZero={false}>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={handleDeleteBulk}
+              disabled={!custom?.selectList?.length}
+              endIcon={loading ? <CircularProgress size={12} /> : <DeleteForeverIcon fontSize="small" />}
+            >
+              Excluir
+            </Button>
+          </Badge>
         </Toolbar>
       </FlexContainer>
       <Divider />
@@ -100,6 +167,17 @@ export const Actions: React.FC<Props> = ({ tournamentId, categoryId, userList })
         userList={userList}
         onSelect={handleSelect}
       />
+      <Modal open={!!custom?.editId} onClose={handleClose} keepMounted={false}>
+        <BoxCenter spacing={1}>
+          <Card sx={{ maxWidth: '100%', width: 500 }}>
+            <CardHeader title={`${title} Ranking`} />
+            <Divider />
+            <CardContent>
+              <FormRanking rankingId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
+            </CardContent>
+          </Card>
+        </BoxCenter>
+      </Modal>
       <Modal open={!!custom?.deleteId} onClose={handleClose}>
         <BoxCenter>
           <Alert severity="warning">

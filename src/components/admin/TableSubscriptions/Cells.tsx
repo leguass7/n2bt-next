@@ -119,6 +119,7 @@ export const SwitchCell: React.FC<Props> = ({ record }) => {
 
 export const NameCell: React.FC<Props> = ({ record }) => {
   const { user, partner } = record
+
   const [open, setOpen] = useState<string>(null)
 
   const { theme } = useAppTheme()
