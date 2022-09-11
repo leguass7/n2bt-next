@@ -1,12 +1,14 @@
 import React, { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
+import AddIcon from '@mui/icons-material/Add'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Divider from '@mui/material/Divider'
+import Fab from '@mui/material/Fab'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
@@ -20,6 +22,7 @@ import { listAdminSubscriptions } from '~/services/api/subscriptions'
 
 import { FormPairRanking, SuccessHandler } from '../FormPairRanking'
 import { ActionVerified } from './ActionVerified'
+import { AddItem } from './AddItem'
 import { ItemSubscription } from './ItemSubscription_old'
 import { PairTools } from './PairTools'
 import { prepareDto, Pair } from './utils'
@@ -41,6 +44,7 @@ type Props = {
   onLoad?: OnLoadHanlder
 }
 export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, onLoad }) => {
+  const [adding, setAdding] = useState(false)
   const [open, setOpen] = useState<string[]>([])
   const [edited, setEdited] = useState<Edited[]>([])
   const [loading, setLoading] = useState(false)
@@ -84,8 +88,13 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, on
     [handleClose]
   )
 
+  const tootgleAdding = () => {
+    setAdding(old => !old)
+  }
+
   return (
     <Grid container spacing={1} sx={{ mt: 1 }}>
+      {adding ? <AddItem categoryId={categoryId} tournamentId={tournamentId} /> : null}
       {data?.map(subscription => {
         const verified = !!(subscription?.userSubscription?.verified && subscription?.partnerSubscription?.verified)
         const hasEdit = edited.find(f => f.userIds.includes(subscription?.userId) || f.userIds.includes(subscription?.partnerId))
@@ -139,6 +148,12 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, on
           </Card>
         </BoxCenter>
       </Modal>
+
+      <Fab color="primary" aria-label="add" sx={{ position: 'fixed', bottom: 20, right: 20 }} onClick={tootgleAdding} title="Adicionar inscrição">
+        <Tooltip title="Adicionar inscrição manualmente" arrow placement="left-start">
+          <AddIcon />
+        </Tooltip>
+      </Fab>
     </Grid>
   )
 }
