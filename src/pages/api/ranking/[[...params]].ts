@@ -1,6 +1,7 @@
 import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from 'next-api-decorators'
 import type { DeepPartial } from 'typeorm'
 
+import { makeArray } from '~/helpers/array'
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
 import { PaginateService } from '~/server-side/services/PaginateService'
@@ -19,10 +20,39 @@ const orderFields = [
 ]
 
 class RankingHandler {
+  @Get('/find')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async search(@Req() req: AuthorizedApiRequest) {
+    const { query } = req
+
+    const categoryId = +query?.categoryId || 0
+    const userId = ((query?.userId as string) || '').split(',').filter(f => !!f)
+
+    if (!categoryId) throw new BadRequestException('Categoria inválida')
+    if (!userId) throw new BadRequestException('userId inválida')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Ranking)
+
+    const queryDb = repo
+      .createQueryBuilder('Ranking')
+      .select()
+      .addSelect(['User.id', 'User.name', 'User.email', 'User.image', 'User.gender'])
+      .innerJoin('Ranking.user', 'User')
+      .where('Ranking.categoryId = :categoryId', { categoryId })
+
+    if (userId) queryDb.andWhere('Ranking.userId IN (:...userId)', { userId: makeArray(userId) })
+
+    const rankings = await queryDb.getMany()
+
+    return { success: true, rankings }
+  }
+
   @Get('/generate')
   @JwtAuthGuard()
   @HttpCode(200)
-  async autoGenerate(@Req() req: AuthorizedPaginationApiRequest) {
+  async autoGenerate(@Req() req: AuthorizedApiRequest) {
     const { query, auth } = req
 
     const categoryId = +query?.categoryId || 0

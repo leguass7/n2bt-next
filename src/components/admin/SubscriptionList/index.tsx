@@ -1,16 +1,24 @@
 import React, { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { Divider, Stack } from '@mui/material'
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
+import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
+import Modal from '@mui/material/Modal'
+import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
 
 import { CircleLoading } from '~/components/CircleLoading'
+import { BoxCenter } from '~/components/styled'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { listAdminSubscriptions } from '~/services/api/subscriptions'
 
+import { FormPairRanking, SuccessHandler } from '../FormPairRanking'
 import { ActionVerified } from './ActionVerified'
 import { ItemSubscription } from './ItemSubscription_old'
 import { PairTools } from './PairTools'
@@ -22,12 +30,19 @@ export type OnLoadParams = {
 }
 
 export type OnLoadHanlder = (params: OnLoadParams) => void
+
+export type Edited = {
+  userIds: string[]
+  points?: number
+}
 type Props = {
   categoryId: number
   tournamentId: number
   onLoad?: OnLoadHanlder
 }
 export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, onLoad }) => {
+  const [open, setOpen] = useState<string[]>([])
+  const [edited, setEdited] = useState<Edited[]>([])
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<Pair[]>([])
 
@@ -51,10 +66,29 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, on
 
   useOnceCall(fetchData)
 
+  const handleClose = useCallback(() => {
+    setOpen([])
+  }, [])
+
+  const handleEditRanking = useCallback((userIds: string[] = []) => {
+    return () => {
+      setOpen(userIds.filter(f => !!f))
+    }
+  }, [])
+
+  const handleEditRankingSuccess: SuccessHandler = useCallback(
+    (userIds, points) => {
+      setEdited(old => [...old, { userIds, points }])
+      handleClose()
+    },
+    [handleClose]
+  )
+
   return (
     <Grid container spacing={1} sx={{ mt: 1 }}>
       {data?.map(subscription => {
         const verified = !!(subscription?.userSubscription?.verified && subscription?.partnerSubscription?.verified)
+        const hasEdit = edited.find(f => f.userIds.includes(subscription?.userId) || f.userIds.includes(subscription?.partnerId))
         return (
           <React.Fragment key={subscription?.id}>
             <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
@@ -74,12 +108,18 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, on
                 </CardContent>
                 <Divider />
                 <CardActions>
-                  <Stack direction={'row'} spacing={1} sx={{ ml: 1 }}>
+                  <Stack direction={'row'} justifyContent="space-between" spacing={1} sx={{ ml: 1, width: '100%' }}>
                     <ActionVerified
                       verified={verified}
                       partnerSubscriptionId={subscription?.partnerSubscription?.id}
                       userSubscriptionId={subscription?.userSubscription?.id}
                     />
+                    <div style={{ flex: 1 }} />
+                    <IconButton size="small" onClick={handleEditRanking([subscription?.userId, subscription?.partnerId])}>
+                      <Tooltip title={`Editar ranking ${hasEdit?.points || ''}`}>
+                        <MilitaryTechIcon fontSize="small" color={hasEdit ? 'primary' : 'inherit'} />
+                      </Tooltip>
+                    </IconButton>
                   </Stack>
                 </CardActions>
               </Card>
@@ -88,6 +128,17 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, on
         )
       })}
       {loading ? <CircleLoading /> : null}
+      <Modal open={!!open?.length} onClose={handleClose} keepMounted={false}>
+        <BoxCenter spacing={1}>
+          <Card sx={{ maxWidth: '100%', width: 500 }}>
+            <CardHeader title={`Editar Ranking`} />
+            <Divider />
+            <CardContent>
+              <FormPairRanking categoryId={categoryId} userIds={open} onSuccess={handleEditRankingSuccess} onCancel={handleClose} />
+            </CardContent>
+          </Card>
+        </BoxCenter>
+      </Modal>
     </Grid>
   )
 }

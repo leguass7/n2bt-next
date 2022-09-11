@@ -9,6 +9,7 @@ export type IRanking = DeepPartial<Ranking>
 export interface IResponseRanking extends IResponseApi {
   ranking: IRanking
   rankingId: number
+  rankingIds: number[]
 }
 
 export interface IResponseRankings extends IResponseApi {

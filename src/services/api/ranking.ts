@@ -1,6 +1,6 @@
 import type { TableFetchParams } from '~/components/CustomTable/types'
 import type { IResponsePaginated } from '~/server-side/services/PaginateService'
-import type { IRanking, IResponseRanking, IResponseUserRanking } from '~/server-side/useCases/ranking/ranking.dto'
+import type { IRanking, IResponseRanking, IResponseRankings, IResponseUserRanking } from '~/server-side/useCases/ranking/ranking.dto'
 
 import { apiService } from './api.service'
 
@@ -26,6 +26,12 @@ export async function autoGenerateRanking(categoryId: number): Promise<IResponse
 
 export async function getRanking(rankingId: number): Promise<IResponseRanking> {
   const response = await apiService.get(`/ranking/${rankingId}`)
+  return response
+}
+
+type FindParams = { userId?: string | string[] }
+export async function findRankings(categoryId: number, params: FindParams = {}): Promise<IResponseRankings> {
+  const response = await apiService.get(`/ranking/find`, { params: { categoryId, ...params } })
   return response
 }
 

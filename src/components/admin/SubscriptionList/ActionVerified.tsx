@@ -5,6 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
 import Switch from '@mui/material/Switch'
 
+import { Text } from '~/components/styled'
 import { updateSubscription } from '~/services/api/subscriptions'
 
 type Props = {
@@ -34,7 +35,10 @@ export const ActionVerified: React.FC<Props> = ({ verified, partnerSubscriptionI
 
   return (
     <FormGroup>
-      <FormControlLabel control={<Switch size="small" checked={checked} onChange={onChange} />} label={checked ? 'confirmado' : 'não confirmado'} />
+      <FormControlLabel
+        control={<Switch size="small" checked={checked} onChange={onChange} />}
+        label={<Text textSize={12}>{checked ? 'confirmado' : 'não confirmado'}</Text>}
+      />
     </FormGroup>
   )
 }
