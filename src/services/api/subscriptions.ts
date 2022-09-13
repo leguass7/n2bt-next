@@ -7,7 +7,6 @@ import type {
   IResponseSubscriptionSummary,
   ISubscription
 } from '~/server-side/useCases/subscriptions/subscriptions.dto'
-import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 import { apiService } from './api.service'
 
@@ -18,8 +17,13 @@ export type AdminSubscriptionsParams = {
   categoryId?: number
 }
 
-export async function createSubscription(data: Partial<Subscription>): Promise<IResponseSubscription> {
+export async function createSubscription(data: Partial<ISubscription>): Promise<IResponseSubscription> {
   const response = await apiService.post('/subscription', data)
+  return response
+}
+
+export async function createPairSubscription(data: Partial<ISubscription>): Promise<IResponseSubscription> {
+  const response = await apiService.post('/subscription/pair', data)
   return response
 }
 

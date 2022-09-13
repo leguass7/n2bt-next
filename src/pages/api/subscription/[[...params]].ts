@@ -208,31 +208,59 @@ class SubscriptionHandler {
     return { success: true, subscriptionId, affected: subscription?.affected }
   }
 
+  @Post('/pair')
+  @JwtAuthGuard()
+  @HttpCode(201)
+  async createPair(@Req() req: AuthorizedApiRequest<Partial<Subscription>>) {
+    const { body, auth } = req
+    const currentUserId = auth?.userId
+    if (!currentUserId) throw new BadRequestException('Usuário não encontrado')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const { categoryId, partnerId, value, paid, userId } = body
+    const saveData: Partial<Subscription> = { actived: true, paid: !!paid, categoryId, value, createdBy: currentUserId }
+
+    const subscriptions = (
+      await Promise.all(
+        [repo.create({ ...saveData, userId, partnerId }), repo.create({ ...saveData, userId: partnerId, partnerId: userId })].map(async u =>
+          repo.save(u)
+        )
+      )
+    ).filter(f => !!f)
+
+    if (subscriptions?.length < 2) throw new HttpException(500, 'erro na criação da inscrição')
+
+    return { success: true, subscriptions }
+  }
+
   @Post()
   @JwtAuthGuard()
   @HttpCode(201)
   async create(@Req() req: AuthorizedApiRequest<Partial<Subscription>>) {
     const { body, auth } = req
-    const userId = auth?.userId
-    if (!userId) throw new BadRequestException('Usuário não encontrado')
+    const currentUserId = auth?.userId
+    const isAdmin = !!(auth?.level >= 8)
+    if (!currentUserId) throw new BadRequestException('Usuário não encontrado')
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
 
-    const { categoryId, partnerId, value } = body
+    const { categoryId, partnerId, value, paid, userId } = body
+
     const newSubscription: Partial<Subscription> = {
       actived: true,
-      paid: false,
-      createdBy: userId,
-      updatedBy: userId,
+      paid: isAdmin ? !!paid : false,
       categoryId,
       partnerId,
-      value,
-      userId
+      userId: isAdmin ? userId : currentUserId,
+      value
     }
-    const hasSubscription = await repo.findOne({ where: { categoryId, userId, actived: true } })
+
+    const hasSubscription = await repo.findOne({ where: { categoryId, userId: isAdmin ? userId : currentUserId, actived: true } })
     if (hasSubscription) {
-      await repo.update(hasSubscription.id, { actived: false, updatedBy: userId })
+      await repo.update(hasSubscription.id, { actived: false, updatedBy: currentUserId })
     }
 
     const data = repo.create(newSubscription)

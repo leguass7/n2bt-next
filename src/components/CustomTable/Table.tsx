@@ -24,6 +24,8 @@ const NothingText = styled.p`
 
 const CustomTableContainer = styled(TableContainer)`
   margin: 0;
+  max-width: 100%;
+  width: 100%;
 
   table tr.selectable {
     cursor: pointer;

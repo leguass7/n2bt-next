@@ -92,9 +92,14 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, on
     setAdding(old => !old)
   }
 
+  const onAddSuccess = () => {
+    tootgleAdding()
+    fetchData()
+  }
+
   return (
     <Grid container spacing={1} sx={{ mt: 1 }}>
-      {adding ? <AddItem categoryId={categoryId} tournamentId={tournamentId} /> : null}
+      {adding ? <AddItem categoryId={categoryId} tournamentId={tournamentId} onSuccess={onAddSuccess} /> : null}
       {data?.map(subscription => {
         const verified = !!(subscription?.userSubscription?.verified && subscription?.partnerSubscription?.verified)
         const hasEdit = edited.find(f => f.userIds.includes(subscription?.userId) || f.userIds.includes(subscription?.partnerId))
