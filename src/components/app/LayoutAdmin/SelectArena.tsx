@@ -64,7 +64,11 @@ export const SelectArena: React.FC = () => {
     requestListArenas()
   })
 
-  if (['/admin/tournaments/ranking', '/admin/tournaments/subscriptions'].includes(pathname)) {
+  if (
+    ['/admin/tournaments/ranking', '/admin/tournaments/subscriptions', '/admin/tournaments/sub-cards', '/admin/tournaments/checkin'].includes(
+      pathname
+    )
+  ) {
     return <div style={{ flexGrow: 1 }} />
   }
 
