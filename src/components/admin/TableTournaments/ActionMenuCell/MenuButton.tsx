@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
+import BeenhereIcon from '@mui/icons-material/Beenhere'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import EditIcon from '@mui/icons-material/Edit'
@@ -52,6 +53,7 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
     }
   }
 
+  const handleClickCheckin = () => push(`/admin/tournaments/checkin?tournamentId=${tournamentId}`)
   const handleClickRanking = () => push(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
   const handleClickSubscriptions = () => push(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
   const handleClickSubCards = () => push(`/admin/tournaments/sub-cards?tournamentId=${tournamentId}`)
@@ -91,14 +93,20 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
         <MoreVertIcon />
       </IconButton>
       <Menu id="long-menu" MenuListProps={{ 'aria-labelledby': 'long-button' }} anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
-        <MenuItemStyled onClick={withClick(handleClickRanking)} disableRipple>
-          <MilitaryTechIcon /> Ranking
+        <MenuItemStyled onClick={withClick(handleClickCheckin)} disableRipple>
+          <ListItemIcon>
+            <BeenhereIcon />
+          </ListItemIcon>
+          <ListItemText primary="Checkin" secondary="Marcar presença no torneio" />
         </MenuItemStyled>
         <MenuItemStyled onClick={withClick(handleClickSubscriptions)} disableRipple>
           <HowToRegIcon /> Inscrições
         </MenuItemStyled>
         <MenuItemStyled onClick={withClick(handleClickSubCards)} disableRipple>
           <GroupIcon /> Inscrições agrupadas
+        </MenuItemStyled>
+        <MenuItemStyled onClick={withClick(handleClickRanking)} disableRipple>
+          <MilitaryTechIcon /> Ranking
         </MenuItemStyled>
         <Divider />
         <MenuItemStyled onClick={withClick(handleDownload, true)} disableRipple disabled={!!downloading}>

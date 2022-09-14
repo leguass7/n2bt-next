@@ -2,16 +2,14 @@ import React from 'react'
 
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
-import { NextPage } from 'next'
+import type { NextPage } from 'next'
 
 import { TableCategories } from '~/components/admin/TableCategories'
 import { TableTournaments } from '~/components/admin/TableTournaments'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 import { useAppArena } from '~/hooks/useAppArena'
-import { FlexContainer } from '~/components/forms/InputSelects/styles'
 
 const AdminTournamentsPage: NextPage = () => {
   const { arenaId } = useAppArena()
