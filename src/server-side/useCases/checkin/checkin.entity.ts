@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm'
+
+import type { Tournament } from '../tournament/tournament.entity'
+import type { User } from '../user/user.entity'
 
 @Entity('checkin')
 export class Checkin {
@@ -19,4 +22,13 @@ export class Checkin {
 
   @Column({ type: 'datetime', nullable: true, precision: null, default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   createdAt?: Date
+
+  // relations
+  @ManyToOne('Tournament', 'checkins')
+  @JoinColumn({ name: 'tournamentId', referencedColumnName: 'id', foreignKeyConstraintName: 'checkin_tournamentId_fkey' })
+  tournament?: Tournament
+
+  @ManyToOne('User', 'checkins')
+  @JoinColumn({ name: 'userId', referencedColumnName: 'id', foreignKeyConstraintName: 'checkin_userId_fkey' })
+  user?: User
 }

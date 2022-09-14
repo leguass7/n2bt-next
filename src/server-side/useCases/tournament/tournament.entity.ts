@@ -6,6 +6,8 @@ import { Pair } from '~/server-side/useCases/pair/pair.entity'
 import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
+import { Checkin } from '../checkin/checkin.entity'
+
 @Entity('tournaments')
 export class Tournament {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
@@ -72,4 +74,7 @@ export class Tournament {
   @ManyToOne('User', 'updatedTournaments', { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'updatedBy', referencedColumnName: 'id', foreignKeyConstraintName: 'tournaments_updatedBy_fkey' })
   updatedUser?: User
+
+  @OneToMany(() => Checkin, checkins => checkins.tournament)
+  checkins?: Checkin[]
 }

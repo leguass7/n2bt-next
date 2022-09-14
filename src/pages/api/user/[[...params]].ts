@@ -92,7 +92,7 @@ class UserHandler {
     if (!userId) throw new BadRequestException('Usuário inválido')
 
     if (body?.email) body.email = body.email.toLowerCase().trim()
-    if (body.birday) body.birday = formatDate(body.birday, 'yyyy-MM-dd HH:mm:ss')
+    if (body?.birday) body.birday = formatDate(`${body.birday}`, 'yyyy-MM-dd HH:mm:ss')
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(User)

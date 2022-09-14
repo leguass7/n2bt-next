@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider'
 import type { NextPage, GetServerSideProps } from 'next'
 import { unstable_getServerSession } from 'next-auth'
 
+import { TableCheckin } from '~/components/admin/TableCheckin'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
@@ -34,7 +35,7 @@ const AdminTournamentsCheckinPage: NextPage<PageProps> = ({ tournamentId }) => {
     <LayoutAdmin>
       <Divider sx={{ mt: 1, mb: 1 }} />
       <Card>
-        <CardContent>sdsdsd</CardContent>
+        <TableCheckin tournamentId={tournamentId} />
       </Card>
     </LayoutAdmin>
   )

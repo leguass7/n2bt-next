@@ -1,8 +1,10 @@
+import type { DeepPartial } from 'typeorm'
+
 import type { IResponseApi } from '~/server-side/api.interface'
 
 import type { User } from './user.entity'
 
-export type IUser = Partial<User>
+export type IUser = DeepPartial<User>
 
 export interface IUserFilter {
   id?: string

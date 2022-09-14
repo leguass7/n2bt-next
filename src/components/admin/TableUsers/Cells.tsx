@@ -52,7 +52,7 @@ export const NameCell: React.FC<Props> = ({ record }) => {
 }
 
 export const LastAcessCell: React.FC<Props> = ({ record }) => {
-  const [d, h] = splitDateTime(record?.lastAcess) || ['--', '--']
+  const [d, h] = record?.lastAcess ? splitDateTime(`${record?.lastAcess}`) || ['--', '--'] : ['-', '-']
   return (
     <CellContainer>
       <Text align="center">
@@ -99,7 +99,7 @@ export const PhoneCell: React.FC<Props> = ({ record }) => {
 export const DateCell: React.FC<Props> = ({ record }) => {
   const str = record?.birday ? formatMysqlDate(record?.birday ? `${record?.birday}` : null) : '--'
   const getAge = () => {
-    const d = tryDate(record?.birday)
+    const d = tryDate(`${record?.birday}`)
     return d ? differenceInYears(new Date(), d) : null
   }
   const age = str ? getAge() : null

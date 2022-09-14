@@ -2,9 +2,9 @@ import Checkbox from '@mui/material/Checkbox'
 import styled from 'styled-components'
 
 import { H4 } from '~/components/styled'
-import { IUser } from '~/server-side/useCases/user/user.dto'
+import type { IUser } from '~/server-side/useCases/user/user.dto'
 
-interface Props extends IUser {}
+type Props = IUser & {}
 
 export const PartnerItem: React.FC<Props> = ({ name, email, phone, gender }) => {
   return (

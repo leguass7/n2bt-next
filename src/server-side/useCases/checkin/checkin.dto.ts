@@ -11,3 +11,24 @@ export interface IResponseCheckin extends IResponseApi {
   checkin?: ICheckin
   checkins?: ICheckin[]
 }
+
+export type CheckinRawDto = {
+  userId: string
+  subscriptionCategoryId: number
+  actived: boolean
+  verified: boolean
+  categoryId: number
+  tournamentId: number
+  title: string
+  userUserId: string
+  name: string
+  nick: string
+  email: string
+  image: string
+  gender: string
+  completed: boolean
+  checkinId: number
+  checkinUserId: string
+  check: boolean
+  createdAt: Date
+}

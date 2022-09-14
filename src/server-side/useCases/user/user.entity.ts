@@ -4,6 +4,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Account } from '~/server-side/useCases/account/account.entity'
 import { Arena } from '~/server-side/useCases/arena/arena.entity'
 import { Category } from '~/server-side/useCases/category/category.entity'
+import { Checkin } from '~/server-side/useCases/checkin/checkin.entity'
 import { Config } from '~/server-side/useCases/config/config.entity'
 import { Pair } from '~/server-side/useCases/pair/pair.entity'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
@@ -152,4 +153,8 @@ export class User {
   // relations Configs
   @OneToMany(() => Config, config => config.user)
   configs?: Config[]
+
+  // relations checkin
+  @OneToMany(() => Checkin, checkins => checkins.tournament)
+  checkins?: Checkin[]
 }
