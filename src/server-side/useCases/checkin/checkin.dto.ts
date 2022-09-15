@@ -16,11 +16,11 @@ export type CheckinRawDto = {
   userId: string
   subscriptionCategoryId: number
   actived: boolean
-  verified: boolean
-  categoryId: number
+  // verified: boolean
+  // categoryId: number
   tournamentId: number
-  title: string
-  userUserId: string
+  // title: string
+  // userUserId: string
   name: string
   nick: string
   email: string

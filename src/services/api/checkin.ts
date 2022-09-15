@@ -14,7 +14,7 @@ export async function listCheckin(tournamentId: number, params: TableFetchParams
   return response
 }
 
-export async function updateCheckin(checkinId: number, data: Partial<ICheckin>): Promise<IResponseSubscription> {
-  const response = await apiService.patch(`/checkin/${checkinId}`, data)
+export async function storeCheckin(data: Partial<ICheckin>): Promise<IResponseSubscription> {
+  const response = await apiService.patch(`/checkin/store`, data)
   return response
 }

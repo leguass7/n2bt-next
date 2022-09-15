@@ -2,12 +2,18 @@ import React, { useContext, memo, useCallback, useMemo } from 'react'
 
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
+import { isDefined } from 'class-validator'
 import cx from 'classnames'
 
 import CustomTableContext from './CustomTableContext'
 import { GenericObject, ICustomCellProps } from './types'
 import { CheckItemProps } from './withCheckedRow'
 
+function hashValues(record = {}) {
+  return Object.entries(record)
+    .map(([_k, v]) => (isDefined(v) && v) || '')
+    .join('-')
+}
 export interface CustomRowProps extends CheckItemProps {
   record: Record<string, any>
 }
@@ -37,7 +43,7 @@ const CustomRow: React.FC<CustomRowProps> = ({ record, onClick, selected }) => {
   return (
     <TableRow onClick={handleRowClick} className={classes}>
       {columns.map(({ name, Cell, align = 'left', width, CellProps }, i) => {
-        const key = `${name}-${i}-${(record && record.id) || '0'}`
+        const key = `${name}-${i}-${(record && record?.id) || hashValues(record)}`
         return (
           <TableCell key={key} align={align} width={width}>
             {renderCell(`${name}`, Cell, CellProps)}

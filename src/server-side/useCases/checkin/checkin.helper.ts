@@ -1,16 +1,16 @@
 import { CheckinRawDto } from './checkin.dto'
 
-export const searchFields = ['User_name', 'User_nick', 'User_email', 'Category_title', 'User_phone']
+export const searchFields = ['User.name', 'User.nick', 'User.email', 'Category.title', 'User.phone']
 
 export const convertFields = [
   ['userId', 'Subscription_userId'],
   // ['subscriptionCategoryId', 'Subscription_categoryId'],
   ['actived', 'Subscription_actived'],
-  ['verified', 'Subscription_verified'],
-  ['categoryId', 'Category_id'],
+  // ['verified', 'Subscription_verified'],
+  // ['categoryId', 'Category_id'],
   ['tournamentId', 'Category_tournamentId'],
-  ['title', 'Category_title'],
-  ['categoryGender', 'Category_gender'],
+  // ['title', 'Category_title'],
+  // ['categoryGender', 'Category_gender'],
   // ['userUserId', 'User_id'],
   ['name', 'User_name'],
   ['nick', 'User_nick'],

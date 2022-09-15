@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react'
 
+import { useOnceCall } from '~/hooks/useOnceCall'
+
 // export { MessageDelete } from './MessageDelete'
 
 export interface IDeleteContainer {
@@ -30,7 +32,7 @@ export interface ITableActionsContext {
 }
 export const TableActionsContext = createContext({} as ITableActionsContext)
 
-type Props = {
+interface Props {
   children?: React.ReactNode
   deleteHandler?: DeleteHandler
   selecthandler?: SelectHandler
@@ -40,7 +42,7 @@ export const TableActionsProvider: React.FC<Props> = ({ children, deleteHandler,
   const [deleting, setDeleting] = useState(false)
   const [selectedIds, setSelectedIds] = useState<SelectedId[]>([])
   const [isSelectMode, setIsSelectMode] = useState(false)
-  const [custom, setCustom] = useState(null)
+  const [custom, setCustom] = useState()
 
   return (
     <TableActionsContext.Provider
@@ -64,7 +66,7 @@ export const TableActionsProvider: React.FC<Props> = ({ children, deleteHandler,
   )
 }
 
-export function useTableActions<T = any>() {
+export function useTableActions<T = any>(initial?: T) {
   const {
     showDelete,
     setShowDelete,
@@ -111,6 +113,8 @@ export function useTableActions<T = any>() {
     },
     [setSelectedIds, selecthandler]
   )
+
+  useOnceCall(() => initial && setCustom(initial))
 
   return {
     showDelete,
