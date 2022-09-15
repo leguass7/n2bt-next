@@ -1,23 +1,14 @@
 import React from 'react'
 
-import FeedbackIcon from '@mui/icons-material/Feedback'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import Divider from '@mui/material/Divider'
-import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
 import Stack from '@mui/material/Stack'
-import Tooltip from '@mui/material/Tooltip'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { BoxCenter, Text } from '~/components/styled'
 
-// import { Container } from './styles';
 type Props = {
   open?: boolean
   loading?: boolean

@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
 import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import type { NextPage, GetServerSideProps } from 'next'
 import { unstable_getServerSession } from 'next-auth'
@@ -18,7 +17,7 @@ type PageProps = {
 }
 
 const AdminTournamentsCheckinPage: NextPage<PageProps> = ({ tournamentId }) => {
-  const [loading, setLoading] = useState(false)
+  const [, setLoading] = useState(false)
   const [categories, setCategories] = useState([])
 
   const fetchData = useCallback(async () => {
