@@ -5,7 +5,7 @@ import { CustomTable } from '~/components/CustomTable'
 import type { TableFetchParams } from '~/components/CustomTable/types'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import type { CheckinRawDto } from '~/server-side/useCases/checkin/checkin.dto'
-import { IUser } from '~/server-side/useCases/user/user.dto'
+import type { IUser } from '~/server-side/useCases/user/user.dto'
 import { listCheckin } from '~/services/api/checkin'
 
 import { Actions } from './Actions'
