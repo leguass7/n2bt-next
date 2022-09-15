@@ -1,13 +1,10 @@
 import { useCallback, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
 
-import Typography from '@mui/material/Typography'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import gfm from 'remark-gfm'
 
 import { Layout } from '~/components/app/Layout'
-import { MkContainer } from '~/components/styled'
+import { RankingPanel } from '~/components/Rankings/RankingPanel'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { getTournament } from '~/services/api/tournament'
@@ -36,12 +33,13 @@ const TournamentAboutPage: NextPage<PageProps> = ({ tournamentId }) => {
         <title>{data?.title} N2BT Beach Tennis</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
-      <Typography variant="h2" align="center" sx={{ m: 2 }}>
+      {/* <Typography variant="h2" align="center" sx={{ m: 2 }}>
         {data?.title}
       </Typography>
       <MkContainer>
         <ReactMarkdown remarkPlugins={[gfm]}>{data?.description}</ReactMarkdown>
-      </MkContainer>
+      </MkContainer> */}
+      <RankingPanel tournament={data} tournamentId={tournamentId} />
     </Layout>
   )
 }
