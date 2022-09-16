@@ -11,7 +11,6 @@ import { Content } from '~/styles'
 
 import { CircleLoading } from '../CircleLoading'
 import { ITab, SimpleTab } from '../Common/SimpleTab'
-import { SubscriptionList } from '../SectionPairSubscriptions/SubscriptionList'
 import { ListPartners } from '../User/ListPartners'
 import { RankingList } from './RankingList'
 
