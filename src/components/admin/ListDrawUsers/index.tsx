@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { Avatar, Typography } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
+import Typography from '@mui/material/Typography'
 import styled from 'styled-components'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
-import { BoxCenter } from '~/components/styled'
 import { stringAvatar } from '~/helpers/string'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { IUser } from '~/server-side/useCases/user/user.dto'

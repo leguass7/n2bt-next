@@ -12,6 +12,7 @@ import { Content } from '~/styles'
 import { CircleLoading } from '../CircleLoading'
 import { ITab, SimpleTab } from '../Common/SimpleTab'
 import { SubscriptionList } from '../SectionPairSubscriptions/SubscriptionList'
+import { ListPartners } from '../User/ListPartners'
 import { RankingList } from './RankingList'
 
 interface Props {
@@ -52,6 +53,7 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
   }, [categories])
 
   if (loading) return <CircleLoading />
+  const title = expired ? 'Rankings do torneio' : 'Pares do torneio'
 
   return (
     <Content>
@@ -61,11 +63,12 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
       </div>
 
       <Divider />
-      <CardHeader title="Rankings do torneio" />
+
+      <CardHeader title={title} />
       <SimpleTab value={tab || false} sx={{ boxShadow: '1px 2px 1px #0003' }} variant="fullWidth" onChange={v => setTab(v)} tabs={categoryTabs} />
 
-      {!!tab && !expired ? <RankingList tournamentId={tournamentId} tab={tab} /> : null}
-      {!!tab && expired ? <SubscriptionList anyVerified tournamentId={tournamentId} categoryId={parseInt(tab)} /> : null}
+      {!!tab && expired ? <RankingList tournamentId={tournamentId} tab={tab} /> : null}
+      {!!tab && !expired ? <ListPartners categoryId={tab} /> : null}
     </Content>
   )
 }
