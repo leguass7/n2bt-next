@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { Card, CardContent, Grid } from '@mui/material'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Grid from '@mui/material/Grid'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { useOnceCall } from '~/hooks/useOnceCall'

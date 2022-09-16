@@ -1,4 +1,5 @@
-import { Button, Stack } from '@mui/material'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import { differenceInMinutes } from 'date-fns'
 import type { GetServerSideProps, NextPage } from 'next'
 import { unstable_getServerSession } from 'next-auth/next'

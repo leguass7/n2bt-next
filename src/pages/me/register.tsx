@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { CardContent } from '@mui/material'
+import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'

@@ -1,4 +1,4 @@
-import { Divider } from '@mui/material'
+import Divider from '@mui/material/Divider'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 

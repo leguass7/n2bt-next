@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
-import { Avatar, Badge, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
+import Badge from '@mui/material/Badge'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import ListItemText from '@mui/material/ListItemText'
+import Typography from '@mui/material/Typography'
 import styled from 'styled-components'
 
 import { stringAvatar } from '~/helpers/string'

@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { Button, Stack } from '@mui/material'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import { Form } from '@unform/web'
 
 import { CircleLoading } from '~/components/CircleLoading'

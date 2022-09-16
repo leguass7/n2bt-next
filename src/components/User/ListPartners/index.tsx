@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { Avatar, Badge, Typography } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
+import Badge from '@mui/material/Badge'
+import Typography from '@mui/material/Typography'
 import styled from 'styled-components'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'

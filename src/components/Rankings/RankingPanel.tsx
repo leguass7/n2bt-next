@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { CardHeader, Chip, Divider } from '@mui/material'
+import CardHeader from '@mui/material/CardHeader'
+import Chip from '@mui/material/Chip'
+import Divider from '@mui/material/Divider'
 import { isPast } from 'date-fns'
 
 import { useIsMounted } from '~/hooks/useIsMounted'

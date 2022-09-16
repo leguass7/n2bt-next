@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Drawer } from '@mui/material'
+import Drawer from '@mui/material/Drawer'
 
 import { isDefined } from '~/helpers/validation'
 
