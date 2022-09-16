@@ -17,3 +17,8 @@ export function compareValues(key: string, order = 'asc') {
     return order === 'desc' ? comparison * -1 : comparison
   }
 }
+
+export function getRandomItem(items: Array<any>) {
+  const index = Math.floor(Math.random() * items.length)
+  return items[index]
+}

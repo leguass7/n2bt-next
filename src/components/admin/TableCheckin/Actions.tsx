@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import ArrowBack from '@mui/icons-material/ArrowBack'
 import Alert from '@mui/material/Alert'
@@ -8,18 +8,20 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
-import Modal from '@mui/material/Modal'
 import Stack from '@mui/material/Stack'
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 import { useRouter } from 'next/router'
 
+import { SimpleModal } from '~/components/Common/SimpleModal'
 import { useCustomTableFilter } from '~/components/CustomTable'
 import { SearchBar } from '~/components/SearchBar'
 import { BoxCenter, FlexContainer } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
-import { useOnceCall } from '~/hooks/useOnceCall'
+import { getRandomItem } from '~/helpers/array'
 import type { IUser } from '~/server-side/useCases/user/user.dto'
+
+import { ListDrawUsers } from '../ListDrawUsers'
 
 export interface ICheckinActions {
   userSelectedList?: string[]
@@ -29,12 +31,17 @@ type Props = {
   tournamentId: number
   users?: IUser[]
 }
+
 export const Actions: React.FC<Props> = ({ tournamentId, users = [] }) => {
   const { push } = useRouter()
   const [open, setOpen] = useState(false)
   const [loading] = useState(false)
   const { custom, setCustom } = useTableActions<ICheckinActions>()
   const { setFilter } = useCustomTableFilter()
+
+  const [disable, setDisable] = useState(false)
+
+  const [winner, setWinner] = useState([])
 
   const handleBack = () => push('/admin/tournaments')
 
@@ -55,13 +62,25 @@ export const Actions: React.FC<Props> = ({ tournamentId, users = [] }) => {
   }
 
   const handleStart = () => {
-    console.log('sortear lista', custom?.userSelectedList)
+    const list = custom?.userSelectedList
+    const item = getRandomItem(list)
+    const index = list.findIndex(l => l === item)
+
+    setDisable(true)
+    setWinner([item, index])
     // localizar nome e foto do usuário em prop `users`
   }
 
-  useOnceCall(() => setCustom({ userSelectedList: users.map(u => u.id) }))
+  const handleSuccess = useCallback(() => {
+    setWinner([])
+    setDisable(false)
+  }, [])
 
-  console.log('lista', custom?.userSelectedList)
+  useEffect(() => {
+    setCustom({ userSelectedList: users.map(u => u.id) })
+  }, [setCustom, users])
+
+  // console.log('lista', custom?.userSelectedList)
   return (
     <>
       <FlexContainer justify="space-around">
@@ -82,21 +101,26 @@ export const Actions: React.FC<Props> = ({ tournamentId, users = [] }) => {
         </Toolbar>
       </FlexContainer>
       <Divider />
-      <Modal open={!!open} onClose={handleClose}>
+      <SimpleModal open={!!open} onToggle={handleClose} title="Sorteio">
         <BoxCenter>
           <Alert severity="info">
-            <AlertTitle>Atenção</AlertTitle>O sorteio apenas para atletas com checkin selecionado.
-            <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-              <Button variant="outlined" onClick={handleClose}>
-                CANCELAR
-              </Button>
-              <Button variant="contained" disabled={!!loading} onClick={handleStart} startIcon={loading ? <CircularProgress size={18} /> : null}>
-                INICIAR
-              </Button>
-            </Stack>
+            <AlertTitle>Atenção</AlertTitle>O sorteio é apenas para atletas com checkin selecionado.
           </Alert>
+          <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+            <Button
+              variant="contained"
+              disabled={!!loading || disable}
+              onClick={handleStart}
+              startIcon={loading ? <CircularProgress size={18} /> : null}
+            >
+              INICIAR
+            </Button>
+          </Stack>
+          <div style={{ padding: '24px 0' }}>
+            <ListDrawUsers winner={winner[0]} initialData={users} times={winner[1] + users?.length * 2} onSuccess={handleSuccess} />
+          </div>
         </BoxCenter>
-      </Modal>
+      </SimpleModal>
     </>
   )
 }
