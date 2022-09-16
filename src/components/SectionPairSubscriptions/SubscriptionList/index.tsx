@@ -25,10 +25,12 @@ type Props = {
   categoryId: number
   tournamentId: number
   onlyVerified?: boolean
+  anyVerified?: boolean
   categoryName?: string
   categoryGender?: CategoryGender
 }
-export const SubscriptionList: React.FC<Props> = ({ categoryId, onlyVerified, categoryName, categoryGender }) => {
+
+export const SubscriptionList: React.FC<Props> = ({ categoryId, onlyVerified, categoryName, categoryGender, anyVerified }) => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<PreparedSubscription[]>([])
 
@@ -38,14 +40,14 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, onlyVerified, ca
       return true
     }
     setLoading(true)
-    const response = await paginateSubscription(categoryId, { page: 1, size: 1000, order: 'asc', orderby: 'name', onlyConfirmed: true })
+    const response = await paginateSubscription(categoryId, { page: 1, size: 1000, order: 'asc', orderby: 'name', onlyConfirmed: !anyVerified })
     if (response?.success) {
       setData(prepareDto(response?.data?.filter(filter) || []))
     } else {
       toast.error(response?.message || 'Erro')
     }
     setLoading(false)
-  }, [categoryId, onlyVerified])
+  }, [categoryId, onlyVerified, anyVerified])
 
   useOnceCall(fetchData)
 

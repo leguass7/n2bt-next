@@ -73,7 +73,7 @@ class CategoryHandler {
     const repo = ds.getRepository(Category)
 
     const where: any = { tournamentId }
-    if (auth.level < 8) where.published = true
+    if (auth?.level < 8) where.published = true
 
     const queryDb = repo
       .createQueryBuilder('Category')
