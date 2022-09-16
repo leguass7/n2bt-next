@@ -38,7 +38,7 @@ export const TableCheckin: React.FC<Props> = ({ tournamentId }) => {
   )
 
   const getUsers = (list: CheckinRawDto[]): IUser[] =>
-    list.map(({ check, userId, image, nick, email }) => (!!check ? ({ id: userId, image, nick, email } as IUser) : null)).filter(f => !!f)
+    list.map(({ check, userId, image, nick, email, name }) => (!!check ? ({ id: userId, image, nick, email, name } as IUser) : null)).filter(f => !!f)
 
   return (
     <>
