@@ -1,6 +1,6 @@
 {
   "name": "n2bt-next",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "scripts": {
     "release": "standard-version --no-verify --skip.tag --release-as patch",
