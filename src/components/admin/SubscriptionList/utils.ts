@@ -1,6 +1,5 @@
 import { compareValues } from '~/helpers/array'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
-import type { IUser } from '~/server-side/useCases/user/user.dto'
 
 export type PreparedSubscription = ISubscription & { key?: string; pair?: ISubscription }
 

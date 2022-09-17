@@ -1,6 +1,6 @@
 {
   "name": "n2bt-next",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "scripts": {
     "release": "standard-version --no-verify --skip.tag --release-as patch",
@@ -38,7 +38,7 @@
     "json2csv": "^5.0.7",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
-    "next": "12.2.5",
+    "next": "^12.3.0",
     "next-api-decorators": "^2.0.0",
     "next-auth": "^4.10.3",
     "next-compose-plugins": "^2.2.1",

@@ -105,6 +105,37 @@ class SubscriptionHandler {
     return { success: true, subscriptions }
   }
 
+  @Get('/list/:categoryId')
+  @JwtAuthGuard()
+  @Pagination()
+  @HttpCode(200)
+  async listByCategory(@Req() req: AuthorizedPaginationApiRequest) {
+    const { query, pagination } = req
+
+    const categoryId = +query?.categoryId
+    if (!categoryId) throw new BadRequestException('Categoria não encontrada')
+
+    const { order } = pagination
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const queryDb = repo
+      .createQueryBuilder('Subscription')
+      .select()
+      .addSelect(['User.id', 'User.name', 'User.image', 'User.email', 'User.nick', 'User.gender'])
+      .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender'])
+      .innerJoin('Subscription.user', 'User')
+      .innerJoin('Subscription.partner', 'Partner')
+      .where({ categoryId, actived: true })
+
+    parseOrderDto({ order, table: 'Subscription', orderFields }).querySetup(queryDb)
+
+    const subscriptions = await queryDb.getMany()
+
+    return { success: true, subscriptions }
+  }
+
   @Post('/transfer')
   @JwtAuthGuard()
   @HttpCode(200)

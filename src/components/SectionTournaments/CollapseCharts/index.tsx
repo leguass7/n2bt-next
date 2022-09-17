@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 
 import GroupIcon from '@mui/icons-material/Group'
-import { Button, Stack } from '@mui/material'
+import Button from '@mui/material/Button'
 import CardContent from '@mui/material/CardContent'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
+import Stack from '@mui/material/Stack'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { FlexContainer, Paragraph, Text } from '~/components/styled'

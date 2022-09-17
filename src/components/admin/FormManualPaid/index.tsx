@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { Button, Stack } from '@mui/material'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import { string, object } from 'yup'

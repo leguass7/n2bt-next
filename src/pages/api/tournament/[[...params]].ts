@@ -53,7 +53,7 @@ class TournamentHandler {
     const where: FindOptionsWhere<Tournament> = { id: tournamentId }
     if (auth?.level <= 8) where.published = true
 
-    const tournament = await repo.findOne({ where })
+    const tournament = await repo.findOne({ where, relations: ['arena'] })
     if (!tournament) throw new BadRequestException()
 
     return { success: true, tournament }

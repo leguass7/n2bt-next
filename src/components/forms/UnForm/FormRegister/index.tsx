@@ -1,8 +1,8 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { Grid } from '@mui/material'
 import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import { Form } from '@unform/web'
 import { cpf } from 'cpf-cnpj-validator'
