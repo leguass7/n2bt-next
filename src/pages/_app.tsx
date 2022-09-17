@@ -18,7 +18,7 @@ import 'react-toastify/dist/ReactToastify.min.css'
 import 'react-circular-progressbar/dist/styles.css'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp: React.FC<AppProps<any>> = ({ Component, pageProps }) => {
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={<StorageLoading />} persistor={persistor}>
