@@ -108,7 +108,7 @@ class RankingHandler {
     const queryDb = repo
       .createQueryBuilder('Ranking')
       .select()
-      .addSelect(['User.id', 'User.name', 'User.image', 'User.email'])
+      .addSelect(['User.id', 'User.name', 'User.image', 'User.gender', 'User.nick'])
       .addSelect(['Category.id', 'Category.title'])
       .addSelect(['Tournament.id', 'Tournament.title'])
       .innerJoin('Ranking.user', 'User')

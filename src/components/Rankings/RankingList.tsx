@@ -18,12 +18,11 @@ import { listRankings } from '~/services/api/ranking'
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 
 interface Props {
-  tab: string
+  categoryId: number
   tournamentId: number
 }
 
-export const RankingList: React.FC<Props> = ({ tab, tournamentId }) => {
-  const categoryId = parseInt(`${tab || 0}`)
+export const RankingList: React.FC<Props> = ({ categoryId, tournamentId }) => {
   const { theme } = useAppTheme()
 
   const [data, setData] = useState<IRanking[]>([])
@@ -58,15 +57,14 @@ export const RankingList: React.FC<Props> = ({ tab, tournamentId }) => {
     <>
       <List>
         {users?.length
-          ? users.map(({ image, name, email, id }, i) => {
+          ? users.map(({ image, name, id, nick }, i) => {
               return (
                 <ListItem key={`user-${id}`}>
                   <ListItemAvatar>
                     <Avatar src={image}>{stringAvatar(name)}</Avatar>
                   </ListItemAvatar>
-                  <ListItemText>
+                  <ListItemText secondary={nick || ' '}>
                     <Typography variant="h6">{name}</Typography>
-                    <Typography variant="caption">{email}</Typography>
                   </ListItemText>
                   <ListItemAvatar>
                     {i < 3 ? (

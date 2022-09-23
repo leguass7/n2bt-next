@@ -47,7 +47,7 @@ export async function updateSubscription(subscriptionId: number, data: Partial<I
   return response
 }
 
-export async function listCategorySubscriptions(categoryId: string): Promise<IResponseSubscriptions> {
+export async function listCategorySubscriptions(categoryId: number): Promise<IResponseSubscriptions> {
   const response = await apiService.get(`/subscription/list`, { params: { categoryId } })
   return response
 }

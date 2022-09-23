@@ -3,8 +3,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import CardHeader from '@mui/material/CardHeader'
 import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
-import { isPast } from 'date-fns'
+import { isPast, parseJSON } from 'date-fns'
 
+import { compareValues } from '~/helpers/array'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { ICategory } from '~/server-side/useCases/category/category.dto'
 import { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
@@ -16,6 +17,11 @@ import { ITab, SimpleTab } from '../Common/SimpleTab'
 import { ListPartners } from '../User/ListPartners'
 import { RankingList } from './RankingList'
 
+const constGender = {
+  M: 'Masculina',
+  F: 'Feminina',
+  MF: 'Mista'
+}
 interface Props {
   tournamentId: number
   tournament?: ITournament
@@ -23,22 +29,22 @@ interface Props {
 
 export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} }) => {
   const [categories, setCategories] = useState<ICategory[]>([])
-  const [tab, setTab] = useState('')
+  const [categoryId, setCategoryId] = useState<number>(null)
 
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMounted()
 
-  const expired = tournament?.expires && isPast(tournament?.expires)
+  const expired = tournament?.expires && isPast(parseJSON(tournament?.expires))
 
   const fetchCategories = useCallback(async () => {
     if (!tournamentId) return
     setLoading(true)
-    const { success, categories: cat } = await listCategories(tournamentId)
+    const res = await listCategories(tournamentId)
     if (isMounted()) {
       setLoading(false)
-      if (success) {
-        setCategories(cat)
-        setTab(`${cat?.[0]?.id || ''}`)
+      if (res?.success) {
+        setCategories(res?.categories || [])
+        setCategoryId(res?.categories?.[0]?.id)
       }
     }
   }, [isMounted, tournamentId])
@@ -47,14 +53,23 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
     fetchCategories()
   }, [fetchCategories])
 
+  const handleTabChange = (tabId: number) => {
+    setCategoryId(tabId)
+  }
+
   const categoryTabs = useMemo<ITab[]>(() => {
-    return categories?.map?.(({ id, title }) => {
-      return { label: title, value: `${id}` }
-    })
+    return categories
+      .map(({ id, title, gender, published }) => {
+        const label = `${title} ${constGender?.[gender] || ''}`
+        return published ? { label, value: id } : null
+      })
+      .filter(f => !!f)
+      .sort(compareValues('label', 'asc'))
   }, [categories])
 
   if (loading) return <CircleLoading />
-  const title = expired ? 'Rankings do torneio' : 'Pares do torneio'
+
+  const title = expired ? 'Rankings do torneio' : 'Duplas do torneio'
 
   return (
     <Content>
@@ -66,10 +81,10 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
       <Divider />
 
       <CardHeader title={title} />
-      <SimpleTab value={tab || false} sx={{ boxShadow: '1px 2px 1px #0003' }} variant="fullWidth" onChange={v => setTab(v)} tabs={categoryTabs} />
+      <SimpleTab value={categoryId} sx={{ boxShadow: '1px 2px 1px #0003' }} onChange={handleTabChange} tabs={categoryTabs} />
 
-      {!!tab && expired ? <RankingList tournamentId={tournamentId} tab={tab} /> : null}
-      {!!tab && !expired ? <ListPartners categoryId={tab} /> : null}
+      {!!categoryId && expired ? <RankingList tournamentId={tournamentId} categoryId={categoryId} /> : null}
+      {!!categoryId && !expired ? <ListPartners categoryId={categoryId} /> : null}
     </Content>
   )
 }

@@ -13,7 +13,7 @@ import { ISubscription } from '~/server-side/useCases/subscriptions/subscription
 import { listCategorySubscriptions } from '~/services/api/subscriptions'
 
 interface Props {
-  categoryId?: string
+  categoryId?: number
 }
 
 export const ListPartners: React.FC<Props> = ({ categoryId }) => {
@@ -86,7 +86,7 @@ export const ListPartners: React.FC<Props> = ({ categoryId }) => {
         })
       ) : (
         <Typography variant="h5" align="center" py={4} width="100%">
-          Nenhum par encontrado nessa categoria
+          Nenhuma dupla encontrado nessa categoria
         </Typography>
       )}
     </ListContainer>

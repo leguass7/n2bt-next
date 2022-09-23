@@ -33,12 +33,6 @@ const TournamentAboutPage: NextPage<PageProps> = ({ tournamentId }) => {
         <title>{data?.title} N2BT Beach Tennis</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
-      {/* <Typography variant="h2" align="center" sx={{ m: 2 }}>
-        {data?.title}
-      </Typography>
-      <MkContainer>
-        <ReactMarkdown remarkPlugins={[gfm]}>{data?.description}</ReactMarkdown>
-      </MkContainer> */}
       <RankingPanel tournament={data} tournamentId={tournamentId} />
     </Layout>
   )
