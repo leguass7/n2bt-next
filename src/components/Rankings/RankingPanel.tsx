@@ -17,6 +17,10 @@ import { ITab, SimpleTab } from '../Common/SimpleTab'
 import { ListPartners } from '../User/ListPartners'
 import { RankingList } from './RankingList'
 
+function categoriesDto(cats: ICategory[]): ICategory[] {
+  return cats.filter(f => f?.gender?.toUpperCase() !== 'MF')
+}
+
 const constGender = {
   M: 'Masculina',
   F: 'Feminina',
@@ -43,8 +47,9 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
     if (isMounted()) {
       setLoading(false)
       if (res?.success) {
-        setCategories(res?.categories || [])
-        setCategoryId(res?.categories?.[0]?.id)
+        const cats = categoriesDto(res?.categories || [])
+        setCategories(cats)
+        setCategoryId(cats?.[0]?.id)
       }
     }
   }, [isMounted, tournamentId])
