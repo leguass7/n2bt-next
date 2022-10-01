@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useCallback, useRef, useState } from 'react'
 
+import TextField from '@mui/material/TextField'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 import { useField } from '@unform/core'
-import { parseISO, parse, isValid } from 'date-fns'
+import { parseISO, isValid, parseJSON } from 'date-fns'
 
 import { VariantColorsTypes } from '~/components/AppThemeProvider/types'
-import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
-
-import { Container, Input, Label } from '../InputText/styles'
 
 function convertDefaultValue(d: Date | string) {
-  const date = d instanceof Date ? d : parse(d, 'yyyy-MM-dd', new Date())
+  const date = d instanceof Date ? d : parseJSON(d)
   return isValid(date) ? date : null
 }
 
@@ -24,15 +22,12 @@ type Props = {
   maxDate?: Date
   minDate?: Date
 }
-export const InputDate: React.FC<Props> = ({ name, label, themeColor = 'primary', disabled, maxDate, minDate }) => {
-  const [actived, setActived] = useState(false)
-  const { theme } = useAppTheme()
-  const ref = useRef<HTMLInputElement>(null)
+export const MuiInputDate: React.FC<Props> = ({ name, label, disabled, maxDate, minDate }) => {
+  const [, setActived] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
   const { fieldName, defaultValue, registerField } = useField(name)
 
   const [dates, setDates] = useState<Date>(defaultValue ? convertDefaultValue(defaultValue) || null : null)
-
-  const id = `input-text-${fieldName}`
 
   const handleOpen = () => setActived(true)
   const handleClose = () => setActived(false)
@@ -46,28 +41,27 @@ export const InputDate: React.FC<Props> = ({ name, label, themeColor = 'primary'
   }, [])
 
   useEffect(() => {
-    registerField({
+    registerField<Date>({
       name: fieldName,
-      ref: ref,
+      ref: inputRef,
       getValue: () => {
         return dates || null
       }
+      // setValue: (ref: React.MutableRefObject<HTMLInputElement>, value) => {
+      //   setDates(convertDefaultValue(value))
+      // },
+      // clearValue: () => {
+      //   setDates(null)
+      // }
     })
   }, [fieldName, registerField, dates])
 
   return (
     <MobileDatePicker
-      inputRef={ref}
-      renderInput={({ inputRef, inputProps }) => (
-        <Container labelColor={theme.colors[themeColor]} disabled={disabled}>
-          <Input id={id} ref={inputRef} {...inputProps} className={'calendar'} />
-          {label ? (
-            <Label htmlFor={id} actived={actived}>
-              {label}
-            </Label>
-          ) : null}
-        </Container>
-      )}
+      key={`aff-${defaultValue}`}
+      inputRef={inputRef}
+      label={label}
+      renderInput={params => <TextField {...params} variant="standard" helperText={null} />}
       toolbarTitle={label}
       value={dates || null}
       onChange={handleChange}
@@ -76,11 +70,7 @@ export const InputDate: React.FC<Props> = ({ name, label, themeColor = 'primary'
       minDate={minDate}
       onOpen={handleOpen}
       onClose={handleClose}
-      // DialogProps={{
-      //   PaperProps: {
-      //     sx: { backgroundColor: '#f1f1f1' }
-      //   }
-      // }}
+      disabled={!!disabled}
     />
   )
 }

@@ -14,7 +14,7 @@ export async function createApiPix(arenaId?: number): Promise<ApiPix> {
   const where: FindOptionsWhere<Config> = { key: dev ? 'CERT_DEV' : 'CERT' }
   if (arenaId) where.arenaId = arenaId
 
-  const data = await repo.findOne({ where })
+  const data = await repo.findOne({ where, order: { arenaId: 'ASC' } })
   const base64 = data.value as string
 
   if (!base64) throw new Error('CERTIFICATE ERROR')

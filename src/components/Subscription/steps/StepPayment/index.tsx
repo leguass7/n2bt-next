@@ -39,9 +39,6 @@ export const StepPayment: React.FC<Props> = ({ icon }) => {
           <Button type="button" variant="contained" onClick={() => goTo(3)} startIcon={<ArrowLeftIcon />} disabled={!!subscription?.id}>
             Voltar
           </Button>
-          {/* <Button type="button" variant="contained" onClick={() => push('/')}>
-            Sair
-          </Button> */}
         </CardActions>
       </CardContainer>
     </BoxCenter>

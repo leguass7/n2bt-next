@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CardHeader from '@mui/material/CardHeader'
 import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
 import { isPast, parseJSON } from 'date-fns'
+import { useRouter } from 'next/router'
 
 import { compareValues } from '~/helpers/array'
 import { useIsMounted } from '~/hooks/useIsMounted'
@@ -32,6 +35,7 @@ interface Props {
 }
 
 export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} }) => {
+  const { push } = useRouter()
   const [categories, setCategories] = useState<ICategory[]>([])
   const [categoryId, setCategoryId] = useState<number>(null)
 
@@ -62,6 +66,10 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
     setCategoryId(tabId)
   }
 
+  const handleBack = () => {
+    push('/')
+  }
+
   const categoryTabs = useMemo<ITab[]>(() => {
     return categories
       .map(({ id, title, gender, published }) => {
@@ -79,7 +87,15 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
   return (
     <Content>
       <div style={{ padding: '16px 0' }}>
-        <CardHeader title={tournament?.title} subheader={tournament?.description} />
+        <CardHeader
+          title={tournament?.title}
+          subheader={tournament?.description}
+          action={
+            <IconButton onClick={handleBack}>
+              <ArrowBackIcon />
+            </IconButton>
+          }
+        />
         <Chip sx={{ marginLeft: 2 }} color="primary" variant="outlined" label={tournament?.arena?.title} />
       </div>
 

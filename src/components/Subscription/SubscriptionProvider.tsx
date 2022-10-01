@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { createContext, useContextSelector } from 'use-context-selector'
 
@@ -7,7 +8,7 @@ import type { IResponseGeneratePix } from '~/server-side/useCases/payment/paymen
 import type { IResponseSubscription, ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import type { IUser } from '~/server-side/useCases/user/user.dto'
 import { generatePayment } from '~/services/api/payment'
-import { createSubscription } from '~/services/api/subscriptions'
+import { createPublicSubscription } from '~/services/api/subscriber'
 
 export interface ISubscriptionProviderContext {
   subscription: ISubscription
@@ -47,9 +48,11 @@ export const SubscriptionProvider: React.FC<Props> = ({ children, tournamentId, 
 
   const saveSubscription = useCallback(async () => {
     if (!category || !partner) return null
-    const response = await createSubscription({ categoryId: category?.id, partnerId: partner?.id, value: category.price })
+    const response = await createPublicSubscription({ categoryId: category?.id, partnerId: partner?.id, value: category.price })
     if (response?.success) {
       setSubscription(response?.subscription)
+    } else {
+      toast.error(response?.message || 'Erro ao gerar inscrição')
     }
     return response
   }, [category, partner])

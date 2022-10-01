@@ -64,7 +64,7 @@ export async function generatePaymentService(
   })) as Partial<IResponseCob> & { responseError?: { mensagem?: string } }
 
   if (!cob || !cob?.txid || !cob.loc) {
-    return { success: false, message: cob?.responseError?.mensagem || 'generate PIX function errror' }
+    return { success: false, message: cob?.responseError?.mensagem || 'generate PIX function error' }
   }
 
   const qrcode = await apiPix.qrcodeByLocation(cob.loc.id)

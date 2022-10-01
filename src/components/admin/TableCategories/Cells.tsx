@@ -46,7 +46,7 @@ export const NameCell: React.FC<Props> = ({ record }) => {
     <CellContainer>
       <Text>{record?.title}</Text>
       <Text textSize={12} textStyle="italic">
-        {genderText}
+        {genderText} - <Text textSize={12}>Limite: {record?.limit}</Text>
       </Text>
     </CellContainer>
   )

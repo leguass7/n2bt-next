@@ -7,6 +7,7 @@ import { object, string } from 'yup'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { Input } from '~/components/forms/UnForm/Input'
+import { MuiInputDate } from '~/components/forms/UnForm/MuiInputDate'
 import { validateFormData } from '~/helpers/validation'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { IResponseTournament, ITournament } from '~/server-side/useCases/tournament/tournament.dto'
@@ -68,15 +69,20 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
     [onInvalid, onSuccess, onFailed, tournamentId, arenaId]
   )
 
-  useOnceCall(() => {
-    fetchData()
-  })
+  useOnceCall(fetchData)
+  // data.subscriptionExpiration
 
   return (
     <>
       <Form ref={formRef} onSubmit={handleSubmit} role="form" initialData={data} key={`form-${data?.id || ''}`}>
         <Input placeholder="nome" type="text" name="title" label="Nome" />
         <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
+        {tournamentId ? (
+          <>{!loading && !!data ? <MuiInputDate name="subscriptionExpiration" label={'Data limite inscrições'} /> : null}</>
+        ) : (
+          <MuiInputDate name="subscriptionExpiration" label={'Data limite inscrições'} />
+        )}
+
         <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 2 }}>
           {onCancel ? (
             <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onCancel}>

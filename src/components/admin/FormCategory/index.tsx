@@ -79,7 +79,6 @@ export const FormCategory: React.FC<FormCategoryProps> = ({ onInvalid, onSuccess
   return (
     <>
       <Form ref={formRef} onSubmit={handleSubmit} role="form" initialData={data} key={`form-${data?.id || ''}`}>
-        <Switch name="mixGender" label="Categoria mista" />
         <FlexContainer verticalPad={10}>
           <InputSelects name="gender" label="Gênero" options={categoryGenders} defaultSelected={data?.gender || 'M'} />
         </FlexContainer>
@@ -87,6 +86,14 @@ export const FormCategory: React.FC<FormCategoryProps> = ({ onInvalid, onSuccess
         <Input placeholder="preço" type="text" name="price" label="Valor da inscrição" />
         <Input placeholder="Desconto" type="text" name="discount" label="Desconto" />
         <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
+        <FlexContainer verticalPad={10}>
+          <div>
+            <Switch name="mixGender" label="Categoria mista" disabled />
+          </div>
+          <div>
+            <Input placeholder="limite" type="number" name="limit" label="Limite atletas" />
+          </div>
+        </FlexContainer>
 
         <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 2 }}>
           {onCancel ? (

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
 import MuiInput, { InputProps } from '@mui/material/Input'
+import TextField from '@mui/material/TextField'
 import { useField } from '@unform/core'
 
 import { ErrorMessage } from './styles'
@@ -42,8 +43,9 @@ export const Input: React.FC<Props> = ({ name, type = 'text', id, label, number,
 
   return (
     <div style={{ padding: 4 }}>
-      {label ? <label htmlFor={id}>{label}</label> : null}
-      <MuiInput
+      {/* {label ? <label htmlFor={id}>{label}</label> : null} */}
+      <TextField
+        label={label}
         fullWidth
         type={type}
         inputProps={{ id }}
@@ -53,6 +55,7 @@ export const Input: React.FC<Props> = ({ name, type = 'text', id, label, number,
         inputRef={ref}
         multiline={multiline}
         placeholder={placeholder}
+        variant="standard"
       />
       {error ? <ErrorMessage>{error}</ErrorMessage> : null}
     </div>

@@ -11,10 +11,12 @@ const spacing: IThemeSpacing = {
 
 export const appTheme = {
   colors: {
-    primary: '#F56268',
+    // primary: '#F56268',
+    primary: '#0E3F80', // summer
     secondary: '#2F5597',
     contrast: '#235910',
-    background: '#323B62',
+    // background: '#323B62',
+    background: '#0593B1', // summer
     text: '#818181',
     textDark: '#151414',
 

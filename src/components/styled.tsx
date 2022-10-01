@@ -27,10 +27,15 @@ export const BoxCenter = styled.div<{ spacing?: number }>`
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
+
   justify-content: center;
   align-items: center;
   align-content: center;
   padding: ${({ theme, spacing = 0 }) => theme.spacing.l * spacing}px;
+  .MuiCard-root {
+    max-width: 500px;
+    width: 100%;
+  }
 `
 
 export const FlexContainer = styled.div<FlexProps & { textColor?: string; gap?: number }>`

@@ -68,6 +68,7 @@ class PaymentHandler {
     if (!price) throw new BadRequestException('Inscrição sem preço')
 
     const overdue = subscription?.category?.tournament?.subscriptionExpiration
+    if (!overdue) throw new BadRequestException('Data de vencimento inválida')
 
     if (subscription?.payment) {
       if (subscription?.payment?.paid) {
@@ -93,6 +94,8 @@ class PaymentHandler {
 
     const cob = await generatePaymentService(apiPix, { expiracao, paymentId: payment?.id, user, value: price })
     if (!cob || !cob?.success) {
+      // eslint-disable-next-line no-console
+      console.error(cob?.message, cob?.messageError)
       throw new BadRequestException('Erro ao criar PIX')
     }
 
