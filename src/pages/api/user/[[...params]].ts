@@ -57,7 +57,7 @@ class UserHandler {
       if (!user) throw new InternalServerErrorException('Usuário não encontrado')
     }
 
-    return { success: true, user, auth: req.auth }
+    return { success: true, user: user ? instanceToPlain(user) : null, auth: req.auth }
   }
 
   @Post('/register')

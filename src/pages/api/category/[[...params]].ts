@@ -40,16 +40,17 @@ class CategoryHandler {
       .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
       .innerJoin('Category.tournament', 'Tournament')
       .where({ published: true, tournamentId })
-      .andWhere(`Category.gender = :gender OR Category.gender = 'MF'`, { gender: user.gender })
+      .andWhere(`(Category.gender = :gender OR Category.gender = 'MF')`, { gender: user.gender })
 
-    if (userId) {
-      queryDb
-        .addSelect(['Subscription.id', 'Subscription.paid', 'Subscription.actived'])
-        .leftJoin('Category.subscriptions', 'Subscription', 'Subscription.userId = :userId AND Subscription.actived = :actived', {
-          userId,
-          actived: true
-        })
-    }
+    // if (userId) {
+    queryDb
+      .addSelect(['Subscription.id', 'Subscription.userId', 'Subscription.partnerId', 'Subscription.paid', 'Subscription.actived'])
+      .leftJoin('Category.subscriptions', 'Subscription', 'Subscription.actived = :actived', { actived: true })
+    // .leftJoin('Category.subscriptions', 'Subscription', 'Subscription.userId = :userId AND Subscription.actived = :actived', {
+    //   userId,
+    //   actived: true
+    // })
+    // }
 
     parseOrderDto({ order, table: 'Category', orderFields }).querySetup(queryDb)
 

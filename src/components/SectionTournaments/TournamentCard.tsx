@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import { useResizeDetector } from 'react-resize-detector'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Button from '@mui/material/Button'
@@ -7,12 +8,14 @@ import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
+import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
 import { isPast } from 'date-fns'
 import { useRouter } from 'next/router'
 import gfm from 'remark-gfm'
 
 import { getTournamentImage } from '~/config/constants'
+import { round } from '~/helpers'
 import { validDate } from '~/helpers/date'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 
@@ -22,7 +25,8 @@ import { ExpandMore } from './ExpandMore'
 
 type Props = Partial<ITournament> & {}
 
-export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, download, subscriptionExpiration }) => {
+export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, download, subscriptionExpiration, limitUsers, arena }) => {
+  const { ref, width } = useResizeDetector()
   const { prefetch } = useRouter()
   const [expanded, setExpanded] = useState(false)
 
@@ -51,9 +55,15 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
     )
   }
 
+  const getMediaHeight = () => {
+    const w = round(width, 0)
+    return round(w / 1.777777777777778, 0)
+  }
+
+  // console.log('width', width, getMediaWidth())
   return (
-    <Card>
-      <CardMedia component="img" height="140" image={getTournamentImage(id)} alt={title} />
+    <Card ref={ref}>
+      <CardMedia component="img" height={getMediaHeight()} image={getTournamentImage(id)} alt={title} />
       <CardContent>
         <div style={{ maxWidth: 290 }}>
           <Typography gutterBottom variant="h5" component="div">
@@ -63,6 +73,9 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
             <ReactMarkdown remarkPlugins={[gfm]}>{description}</ReactMarkdown>
           </MkContainer>
         </div>
+      </CardContent>
+      <CardContent>
+        <Chip color="secondary" variant="filled" size="small" label={arena?.title} />
       </CardContent>
       <CardActions>
         {!expired ? (
@@ -75,7 +88,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
-      <CollapseCharts tournamentId={id} expanded={!!expanded} />
+      <CollapseCharts tournamentId={id} expanded={!!expanded} limitUsers={limitUsers} />
     </Card>
   )
 }

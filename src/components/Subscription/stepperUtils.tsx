@@ -46,12 +46,12 @@ export const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
       // backgroundImage: 'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)'
-      backgroundImage: `linear-gradient( 95deg, ${theme.palette.primary.main} 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)`
+      backgroundImage: `linear-gradient( 95deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 75%)`
     }
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage: 'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)'
+      backgroundImage: `linear-gradient( 95deg,${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 75%)`
     }
   },
   [`& .${stepConnectorClasses.line}`]: {
@@ -75,11 +75,11 @@ const ColorlibStepIconRoot = styled('div')<{
   justifyContent: 'center',
   alignItems: 'center',
   ...(ownerState.active && {
-    backgroundImage: 'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+    backgroundImage: `linear-gradient( 136deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 75%)`,
     boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)'
   }),
   ...(ownerState.completed && {
-    backgroundImage: 'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)'
+    backgroundImage: `linear-gradient( 136deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 75%)`
   })
 }))
 

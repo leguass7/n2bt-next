@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
-import MuiInput, { InputProps } from '@mui/material/Input'
+import { InputProps } from '@mui/material/Input'
 import TextField from '@mui/material/TextField'
 import { useField } from '@unform/core'
 

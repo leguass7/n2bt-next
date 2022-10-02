@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CardHeader from '@mui/material/CardHeader'
@@ -7,6 +8,7 @@ import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import { isPast, parseJSON } from 'date-fns'
 import { useRouter } from 'next/router'
+import gfm from 'remark-gfm'
 
 import { compareValues } from '~/helpers/array'
 import { useIsMounted } from '~/hooks/useIsMounted'
@@ -17,6 +19,7 @@ import { Content } from '~/styles'
 
 import { CircleLoading } from '../CircleLoading'
 import { ITab, SimpleTab } from '../Common/SimpleTab'
+import { MkContainer } from '../styled'
 import { ListPartners } from '../User/ListPartners'
 import { RankingList } from './RankingList'
 
@@ -89,7 +92,12 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
       <div style={{ padding: '16px 0' }}>
         <CardHeader
           title={tournament?.title}
-          subheader={tournament?.description}
+          // subheader={tournament?.description}
+          subheader={
+            <MkContainer>
+              <ReactMarkdown remarkPlugins={[gfm]}>{tournament?.description}</ReactMarkdown>
+            </MkContainer>
+          }
           action={
             <IconButton onClick={handleBack}>
               <ArrowBackIcon />

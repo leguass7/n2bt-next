@@ -13,8 +13,10 @@ export const appTheme = {
   colors: {
     // primary: '#F56268',
     primary: '#0E3F80', // summer
-    secondary: '#2F5597',
-    contrast: '#235910',
+    // secondary: '#2F5597',
+    secondary: '#CDBE55', //summer
+    // contrast: '#235910',
+    contrast: '#CDBE55', // summer
     // background: '#323B62',
     background: '#0593B1', // summer
     text: '#818181',

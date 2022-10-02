@@ -23,6 +23,7 @@ const createMuiTheme = (theme: IAppTheme) => {
         styleOverrides: {
           root: {
             backgroundColor: theme.colors.background
+            //backgroundColor: darken(theme.colors.background, 0.1)
           }
         }
       }
@@ -35,7 +36,10 @@ const createMuiTheme = (theme: IAppTheme) => {
       contrastThreshold: 3,
       tonalOffset: 0.2,
       background: {
-        default: theme.colors.background
+        // default: darken(theme.colors.background, 0.1)
+
+        // default: '#5eaac5'
+        default: '#5599b1'
       }
     }
   })

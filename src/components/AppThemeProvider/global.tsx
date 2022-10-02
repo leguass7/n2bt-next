@@ -1,9 +1,31 @@
 import { memo } from 'react'
-// import { renderToStaticMarkup } from 'react-dom/server'
 
 import { createGlobalStyle, css } from 'styled-components'
 
+import bg from '~/assets/summer-bg.png'
+import groundImg from '~/assets/summer-ground.png'
 import { brighten } from '~/helpers/colors'
+
+const globBackground = css`
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: cover;
+  background-attachment: scroll;
+  background-image: url(${bg.src});
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 375px;
+    /* border: 1px dashed #f00; */
+    position: absolute;
+    bottom: 0;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: contain;
+    background-image: url(${groundImg.src});
+  }
+`
 
 const globCss = css`
   h2 {
@@ -36,9 +58,9 @@ const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
     padding: 0;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: bottom;
     background-size: cover;
-    background-attachment: fixed;
+    background-attachment: scroll;
     min-height: 100vh;
     height: 100%;
     box-sizing: border-box;
@@ -47,6 +69,8 @@ const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.colors.text};
     font-family: Gilroy, Tahoma, Geneva, Verdana, sans-serif;
     border: 0;
+    ${globBackground}
+
   }
 
   #__next{
@@ -59,6 +83,7 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box !important;
     border: 0;
     ${globCss}
+
   }
 `
 

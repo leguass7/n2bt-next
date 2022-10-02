@@ -23,8 +23,9 @@ type ChartData = {
 type Props = {
   tournamentId: number
   expanded?: boolean
+  limitUsers?: number
 }
-export const CollapseCharts: React.FC<Props> = ({ expanded, tournamentId }) => {
+export const CollapseCharts: React.FC<Props> = ({ expanded, tournamentId, limitUsers }) => {
   const [data, setData] = useState<ChartData>({ total: 200, value: 0 })
   const { theme } = useAppTheme()
   const progressStyles = buildStyles({
@@ -51,7 +52,7 @@ export const CollapseCharts: React.FC<Props> = ({ expanded, tournamentId }) => {
       <CardContent>
         <FlexContainer gap={20}>
           <ChartContainer>
-            <CircularProgressbar value={data?.value} maxValue={208} text={`${data?.value}`} styles={progressStyles} />
+            <CircularProgressbar value={data?.value} maxValue={limitUsers} text={`${data?.value}`} styles={progressStyles} />
           </ChartContainer>
           <Paragraph align="center">
             <Text textSize={26} bold>
@@ -60,9 +61,12 @@ export const CollapseCharts: React.FC<Props> = ({ expanded, tournamentId }) => {
             <Text textSize={18}>Inscrições realizadas</Text>
           </Paragraph>
         </FlexContainer>
+      </CardContent>
+      <Divider />
+      <CardContent>
         <Stack direction={'row'} spacing={1} justifyContent="center" sx={{ mt: 1 }}>
           <Button href={`/tournament/subscriptions/${tournamentId}`} startIcon={<GroupIcon />}>
-            Duplas inscritas
+            Duplas inscritas {limitUsers}
           </Button>
         </Stack>
       </CardContent>

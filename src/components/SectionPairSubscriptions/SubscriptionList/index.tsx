@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 
 import { CircleLoading } from '~/components/CircleLoading'
-import { Text } from '~/components/styled'
+import { FlexContainer, Text } from '~/components/styled'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { CategoryGender } from '~/server-side/useCases/category/category.entity'
 import { paginateSubscription } from '~/services/api/subscriptions'
@@ -87,13 +87,15 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, onlyVerified, ca
           )
         })}
         {!data.length && !loading ? (
-          <Alert variant="outlined" severity="info">
-            <AlertTitle>Duplas confirmadas</AlertTitle>
-            Não há confirmação de duplas cadastradas.{' '}
-            <Text textSize={14} textStyle="italic">
-              (Apenas duplas confirmadas pela administração do torneio)
-            </Text>
-          </Alert>
+          <FlexContainer justify="center">
+            <Alert variant="filled" severity="info">
+              <AlertTitle>Duplas confirmadas</AlertTitle>
+              Não há confirmação de duplas cadastradas.{' '}
+              <Text textSize={14} textStyle="italic">
+                (Apenas duplas confirmadas pela administração do torneio)
+              </Text>
+            </Alert>
+          </FlexContainer>
         ) : null}
         {loading ? <CircleLoading /> : null}
       </Grid>
