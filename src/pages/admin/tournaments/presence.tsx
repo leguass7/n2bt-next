@@ -16,7 +16,7 @@ type PageProps = {
   tournamentId?: number
 }
 
-const AdminTournamentsCheckinPage: NextPage<PageProps> = ({ tournamentId }) => {
+const AdminTournamentsPresencePage: NextPage<PageProps> = ({ tournamentId }) => {
   const [, setLoading] = useState(false)
   const [categories, setCategories] = useState([])
 
@@ -58,18 +58,10 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async context =
   }
 
   if (!session) {
-    return {
-      redirect: { destination: `/login?tournamentId=${tournamentId}` },
-      props: { tournamentId }
-    }
+    return { redirect: { destination: `/login?tournamentId=${tournamentId}` }, props: { tournamentId } }
   }
 
-  return {
-    props: {
-      session,
-      tournamentId
-    }
-  }
+  return { props: { session, tournamentId } }
 }
 
-export default AdminTournamentsCheckinPage
+export default AdminTournamentsPresencePage

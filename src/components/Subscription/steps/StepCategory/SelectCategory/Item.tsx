@@ -107,7 +107,7 @@ export const Item: React.FC<Props> = ({ onClick, actived, paidCount = 0, ...cate
           <Radio checked={!!actived} disabled={!!disabled} />
           <Text style={{ filter: 'grayscale(100%)', flex: 1 }}>
             <Text transform="uppercase" textSize={18}>
-              {title} {limit}
+              {title}
             </Text>
             <Text>
               <br />
