@@ -27,6 +27,12 @@ export class Category {
   @Column({ type: 'enum', enum: ['F', 'M', 'MF'], nullable: false, default: 'M' })
   gender?: string
 
+  @Column({ nullable: true })
+  minAge?: number
+
+  @Column({ nullable: true })
+  maxAge?: number
+
   @Column({ nullable: true, default: false })
   mixGender?: boolean
 
