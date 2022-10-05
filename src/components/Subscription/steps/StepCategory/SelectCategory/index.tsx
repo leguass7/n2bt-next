@@ -54,7 +54,7 @@ export const SelectCategory: React.FC<Props> = ({ tournamentId, onChange, defaul
     const count =
       hasSubsIn &&
       categories.reduce((acc, c) => {
-        const paids = c?.subscriptions?.filter(s => !!s.paid)?.length || 0
+        const paids = c?.subscriptions?.filter(s => s.userId === userData?.id && !!s.paid)?.length || 0
         acc = acc + paids
         return acc
       }, 0)
