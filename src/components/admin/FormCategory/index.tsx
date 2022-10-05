@@ -1,9 +1,11 @@
 import React, { useCallback, useRef, useState } from 'react'
 
 import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { Form } from '@unform/web'
-import { object, string } from 'yup'
+import { number, object, ref, string } from 'yup'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { InputSelects } from '~/components/forms/InputSelects'
@@ -24,7 +26,9 @@ export type SuccessHandler = (reason: SuccessReason, response?: IResponseCategor
 
 const schema = object().shape({
   title: string().required('titulo da categoria requerido'),
-  description: string()
+  description: string(),
+  minAge: number().min(3, 'Digite uma idade mínima acima de 3 anos').nullable(),
+  maxAge: number().min(ref('minAge'), 'Idade máxima deve ser maior que idade mínima').nullable()
 })
 
 export type FormCategoryProps = {
@@ -82,16 +86,41 @@ export const FormCategory: React.FC<FormCategoryProps> = ({ onInvalid, onSuccess
         <FlexContainer verticalPad={10}>
           <InputSelects name="gender" label="Gênero" options={categoryGenders} defaultSelected={data?.gender || 'M'} />
         </FlexContainer>
-        <Input placeholder="nome" type="text" name="title" label="Nome" />
-        <Input placeholder="preço" type="text" name="price" label="Valor da inscrição" />
-        <Input placeholder="Desconto" type="text" name="discount" label="Desconto" />
-        <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
+        <Grid container>
+          <Grid item xs={6}>
+            <Input type="text" name="title" label="Nome" />
+          </Grid>
+          <Grid item xs={6}>
+            <Input number name="limit" label="Limite de atletas" />
+          </Grid>
+          <Grid item xs={12}>
+            <Input type="text" multiline name="description" label="Descrição" />
+          </Grid>
+          <Grid item xs={12} pt={2}>
+            <Typography variant="h6">Valor</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Input number name="price" label="Valor da inscrição" />
+          </Grid>
+          <Grid item xs={6}>
+            <Input number name="discount" label="Desconto" />
+          </Grid>
+
+          <Grid item xs={12} pt={2}>
+            <Typography variant="h6">Restrições</Typography>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Input number name="minAge" label="Idade mínima" />
+          </Grid>
+          <Grid item xs={6}>
+            <Input number name="maxAge" label="Idade máxima" />
+          </Grid>
+        </Grid>
+
         <FlexContainer verticalPad={10}>
           <div>
             <Switch name="mixGender" label="Categoria mista" disabled />
-          </div>
-          <div>
-            <Input placeholder="limite" type="number" name="limit" label="Limite atletas" />
           </div>
         </FlexContainer>
 
