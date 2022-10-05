@@ -45,8 +45,8 @@ export async function prepareDataSource(sync?: boolean) {
       url: databaseUrl,
       extra: { connectionLimit: 6 },
       synchronize: !!sync,
-      // logging: ['error'],
-      logging: ['error', 'query'],
+      logging: ['error'],
+      // logging: ['error', 'query'],
       entities
     })
 

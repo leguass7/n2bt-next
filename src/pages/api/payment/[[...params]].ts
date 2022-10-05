@@ -55,7 +55,7 @@ class PaymentHandler {
       .createQueryBuilder('Subscription')
       .select()
       .addSelect(['Category.id', 'Category.tournamentId', 'Category.price'])
-      .addSelect(['Tournament.id', 'Tournament.arenaId', 'Tournament.published', 'Tournament.subscriptionExpiration'])
+      .addSelect(['Tournament.id', 'Tournament.arenaId', 'Tournament.published', 'Tournament.subscriptionEnd'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Category.tournament', 'Tournament')
       .leftJoin('Subscription.payment', 'Payment')
