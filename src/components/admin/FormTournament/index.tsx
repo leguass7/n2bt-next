@@ -80,7 +80,7 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
         {tournamentId ? (
           <>{!loading && !!data ? <MuiInputDate name="subscriptionExpiration" label={'Data limite inscrições'} /> : null}</>
         ) : (
-          <MuiInputDate name="subscriptionExpiration" label={'Data limite inscrições'} />
+          <MuiInputDate name="subscriptionEnd" label={'Data limite inscrições'} />
         )}
 
         <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 2 }}>
