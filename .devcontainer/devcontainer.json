@@ -1,0 +1,39 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.238.1/containers/typescript-node
+{
+  "name": "Node.js & TypeScript",
+  "build": {
+    "dockerfile": "Dockerfile",
+    // Update 'VARIANT' to pick a Node version: 18, 16, 14.
+    // Append -bullseye or -buster to pin to an OS version.
+    // Use -bullseye variants on local on arm64/Apple Silicon.
+    "args": {
+      "VARIANT": "16"
+    }
+  },
+
+  "postCreateCommand": "docker network create database && docker run --name mysql -v mysqldata:/var/lib/mysql --network database -e MYSQL_ROOT_PASSWORD=root -p 3307:3306 -d mysql && docker run --name pma -d --network database -e PMA_HOST=mysql -e PMA_USER=root -e PMA_PASSWORD=root -p 8080:80 phpmyadmin/phpmyadmin && docker run --name cache -d -e REDIS_PORT=6379 -v redis_lib:/var/lib/redis -v redis_data:/data -p 6379:6379 redis:alpine && docker update --restart unless-stopped $(docker ps -q)",
+
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": ["dbaeumer.vscode-eslint"]
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [8080],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "yarn install",
+
+  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  // "remoteUser": "node",
+  "features": {
+    "docker-from-docker": "20.10",
+    "git": "latest",
+    "github-cli": "latest"
+  }
+}
