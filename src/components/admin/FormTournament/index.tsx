@@ -78,7 +78,7 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
         <Input placeholder="nome" type="text" name="title" label="Nome" />
         <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
         {tournamentId ? (
-          <>{!loading && !!data ? <MuiInputDate name="subscriptionExpiration" label={'Data limite inscrições'} /> : null}</>
+          <>{!loading && !!data ? <MuiInputDate name="subscriptionEnd" label={'Data limite inscrições'} /> : null}</>
         ) : (
           <MuiInputDate name="subscriptionEnd" label={'Data limite inscrições'} />
         )}
