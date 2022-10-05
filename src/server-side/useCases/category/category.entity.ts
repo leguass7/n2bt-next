@@ -27,10 +27,10 @@ export class Category {
   @Column({ type: 'enum', enum: ['F', 'M', 'MF'], nullable: false, default: 'M' })
   gender?: string
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: null })
   minAge?: number
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: null })
   maxAge?: number
 
   @Column({ nullable: true, default: false })
