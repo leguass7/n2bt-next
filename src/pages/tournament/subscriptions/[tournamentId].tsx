@@ -76,7 +76,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async ({ req, p
   const ds = await prepareConnection()
   const repo = ds.getRepository(Tournament)
   const tournament = await repo.findOne({ where: { id: tournamentId } })
-  const isExpired = !!(tournament?.subscriptionExpiration && differenceInMinutes(tournament?.subscriptionExpiration, new Date()) <= 0)
+  const isExpired = !!(tournament?.subscriptionEnd && differenceInMinutes(tournament?.subscriptionEnd, new Date()) <= 0)
 
   return {
     props: {

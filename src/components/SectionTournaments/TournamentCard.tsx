@@ -25,13 +25,13 @@ import { ExpandMore } from './ExpandMore'
 
 type Props = Partial<ITournament> & {}
 
-export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, download, subscriptionExpiration, limitUsers, arena }) => {
+export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, download, subscriptionEnd, limitUsers, arena }) => {
   const { ref, width } = useResizeDetector()
   const { prefetch } = useRouter()
   const [expanded, setExpanded] = useState(false)
 
   const expiresDate = validDate(expires)
-  const subExpiresDate = validDate(subscriptionExpiration)
+  const subExpiresDate = validDate(subscriptionEnd)
 
   const expired = isPast(expiresDate) || isPast(subExpiresDate)
 

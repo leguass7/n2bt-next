@@ -66,7 +66,7 @@ export const CollapseCharts: React.FC<Props> = ({ expanded, tournamentId, limitU
       <CardContent>
         <Stack direction={'row'} spacing={1} justifyContent="center" sx={{ mt: 1 }}>
           <Button href={`/tournament/subscriptions/${tournamentId}`} startIcon={<GroupIcon />}>
-            Duplas inscritas {limitUsers}
+            Duplas inscritas
           </Button>
         </Stack>
       </CardContent>

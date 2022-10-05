@@ -67,7 +67,7 @@ class PaymentHandler {
     const price = subscription?.value || subscription?.category?.price
     if (!price) throw new BadRequestException('Inscrição sem preço')
 
-    const overdue = subscription?.category?.tournament?.subscriptionExpiration
+    const overdue = subscription?.category?.tournament?.subscriptionEnd
     if (!overdue) throw new BadRequestException('Data de vencimento inválida')
 
     if (subscription?.payment) {

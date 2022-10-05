@@ -26,9 +26,6 @@ export class Tournament {
   published: boolean
 
   @Column({ type: 'datetime', nullable: true, precision: null })
-  subscriptionExpiration: Date
-
-  @Column({ type: 'datetime', nullable: true, precision: null })
   expires: Date
 
   @Column({ nullable: true, default: 200 })
@@ -51,6 +48,12 @@ export class Tournament {
 
   @Column({ nullable: true, precision: null, onUpdate: 'CURRENT_TIMESTAMP', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt?: Date
+
+  @Column({ type: 'datetime', nullable: true, precision: null })
+  subscriptionStart: Date
+
+  @Column({ type: 'datetime', nullable: true, precision: null })
+  subscriptionEnd: Date
 
   // relations
   @OneToMany(() => Category, category => category.tournament)

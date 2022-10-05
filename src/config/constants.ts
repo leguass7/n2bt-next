@@ -1,3 +1,4 @@
+import imgDunas from '~/assets/dunas-out-large.jpg'
 import imgOriginal from '~/assets/original-1ano.jpg'
 import imgSpeed from '~/assets/primeira-speed.jpg'
 import imgSummer from '~/assets/summer-50-large.jpg'
@@ -29,7 +30,8 @@ export const shirtSizes: CategoryOption[] = [
 export const tournamentImages = [
   { id: 1, image: imgSpeed },
   { id: 2, image: imgOriginal },
-  { id: 3, image: imgSummer }
+  { id: 3, image: imgSummer },
+  { id: 4, image: imgDunas }
   //
 ]
 
