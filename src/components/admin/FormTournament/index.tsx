@@ -89,8 +89,8 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
         <Input placeholder="nome" type="text" name="title" label="Nome" />
         <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
         <Stack direction="column" spacing={1} pt={2}>
-          <InputDate fullWidth label="Início das incrições" name="subscriptionStart" minDate={new Date()} clearable />
-          <InputDate fullWidth label="Fim das incrições" name="subscriptionEnd" clearable />
+          <InputDate label="Início das incrições" name="subscriptionStart" minDate={new Date()} clearable />
+          <InputDate label="Fim das incrições" name="subscriptionEnd" clearable />
         </Stack>
 
         {/* {tournamentId ? (

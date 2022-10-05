@@ -5,5 +5,5 @@ export const ErrorMessage = styled.span`
   padding: 4px 0;
   color: #f55;
   font-size: 12px;
-  font-weight: 300;
+  font-weight: 600;
 `

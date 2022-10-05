@@ -8,6 +8,7 @@ import { VariantColorsTypes } from '~/components/AppThemeProvider/types'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 
 import { Container, Input, Label } from '../InputText/styles'
+import { ErrorMessage } from './styles'
 
 function convertDefaultValue(d: Date | string) {
   const date = d instanceof Date ? d : parse(d, 'yyyy-MM-dd', new Date())
@@ -28,7 +29,7 @@ export const InputDate: React.FC<Props> = ({ name, label, themeColor = 'primary'
   const [actived, setActived] = useState(false)
   const { theme } = useAppTheme()
   const ref = useRef<HTMLInputElement>(null)
-  const { fieldName, defaultValue, registerField } = useField(name)
+  const { fieldName, defaultValue, registerField, error } = useField(name)
 
   const [dates, setDates] = useState<Date>(defaultValue ? convertDefaultValue(defaultValue) || null : null)
 
@@ -56,31 +57,34 @@ export const InputDate: React.FC<Props> = ({ name, label, themeColor = 'primary'
   }, [fieldName, registerField, dates])
 
   return (
-    <MobileDatePicker
-      inputRef={ref}
-      renderInput={({ inputRef, inputProps }) => (
-        <Container labelColor={theme.colors[themeColor]} disabled={disabled}>
-          <Input id={id} ref={inputRef} {...inputProps} className={'calendar'} />
-          {label ? (
-            <Label htmlFor={id} actived={actived}>
-              {label}
-            </Label>
-          ) : null}
-        </Container>
-      )}
-      toolbarTitle={label}
-      value={dates || null}
-      onChange={handleChange}
-      onAccept={handleChange}
-      maxDate={maxDate}
-      minDate={minDate}
-      onOpen={handleOpen}
-      onClose={handleClose}
-      // DialogProps={{
-      //   PaperProps: {
-      //     sx: { backgroundColor: '#f1f1f1' }
-      //   }
-      // }}
-    />
+    <>
+      <MobileDatePicker
+        inputRef={ref}
+        renderInput={({ inputRef, inputProps }) => (
+          <Container labelColor={theme.colors[themeColor]} disabled={disabled}>
+            <Input id={id} ref={inputRef} {...inputProps} className={'calendar'} />
+            {label ? (
+              <Label htmlFor={id} actived={actived}>
+                {label}
+              </Label>
+            ) : null}
+          </Container>
+        )}
+        toolbarTitle={label}
+        value={dates || null}
+        onChange={handleChange}
+        onAccept={handleChange}
+        maxDate={maxDate}
+        minDate={minDate}
+        onOpen={handleOpen}
+        onClose={handleClose}
+        // DialogProps={{
+        //   PaperProps: {
+        //     sx: { backgroundColor: '#f1f1f1' }
+        //   }
+        // }}
+      />
+      {error ? <ErrorMessage style={{ paddingLeft: 18 }}>{error}</ErrorMessage> : null}
+    </>
   )
 }
