@@ -17,6 +17,7 @@ import Tooltip from '@mui/material/Tooltip'
 
 import { useAdminTournament } from '~/components/app/LayoutAdmin/LayoutAdminProvider'
 import { CircleLoading } from '~/components/CircleLoading'
+import { SimpleModal } from '~/components/Common/SimpleModal'
 import { useCustomTable } from '~/components/CustomTable'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
@@ -79,17 +80,17 @@ export const Actions: React.FC = () => {
         </Toolbar>
       </FlexContainer>
       <Divider />
-      <Modal open={!!custom?.editId} onClose={handleClose} keepMounted={false}>
-        <BoxCenter spacing={1}>
+      <SimpleModal title={`${title} categoria`} open={!!custom?.editId} onToggle={handleClose}>
+        {/* <BoxCenter spacing={1}>
           <Card sx={{ maxWidth: '100%', minWidth: 500 }}>
             <CardHeader title={`${title} Categoria`} />
             <Divider />
-            <CardContent>
-              <FormCategory tournamentId={tournamentId} categoryId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
-            </CardContent>
+            <CardContent> */}
+        <FormCategory tournamentId={tournamentId} categoryId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
+        {/* </CardContent>
           </Card>
-        </BoxCenter>
-      </Modal>
+        </BoxCenter> */}
+      </SimpleModal>
       <Modal open={!!custom?.deleteId} onClose={handleClose} keepMounted={false}>
         <BoxCenter spacing={1}>
           <Card>
