@@ -30,7 +30,7 @@ export type Props = {
 
 const schema = object().shape({
   shirtSize: string().required('O tamanho da camisa é obrigatório'),
-  birday: string().required('A sua data de nascimento é obrigatória'),
+  birday: string().required('A sua data de nascimento é obrigatória').nullable(),
   // category: string().required('Categoria é requirido'),
   gender: string().required('gênero é requirido'),
   cpf: string()
