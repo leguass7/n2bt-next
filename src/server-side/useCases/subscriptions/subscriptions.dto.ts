@@ -2,7 +2,7 @@ import type { DeepPartial } from 'typeorm'
 
 import type { IResponseApi } from '~/server-side/api.interface'
 
-import { Subscription } from './subscriptions.entity'
+import { ShirtStatus, Subscription } from './subscriptions.entity'
 
 export type ISubscription = DeepPartial<Subscription>
 
@@ -13,6 +13,10 @@ export interface IResponseSubscription extends IResponseApi {
 
 export interface IResponseSubscriptions extends IResponseApi {
   subscriptions?: ISubscription[]
+}
+
+export interface IResponseSubscriptionsReport extends IResponseSubscriptions {
+  counters: Record<keyof typeof ShirtStatus, number>
 }
 
 export interface IResponseSubscriptionSummary extends IResponseApi {
@@ -38,3 +42,5 @@ export interface SubscriptionSheetDto {
   amount?: number | string
   shirtSize?: string
 }
+
+export type SubscriptionReportCounter = Record<keyof typeof ShirtStatus, number>
