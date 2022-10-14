@@ -1,5 +1,5 @@
 import type { NextApiResponse } from 'next'
-import { BadRequestException, createHandler, Get, HttpCode, HttpException, Patch, Post, Req, Res } from 'next-api-decorators'
+import { BadRequestException, createHandler, ForbiddenException, Get, HttpCode, HttpException, Patch, Post, Req, Res } from 'next-api-decorators'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
@@ -299,6 +299,35 @@ class SubscriptionHandler {
     if (!subscription) throw new HttpException(500, 'erro na criação da inscrição')
 
     return { success: true, subscriptionId: subscription?.id, subscription }
+  }
+
+  @Get('report')
+  @HttpCode(200)
+  @IfAuth()
+  async report(@Req() req: AuthorizedPaginationApiRequest) {
+    const { auth, query } = req
+
+    const isAdmin = !!(auth?.level >= 8)
+    if (!isAdmin) throw new ForbiddenException()
+
+    const tournamentId = +query?.tournamentId
+    if (!tournamentId) throw new BadRequestException('Torneio não encontrado')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const subscriptions = await repo
+      .createQueryBuilder('Subscription')
+      .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.paid'])
+      .addSelect(['Category.id', 'Category.tournamentId'])
+      .innerJoin('Subscription.category', 'Category')
+      .where({ actived: true })
+      .innerJoin('Subscription.user', 'User')
+      .where({ actived: true })
+      .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
+      .getMany()
+
+    return { success: true, data: subscriptions }
   }
 
   @Get()

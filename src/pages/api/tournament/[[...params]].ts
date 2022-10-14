@@ -41,25 +41,25 @@ class TournamentHandler {
     return { success: true, tournaments }
   }
 
-  @Get('/:tournamentId/report')
-  @IfAuth()
-  @HttpCode(200)
-  async report(@Req() req: AuthorizedApiRequest) {
-    const { auth, query } = req
-    if (auth?.level <= 8) throw new ForbiddenException()
+  // @Get('/:tournamentId/report')
+  // @IfAuth()
+  // @HttpCode(200)
+  // async report(@Req() req: AuthorizedApiRequest) {
+  //   const { auth, query } = req
+  //   if (auth?.level <= 8) throw new ForbiddenException()
 
-    const tournamentId = +query?.params[0] || 0
+  //   const tournamentId = +query?.params[0] || 0
 
-    const ds = await prepareConnection()
-    const repo = ds.getRepository(Tournament)
+  //   const ds = await prepareConnection()
+  //   const repo = ds.getRepository(Tournament)
 
-    const where: FindOptionsWhere<Tournament> = { id: tournamentId }
+  //   const where: FindOptionsWhere<Tournament> = { id: tournamentId }
 
-    const tournament = await repo.findOne({ where, relations: ['pairs'] })
-    if (!tournament) throw new BadRequestException('Torneio não encontrado')
+  //   const tournament = await repo.findOne({ where, relations: ['pairs'] })
+  //   if (!tournament) throw new BadRequestException('Torneio não encontrado')
 
-    return { success: true, tournament }
-  }
+  //   return { success: true, tournament }
+  // }
 
   @Get('/:tournamentId')
   @IfAuth()
