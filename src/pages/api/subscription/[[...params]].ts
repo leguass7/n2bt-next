@@ -9,8 +9,8 @@ import { factoryXlsxService } from '~/server-side/services/XlsxService'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
-import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
-import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
+import { IRequestSubscriptionTransfer, SubscriptionReportCounter } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { ShirtStatus, Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 const userSearchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
 const searchFields = ['Subscription.id', 'User.name', 'Partner.name']
@@ -301,8 +301,7 @@ class SubscriptionHandler {
     return { success: true, subscriptionId: subscription?.id, subscription }
   }
 
-  @Get('report')
-  @HttpCode(200)
+  @Get('/report')
   @IfAuth()
   async report(@Req() req: AuthorizedPaginationApiRequest) {
     const { auth, query } = req
@@ -316,18 +315,47 @@ class SubscriptionHandler {
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
 
-    const subscriptions = await repo
+    const repoQuery = repo
       .createQueryBuilder('Subscription')
-      .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.paid'])
-      .addSelect(['Category.id', 'Category.tournamentId'])
+      .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.paid', 'Subscription.shirtStatus'])
       .innerJoin('Subscription.category', 'Category')
-      .where({ actived: true })
       .innerJoin('Subscription.user', 'User')
+      .addSelect(['Category.id', 'Category.tournamentId'])
+      .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize'])
       .where({ actived: true })
+      .distinctOn(['User.id'])
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
-      .getMany()
 
-    return { success: true, data: subscriptions }
+    const subscriptions = await repoQuery.getMany()
+
+    const initialCounter: SubscriptionReportCounter = {
+      WAITING: 0,
+      PRODUCTION: 0,
+      SENT: 0,
+      DELIVERED: 0
+    }
+
+    const counters = subscriptions.reduce((ac, at) => {
+      switch (at.shirtStatus) {
+        case ShirtStatus.WAITING:
+          ac.WAITING++
+          break
+        case ShirtStatus.PRODUCTION:
+          ac.PRODUCTION++
+          break
+        case ShirtStatus.SENT:
+          ac.SENT++
+          break
+        case ShirtStatus.DELIVERED:
+          ac.DELIVERED++
+          break
+        default:
+      }
+
+      return ac
+    }, initialCounter)
+
+    return { success: true, subscriptions, counters }
   }
 
   @Get()

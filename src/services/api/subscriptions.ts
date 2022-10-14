@@ -4,6 +4,7 @@ import type {
   IRequestSubscriptionTransfer,
   IResponseSubscription,
   IResponseSubscriptions,
+  IResponseSubscriptionsReport,
   IResponseSubscriptionSummary,
   ISubscription
 } from '~/server-side/useCases/subscriptions/subscriptions.dto'
@@ -34,6 +35,11 @@ export async function paginateSubscription(categoryId: number, params: PaginateS
 
 export async function getSubscriptionSummary(tournamentId: number, params: TableFetchParams = {}): Promise<IResponseSubscriptionSummary> {
   const response = await apiService.get('/subscription/summary', { params: { tournamentId, ...params } })
+  return response
+}
+
+export async function getSubscriptionReport(tournamentId: number, params: TableFetchParams = {}): Promise<IResponseSubscriptionsReport> {
+  const response = await apiService.get('/subscription/report', { params: { tournamentId, ...params } })
   return response
 }
 
