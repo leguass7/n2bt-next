@@ -1,20 +1,90 @@
+import { useCallback, useState } from 'react'
+import { toast } from 'react-toastify'
+
+import { ArrowBack } from '@mui/icons-material'
+import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material'
 import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
 
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
+import { CircleLoading } from '~/components/CircleLoading'
+import { useIsMounted } from '~/hooks/useIsMounted'
+import { useOnceCall } from '~/hooks/useOnceCall'
+import { ISubscription, SubscriptionReportCounter } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { getSubscriptionReport } from '~/services/api/subscriptions'
 
 interface Props {
   tournamentId?: number
+  subscriptions?: ISubscription[]
 }
 
-const AdminTournamentReport: NextPage<Props> = () => {
+const initialCounter: SubscriptionReportCounter = {
+  DELIVERED: 0,
+  PRODUCTION: 0,
+  SENT: 0,
+  WAITING: 0
+}
+
+const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
+  const [data, setData] = useState<ISubscription[]>([])
+  const [counter, setCounter] = useState<SubscriptionReportCounter>(initialCounter)
+
+  const [loading, setLoading] = useState(false)
+  const isMounted = useIsMounted()
+
+  const fetchData = useCallback(async () => {
+    if (!tournamentId) return
+    setLoading(true)
+
+    const { success, subscriptions = [], message, counters } = await getSubscriptionReport(tournamentId)
+
+    if (isMounted()) {
+      setLoading(false)
+
+      if (success) {
+        setData(subscriptions)
+        setCounter(counters)
+      } else toast(message, { type: 'error' })
+    }
+  }, [tournamentId, isMounted])
+
+  useOnceCall(fetchData)
+
   return (
     <LayoutAdmin>
-      <Link href="/admin/tournaments">
-        <a>Voltar</a>
-      </Link>
+      <Grid container py={2} justifyContent="space-between">
+        <Link href="/admin/tournaments">
+          <a>
+            <ArrowBack fontSize="large" htmlColor="#fff" />
+          </a>
+        </Link>
 
-      <h1>Página de relatório </h1>
+        <Typography variant="h4" align="center">
+          Relatório
+        </Typography>
+
+        <span />
+      </Grid>
+
+      <Grid container>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Card>
+            <CardHeader title="Quantidade de blusas" />
+            <CardContent>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography align="center">Em espera: {counter?.WAITING}</Typography>
+                  <Typography align="center">Em produção: {counter?.PRODUCTION}</Typography>
+                  <Typography align="center">Enviadas: {counter?.SENT}</Typography>
+                  <Typography align="center">Entregues: {counter?.DELIVERED}</Typography>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {loading ? <CircleLoading /> : null}
     </LayoutAdmin>
   )
 }
@@ -22,7 +92,9 @@ const AdminTournamentReport: NextPage<Props> = () => {
 export default AdminTournamentReport
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
+  const tournamentId = +query?.tournamentId
+
   return {
-    props: { tournamentId: +query?.tournamentId }
+    props: { tournamentId }
   }
 }
