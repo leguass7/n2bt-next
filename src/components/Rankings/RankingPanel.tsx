@@ -23,8 +23,8 @@ import { MkContainer } from '../styled'
 import { ListPartners } from '../User/ListPartners'
 import { RankingList } from './RankingList'
 
-function categoriesDto(cats: ICategory[]): ICategory[] {
-  return cats.filter(f => f?.gender?.toUpperCase() !== 'MF')
+function categoriesDto(cats: ICategory[], mista?: boolean): ICategory[] {
+  return cats.filter(f => (mista ? f : f?.gender?.toUpperCase() !== 'MF'))
 }
 
 const constGender = {
@@ -45,7 +45,7 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMounted()
 
-  const expired = tournament?.expires && isPast(parseJSON(tournament?.expires))
+  const expired = useMemo(() => tournament?.expires && isPast(parseJSON(tournament?.expires)), [tournament])
 
   const fetchCategories = useCallback(async () => {
     if (!tournamentId) return
@@ -54,12 +54,12 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
     if (isMounted()) {
       setLoading(false)
       if (res?.success) {
-        const cats = categoriesDto(res?.categories || [])
+        const cats = categoriesDto(res?.categories || [], !expired)
         setCategories(cats)
         setCategoryId(cats?.[0]?.id)
       }
     }
-  }, [isMounted, tournamentId])
+  }, [isMounted, tournamentId, expired])
 
   useEffect(() => {
     fetchCategories()
