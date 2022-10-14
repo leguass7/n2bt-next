@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
+import AssessmentIcon from '@mui/icons-material/Assessment'
 import BeenhereIcon from '@mui/icons-material/Beenhere'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -59,6 +60,7 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
   const handleClickRanking = () => push(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
   const handleClickSubscriptions = () => push(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
   const handleClickSubCards = () => push(`/admin/tournaments/sub-cards?tournamentId=${tournamentId}`)
+  const handleClickReport = () => push(`/admin/tournaments/report?tournamentId=${tournamentId}`)
   const handleDelete = () => setCustom({ deleteId: tournamentId })
 
   const handleEdit = () => {
@@ -104,6 +106,9 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
         </MenuItemStyled>
         <MenuItemStyled onClick={withClick(handleClickSubscriptions)} disableRipple>
           <HowToRegIcon /> Inscrições
+        </MenuItemStyled>
+        <MenuItemStyled onClick={withClick(handleClickReport)} disableRipple>
+          <AssessmentIcon /> Relatório
         </MenuItemStyled>
         <MenuItemStyled onClick={withClick(handleClickSubCards)} disableRipple>
           <GroupIcon /> Inscrições agrupadas
