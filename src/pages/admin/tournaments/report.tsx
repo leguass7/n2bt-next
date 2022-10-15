@@ -2,10 +2,11 @@ import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { ArrowBack } from '@mui/icons-material'
-import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material'
+import { Card, CardContent, CardHeader, Grid, Paper, Typography } from '@mui/material'
 import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
 
+import { TableReport } from '~/components/admin/TableReport'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 import { CircleLoading } from '~/components/CircleLoading'
 import { useIsMounted } from '~/hooks/useIsMounted'
@@ -82,6 +83,14 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
             </CardContent>
           </Card>
         </Grid>
+      </Grid>
+
+      <Grid pt={5} container>
+        <Card>
+          <CardContent>
+            <TableReport data={data} fetchData={fetchData} />
+          </CardContent>
+        </Card>
       </Grid>
 
       {loading ? <CircleLoading /> : null}
