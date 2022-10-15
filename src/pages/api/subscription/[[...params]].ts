@@ -321,7 +321,7 @@ class SubscriptionHandler {
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
       .addSelect(['Category.id', 'Category.tournamentId'])
-      .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize'])
+      .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize', 'User.email'])
       .where({ actived: true })
       .distinctOn(['User.id'])
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
