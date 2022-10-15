@@ -90,7 +90,7 @@ export const ReportStatusCell: React.FC<Props> = ({ record }) => {
     <div>
       {selected === ShirtStatus.WAITING ? (
         <Button color="inherit" variant="outlined" onClick={() => setSelected(ShirtStatus.PRODUCTION)}>
-          Produzir blusa
+          Produzir camisetas
         </Button>
       ) : (
         <FormControl fullWidth>

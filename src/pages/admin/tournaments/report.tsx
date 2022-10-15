@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { ArrowBack } from '@mui/icons-material'
-import { Card, CardContent, CardHeader, Grid, Paper, Typography } from '@mui/material'
+import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material'
 import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
 
@@ -70,7 +70,7 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
       <Grid container>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Card>
-            <CardHeader title="Quantidade de blusas" />
+            <CardHeader title="Quantidade de camisetas" />
             <CardContent>
               <Grid container>
                 <Grid item xs={12}>
