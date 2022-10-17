@@ -9,8 +9,8 @@ import { factoryXlsxService } from '~/server-side/services/XlsxService'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
-import { IRequestSubscriptionTransfer, SubscriptionReportCounter } from '~/server-side/useCases/subscriptions/subscriptions.dto'
-import { ShirtStatus, Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
+import { IRequestSubscriptionTransfer, ShirtStatus, SubscriptionReportCounter } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 const userSearchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
 const searchFields = ['Subscription.id', 'User.name', 'Partner.name']
@@ -317,14 +317,16 @@ class SubscriptionHandler {
 
     const repoQuery = repo
       .createQueryBuilder('Subscription')
-      .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.paid', 'Subscription.shirtStatus'])
+      .select(['Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtStatus'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
       .addSelect(['Category.id', 'Category.tournamentId'])
       .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize', 'User.email'])
       .where({ actived: true })
-      .distinctOn(['User.id'])
+      .distinct()
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
+      .orderBy('User.name', 'ASC')
+      .groupBy('Subscription.userId')
 
     const subscriptions = await repoQuery.getMany()
 

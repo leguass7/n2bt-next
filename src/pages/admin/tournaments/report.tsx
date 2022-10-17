@@ -11,7 +11,7 @@ import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 import { CircleLoading } from '~/components/CircleLoading'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import { ISubscription, SubscriptionReportCounter } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type { ISubscription, SubscriptionReportCounter } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { getSubscriptionReport } from '~/services/api/subscriptions'
 
 interface Props {

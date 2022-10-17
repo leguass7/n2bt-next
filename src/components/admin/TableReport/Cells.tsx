@@ -4,8 +4,7 @@ import { DoneRounded, WarningRounded } from '@mui/icons-material'
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material'
 
 import { ICustomCellProps } from '~/components/CustomTable'
-import { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
-import { ShirtStatus } from '~/server-side/useCases/subscriptions/subscriptions.entity'
+import { ISubscription, ShirtStatus } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { updateSubscription } from '~/services/api/subscriptions'
 
 type Props = ICustomCellProps<ISubscription>

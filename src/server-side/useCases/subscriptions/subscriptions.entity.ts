@@ -5,16 +5,12 @@ import type { Category } from '~/server-side/useCases/category/category.entity'
 import type { Payment } from '~/server-side/useCases/payment/payment.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
-export enum ShirtStatus {
-  WAITING = 'Em espera',
-  PRODUCTION = 'Em produção',
-  SENT = 'Enviado',
-  DELIVERED = 'Entregue'
-}
+import { ShirtStatus } from './subscriptions.dto'
 
 @Entity('subscriptions')
 export class Subscription {
-  @PrimaryGeneratedColumn('increment', { unsigned: true })
+  // @PrimaryGeneratedColumn('increment', { unsigned: true })
+  @Column({ primary: true, generated: 'increment' })
   id: number
 
   @Column({ unsigned: true })
@@ -38,6 +34,9 @@ export class Subscription {
   @Column({ unsigned: true, nullable: true, default: null })
   paymentId?: number
 
+  @Column('enum', { enum: ShirtStatus, default: ShirtStatus.WAITING })
+  shirtStatus: ShirtStatus
+
   @Column({ type: 'uuid', nullable: true, default: null, length: 36 })
   createdBy?: string
 
@@ -51,7 +50,6 @@ export class Subscription {
   updatedAt?: Date
 
   // relations
-
   @ManyToOne('User', 'userSubscriptions', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId', referencedColumnName: 'id', foreignKeyConstraintName: 'subscriptions_userId_fkey' })
   user: User
@@ -66,9 +64,6 @@ export class Subscription {
   @ManyToOne('User', 'createdSubscriptions', { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'createdBy', referencedColumnName: 'id', foreignKeyConstraintName: 'subscriptions_createdBy_fkey' })
   createdUser?: User
-
-  @Column('enum', { enum: ShirtStatus, default: ShirtStatus.WAITING })
-  shirtStatus: ShirtStatus
 
   @ManyToOne('User', 'updatedSubscriptions', { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'updatedBy', referencedColumnName: 'id', foreignKeyConstraintName: 'subscriptions_updatedBy_fkey' })

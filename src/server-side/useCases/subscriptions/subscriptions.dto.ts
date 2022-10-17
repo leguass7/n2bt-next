@@ -2,7 +2,14 @@ import type { DeepPartial } from 'typeorm'
 
 import type { IResponseApi } from '~/server-side/api.interface'
 
-import { ShirtStatus, Subscription } from './subscriptions.entity'
+import type { Subscription } from './subscriptions.entity'
+
+export enum ShirtStatus {
+  WAITING = 'Em espera',
+  PRODUCTION = 'Em produção',
+  SENT = 'Enviado',
+  DELIVERED = 'Entregue'
+}
 
 export type ISubscription = DeepPartial<Subscription>
 

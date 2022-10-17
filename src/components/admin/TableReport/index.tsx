@@ -1,7 +1,7 @@
 import { CustomTable } from '~/components/CustomTable'
 // import type { TableFetchParams } from '~/components/CustomTable/types'
 import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
-import { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
 import { ReportActions } from './Actions'
 import { reportColumns } from './columns'

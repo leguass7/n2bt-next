@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Delete, ForbiddenException, Get, HttpCode, Patch, Post, Req } from 'next-api-decorators'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from 'next-api-decorators'
 import { FindOptionsWhere } from 'typeorm'
 
 import { prepareConnection } from '~/server-side/database/conn'

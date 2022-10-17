@@ -1,4 +1,4 @@
-import { TableFetchParams } from '~/components/CustomTable/types'
+import type { TableFetchParams } from '~/components/CustomTable/types'
 import type { IResponsePaginated } from '~/server-side/services/PaginateService'
 import type {
   IRequestSubscriptionTransfer,
