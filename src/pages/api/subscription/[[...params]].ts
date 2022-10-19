@@ -317,7 +317,7 @@ class SubscriptionHandler {
 
     const repoQuery = repo
       .createQueryBuilder('Subscription')
-      .select(['Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtStatus'])
+      .select(['Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtDelivered'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
       .addSelect(['Category.id', 'Category.tournamentId'])
@@ -330,34 +330,7 @@ class SubscriptionHandler {
 
     const subscriptions = await repoQuery.getMany()
 
-    const initialCounter: SubscriptionReportCounter = {
-      WAITING: 0,
-      PRODUCTION: 0,
-      SENT: 0,
-      DELIVERED: 0
-    }
-
-    const counters = subscriptions.reduce((ac, at) => {
-      switch (at.shirtStatus) {
-        case ShirtStatus.WAITING:
-          ac.WAITING++
-          break
-        case ShirtStatus.PRODUCTION:
-          ac.PRODUCTION++
-          break
-        case ShirtStatus.SENT:
-          ac.SENT++
-          break
-        case ShirtStatus.DELIVERED:
-          ac.DELIVERED++
-          break
-        default:
-      }
-
-      return ac
-    }, initialCounter)
-
-    return { success: true, subscriptions, counters }
+    return { success: true, subscriptions }
   }
 
   @Get()

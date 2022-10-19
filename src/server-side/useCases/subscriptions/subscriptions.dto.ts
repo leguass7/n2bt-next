@@ -23,7 +23,7 @@ export interface IResponseSubscriptions extends IResponseApi {
 }
 
 export interface IResponseSubscriptionsReport extends IResponseSubscriptions {
-  counters: Record<keyof typeof ShirtStatus, number>
+  // counters: Record<keyof typeof ShirtStatus, number>
 }
 
 export interface IResponseSubscriptionSummary extends IResponseApi {
