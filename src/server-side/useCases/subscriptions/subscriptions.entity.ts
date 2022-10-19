@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 
 import { transformer } from '~/server-side/database/transformer'
 import type { Category } from '~/server-side/useCases/category/category.entity'
@@ -34,8 +34,11 @@ export class Subscription {
   @Column({ unsigned: true, nullable: true, default: null })
   paymentId?: number
 
-  @Column('enum', { enum: ShirtStatus, default: ShirtStatus.WAITING })
-  shirtStatus: ShirtStatus
+  // @Column('enum', { enum: ShirtStatus, default: ShirtStatus.WAITING })
+  // shirtStatus: ShirtStatus
+
+  @Column('datetime', { nullable: true, default: null })
+  shirtDelivered?: Date
 
   @Column({ type: 'uuid', nullable: true, default: null, length: 36 })
   createdBy?: string
