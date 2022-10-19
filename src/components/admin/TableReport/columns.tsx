@@ -4,7 +4,7 @@ import { ISubscription } from '~/server-side/useCases/subscriptions/subscription
 import { ReportGenderCell, ReportNameCell, ReportPaymentCell, ReportShirtSizeCell, ReportStatusCell } from './Cells'
 
 export const reportColumns: IColumnTable<ISubscription>[] = [
-  { name: 'id', label: 'ID', align: 'center', width: 50 },
+  // { name: 'id', label: 'ID', align: 'center', width: 50 },
   { label: 'Nome', Cell: ReportNameCell },
   { name: 'paid', label: 'Pago', align: 'center', Cell: ReportPaymentCell },
   { label: 'Camisetas', align: 'center', Cell: ReportShirtSizeCell },
