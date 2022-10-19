@@ -5,7 +5,7 @@ import { ReportGenderCell, ReportNameCell, ReportPaymentCell, ReportShirtSizeCel
 
 export const reportColumns: IColumnTable<ISubscription>[] = [
   { name: 'id', label: 'ID', align: 'center', width: 50 },
-  { label: 'Nome', align: 'center', Cell: ReportNameCell },
+  { label: 'Nome', Cell: ReportNameCell },
   { name: 'paid', label: 'Pago', align: 'center', Cell: ReportPaymentCell },
   { label: 'Camisetas', align: 'center', Cell: ReportShirtSizeCell },
   { label: 'Sexo', align: 'center', Cell: ReportGenderCell },
