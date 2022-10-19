@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { ArrowBack } from '@mui/icons-material'
-import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material'
+import { Card, CardContent, Grid, Typography } from '@mui/material'
 import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
 
@@ -11,7 +11,7 @@ import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 import { CircleLoading } from '~/components/CircleLoading'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import type { ISubscription, SubscriptionReportCounter } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { getSubscriptionReport } from '~/services/api/subscriptions'
 
 interface Props {
@@ -19,16 +19,8 @@ interface Props {
   subscriptions?: ISubscription[]
 }
 
-const initialCounter: SubscriptionReportCounter = {
-  DELIVERED: 0,
-  PRODUCTION: 0,
-  SENT: 0,
-  WAITING: 0
-}
-
 const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
   const [data, setData] = useState<ISubscription[]>([])
-  const [counter, setCounter] = useState<SubscriptionReportCounter>(initialCounter)
 
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMounted()
@@ -37,15 +29,12 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
     if (!tournamentId) return
     setLoading(true)
 
-    const { success, subscriptions = [], message, counters } = await getSubscriptionReport(tournamentId)
+    const { success, subscriptions = [], message } = await getSubscriptionReport(tournamentId)
 
     if (isMounted()) {
       setLoading(false)
 
-      if (success) {
-        setData(subscriptions)
-        setCounter(counters)
-      } else toast(message, { type: 'error' })
+      success ? setData(subscriptions) : toast(message, { type: 'error' })
     }
   }, [tournamentId, isMounted])
 
@@ -67,7 +56,7 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
         <span />
       </Grid>
 
-      <Grid container>
+      {/* <Grid container>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Card>
             <CardHeader title="Quantidade de camisetas" />
@@ -83,7 +72,7 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
             </CardContent>
           </Card>
         </Grid>
-      </Grid>
+      </Grid> */}
 
       <Grid pt={5} container>
         <Card>
