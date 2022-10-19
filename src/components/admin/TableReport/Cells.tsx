@@ -10,15 +10,16 @@ import { updateSubscription } from '~/services/api/subscriptions'
 type Props = ICustomCellProps<ISubscription>
 
 export const ReportNameCell: React.FC<Props> = ({ record }) => {
-  const { name, email } = record.user
+  const { name, email, phone, nick } = record.user
   return (
     <div>
-      <Typography align="left" variant="h6">
-        {name}
+      <Typography variant="body1">
+        {name} {nick ? `(${nick})` : null}
       </Typography>
-      <Typography align="left" variant="caption">
+      <Typography display="block" variant="body2">
         {email}
       </Typography>
+      <Typography variant="caption">{phone}</Typography>
     </div>
   )
 }
