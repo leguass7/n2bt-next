@@ -9,7 +9,7 @@ import { factoryXlsxService } from '~/server-side/services/XlsxService'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
-import { IRequestSubscriptionTransfer, ShirtStatus, SubscriptionReportCounter } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 const userSearchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
@@ -317,7 +317,7 @@ class SubscriptionHandler {
 
     const repoQuery = repo
       .createQueryBuilder('Subscription')
-      .select(['Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtDelivered'])
+      .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtDelivered'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
       .addSelect(['Category.id', 'Category.tournamentId'])

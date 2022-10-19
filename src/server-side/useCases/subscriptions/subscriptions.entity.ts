@@ -5,8 +5,6 @@ import type { Category } from '~/server-side/useCases/category/category.entity'
 import type { Payment } from '~/server-side/useCases/payment/payment.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
-import { ShirtStatus } from './subscriptions.dto'
-
 @Entity('subscriptions')
 export class Subscription {
   // @PrimaryGeneratedColumn('increment', { unsigned: true })
@@ -33,9 +31,6 @@ export class Subscription {
 
   @Column({ unsigned: true, nullable: true, default: null })
   paymentId?: number
-
-  // @Column('enum', { enum: ShirtStatus, default: ShirtStatus.WAITING })
-  // shirtStatus: ShirtStatus
 
   @Column('datetime', { nullable: true, default: null })
   shirtDelivered?: Date
