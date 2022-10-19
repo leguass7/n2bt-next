@@ -15,7 +15,14 @@ export interface IResponseSubscriptions extends IResponseApi {
   subscriptions?: ISubscription[]
 }
 
-export interface IResponseSubscriptionsReport extends IResponseSubscriptions {}
+export interface ISubscriptionStatistics {
+  total: number
+  sizes?: Record<string, number>
+}
+
+export interface IResponseSubscriptionsReport extends IResponseSubscriptions {
+  statistics: ISubscriptionStatistics
+}
 
 export interface IResponseSubscriptionSummary extends IResponseApi {
   total?: number

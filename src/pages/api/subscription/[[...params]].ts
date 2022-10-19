@@ -337,7 +337,18 @@ class SubscriptionHandler {
 
     const subscriptions = await repoQuery.getMany()
 
-    return { success: true, subscriptions }
+    const statistics: any = { total: subscriptions.length }
+
+    statistics.sizes = subscriptions.reduce((ac, at) => {
+      const size = at.user.shirtSize
+
+      if (Object.hasOwn(ac, size)) ac[size] += 1
+      else ac[size] = 1
+
+      return ac
+    }, {})
+
+    return { success: true, subscriptions, statistics }
   }
 
   @Get()
