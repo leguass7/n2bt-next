@@ -312,6 +312,8 @@ class SubscriptionHandler {
     const tournamentId = +query?.tournamentId
     if (!tournamentId) throw new BadRequestException('Torneio não encontrado')
 
+    const search = query?.search
+
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
 
@@ -327,6 +329,11 @@ class SubscriptionHandler {
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
       .orderBy('User.name', 'ASC')
       .groupBy('Subscription.userId')
+
+    if (search)
+      repoQuery.andWhere(`( User.name LIKE :search OR User.nick LIKE :search OR User.email LIKE :search OR User.phone LIKE :search )`, {
+        search: `%${search}%`
+      })
 
     const subscriptions = await repoQuery.getMany()
 

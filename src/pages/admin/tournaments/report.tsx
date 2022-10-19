@@ -25,18 +25,21 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMounted()
 
-  const fetchData = useCallback(async () => {
-    if (!tournamentId) return
-    setLoading(true)
+  const fetchData = useCallback(
+    async (filter?: Record<string, any>) => {
+      if (!tournamentId) return
+      setLoading(true)
 
-    const { success, subscriptions = [], message } = await getSubscriptionReport(tournamentId)
+      const { success, subscriptions = [], message } = await getSubscriptionReport(tournamentId, filter)
 
-    if (isMounted()) {
-      setLoading(false)
+      if (isMounted()) {
+        setLoading(false)
 
-      success ? setData(subscriptions) : toast(message, { type: 'error' })
-    }
-  }, [tournamentId, isMounted])
+        success ? setData(subscriptions) : toast(message, { type: 'error' })
+      }
+    },
+    [tournamentId, isMounted]
+  )
 
   useOnceCall(fetchData)
 
