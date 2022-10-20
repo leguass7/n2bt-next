@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { ArrowBack } from '@mui/icons-material'
-import { Card, CardContent, Grid, Typography } from '@mui/material'
+import { ArrowBack, ContentCopy } from '@mui/icons-material'
+import { Card, CardActions, CardContent, CardHeader, Grid, IconButton, Typography } from '@mui/material'
 import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
 
@@ -11,7 +11,7 @@ import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 import { CircleLoading } from '~/components/CircleLoading'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type { ISubscription, ISubscriptionStatistics } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { getSubscriptionReport } from '~/services/api/subscriptions'
 
 interface Props {
@@ -21,6 +21,7 @@ interface Props {
 
 const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
   const [data, setData] = useState<ISubscription[]>([])
+  const [statistics, setStatistics] = useState<Partial<ISubscriptionStatistics>>({})
 
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMounted()
@@ -30,18 +31,45 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
       if (!tournamentId) return
       setLoading(true)
 
-      const { success, subscriptions = [], message } = await getSubscriptionReport(tournamentId, filter)
+      const { success, subscriptions = [], message, statistics } = await getSubscriptionReport(tournamentId, filter)
 
       if (isMounted()) {
         setLoading(false)
 
-        success ? setData(subscriptions) : toast(message, { type: 'error' })
+        if (!success) toast(message, { type: 'error' })
+        else {
+          setData(subscriptions)
+          setStatistics(statistics)
+        }
       }
     },
     [tournamentId, isMounted]
   )
 
   useOnceCall(fetchData)
+
+  const renderShirtStatistics = useCallback(() => {
+    if (!statistics?.sizes) return null
+    const sizes = Object.entries(statistics.sizes)
+
+    return sizes.map(([key, value]) => {
+      return (
+        <Typography key={key}>
+          <b>{key}:</b> {value}
+        </Typography>
+      )
+    })
+  }, [statistics])
+
+  const handleCopyShirtInfo = () => {
+    if (document) {
+      const containerInfo = document.getElementById('shirts-quantity')
+      const info = containerInfo.innerText.replace(/\n\n/g, '\n')
+
+      navigator.clipboard.writeText(info)
+      toast('Conteúdo copiado com sucesso!', { type: 'info', position: 'bottom-right' })
+    }
+  }
 
   return (
     <LayoutAdmin>
@@ -59,23 +87,34 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
         <span />
       </Grid>
 
-      {/* <Grid container>
+      <Grid container>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Card>
-            <CardHeader title="Quantidade de camisetas" />
+            <Grid container alignItems="center" pr={2} justifyContent="space-between">
+              <CardHeader title="Qtd de camisetas" />
+              <IconButton onClick={handleCopyShirtInfo}>
+                <ContentCopy />
+              </IconButton>
+            </Grid>
             <CardContent>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography align="center">Em espera: {counter?.WAITING}</Typography>
-                  <Typography align="center">Em produção: {counter?.PRODUCTION}</Typography>
-                  <Typography align="center">Enviadas: {counter?.SENT}</Typography>
-                  <Typography align="center">Entregues: {counter?.DELIVERED}</Typography>
+              <Grid container id="shirts-quantity">
+                <Grid item xs={12} flex={1}>
+                  {renderShirtStatistics()}
                 </Grid>
               </Grid>
             </CardContent>
+            <CardActions>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant="body1" fontWeight={700} align="right">
+                    Total: {statistics?.total}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </CardActions>
           </Card>
         </Grid>
-      </Grid> */}
+      </Grid>
 
       <Grid pt={5} container>
         <Card>
