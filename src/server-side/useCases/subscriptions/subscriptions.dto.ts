@@ -18,6 +18,7 @@ export interface IResponseSubscriptions extends IResponseApi {
 export interface ISubscriptionStatistics {
   total: number
   sizes?: Record<string, number>
+  categories?: Record<string, number>
 }
 
 export interface IResponseSubscriptionsReport extends IResponseSubscriptions {

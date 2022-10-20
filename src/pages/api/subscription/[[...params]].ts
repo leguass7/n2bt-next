@@ -322,7 +322,7 @@ class SubscriptionHandler {
       .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtDelivered'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
-      .addSelect(['Category.id', 'Category.tournamentId'])
+      .addSelect(['Category.id', 'Category.tournamentId', 'Category.limit', 'Category.title'])
       .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize', 'User.email', 'User.phone'])
       .where({ actived: true })
       .distinct()
@@ -342,8 +342,15 @@ class SubscriptionHandler {
     statistics.sizes = subscriptions.reduce((ac, at) => {
       const size = at.user.shirtSize
 
-      if (Object.hasOwn(ac, size)) ac[size] += 1
-      else ac[size] = 1
+      ac[size] = Object.hasOwn(ac, size) ? ac[size] + 1 : 1
+
+      return ac
+    }, {})
+
+    statistics.categories = subscriptions.reduce((ac, at) => {
+      const { title } = at.category
+
+      ac[title] = Object.hasOwn(ac, title) ? ac[title] + 1 : 1
 
       return ac
     }, {})
