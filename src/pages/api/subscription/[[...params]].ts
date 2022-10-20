@@ -9,7 +9,7 @@ import { factoryXlsxService } from '~/server-side/services/XlsxService'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
-import { IRequestSubscriptionTransfer, ShirtStatus, SubscriptionReportCounter } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 const userSearchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
@@ -312,52 +312,50 @@ class SubscriptionHandler {
     const tournamentId = +query?.tournamentId
     if (!tournamentId) throw new BadRequestException('Torneio não encontrado')
 
+    const search = query?.search
+
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
 
     const repoQuery = repo
       .createQueryBuilder('Subscription')
-      .select(['Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtStatus'])
+      .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtDelivered'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
-      .addSelect(['Category.id', 'Category.tournamentId'])
-      .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize', 'User.email'])
+      .addSelect(['Category.id', 'Category.tournamentId', 'Category.limit', 'Category.title'])
+      .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize', 'User.email', 'User.phone'])
       .where({ actived: true })
       .distinct()
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
       .orderBy('User.name', 'ASC')
-      .groupBy('Subscription.userId')
+      .groupBy('Subscription.userId, Subscription.id')
+
+    if (search)
+      repoQuery.andWhere(`( User.name LIKE :search OR User.nick LIKE :search OR User.email LIKE :search OR User.phone LIKE :search )`, {
+        search: `%${search}%`
+      })
 
     const subscriptions = await repoQuery.getMany()
 
-    const initialCounter: SubscriptionReportCounter = {
-      WAITING: 0,
-      PRODUCTION: 0,
-      SENT: 0,
-      DELIVERED: 0
-    }
+    const statistics: any = { total: subscriptions.length }
 
-    const counters = subscriptions.reduce((ac, at) => {
-      switch (at.shirtStatus) {
-        case ShirtStatus.WAITING:
-          ac.WAITING++
-          break
-        case ShirtStatus.PRODUCTION:
-          ac.PRODUCTION++
-          break
-        case ShirtStatus.SENT:
-          ac.SENT++
-          break
-        case ShirtStatus.DELIVERED:
-          ac.DELIVERED++
-          break
-        default:
-      }
+    statistics.sizes = subscriptions.reduce((ac, at) => {
+      const size = at.user.shirtSize
+
+      ac[size] = Object.hasOwn(ac, size) ? ac[size] + 1 : 1
 
       return ac
-    }, initialCounter)
+    }, {})
 
-    return { success: true, subscriptions, counters }
+    statistics.categories = subscriptions.reduce((ac, at) => {
+      const { title } = at.category
+
+      ac[title] = Object.hasOwn(ac, title) ? ac[title] + 1 : 1
+
+      return ac
+    }, {})
+
+    return { success: true, subscriptions, statistics }
   }
 
   @Get()

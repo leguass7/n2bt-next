@@ -4,13 +4,6 @@ import type { IResponseApi } from '~/server-side/api.interface'
 
 import type { Subscription } from './subscriptions.entity'
 
-export enum ShirtStatus {
-  WAITING = 'Em espera',
-  PRODUCTION = 'Em produção',
-  SENT = 'Enviado',
-  DELIVERED = 'Entregue'
-}
-
 export type ISubscription = DeepPartial<Subscription>
 
 export interface IResponseSubscription extends IResponseApi {
@@ -22,8 +15,14 @@ export interface IResponseSubscriptions extends IResponseApi {
   subscriptions?: ISubscription[]
 }
 
+export interface ISubscriptionStatistics {
+  total: number
+  sizes?: Record<string, number>
+  categories?: Record<string, number>
+}
+
 export interface IResponseSubscriptionsReport extends IResponseSubscriptions {
-  counters: Record<keyof typeof ShirtStatus, number>
+  statistics: ISubscriptionStatistics
 }
 
 export interface IResponseSubscriptionSummary extends IResponseApi {
@@ -49,5 +48,3 @@ export interface SubscriptionSheetDto {
   amount?: number | string
   shirtSize?: string
 }
-
-export type SubscriptionReportCounter = Record<keyof typeof ShirtStatus, number>

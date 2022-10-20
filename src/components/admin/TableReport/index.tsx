@@ -14,7 +14,7 @@ interface Props {
 export const TableReport: React.FC<Props> = ({ data, fetchData }) => {
   return (
     <TableActionsProvider>
-      <CustomTable title="Participantes" columns={reportColumns} pageSize={data.length} total={data.length} records={data} onPagination={fetchData}>
+      <CustomTable title="Participantes" columns={reportColumns} pageSize={20} total={data.length} records={data} onPagination={fetchData}>
         <ReportActions />
       </CustomTable>
     </TableActionsProvider>
