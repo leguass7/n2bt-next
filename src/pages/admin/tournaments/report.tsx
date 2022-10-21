@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { ArrowBack, ContentCopy } from '@mui/icons-material'
-import { Card, CardActions, CardContent, CardHeader, Grid, IconButton, Typography } from '@mui/material'
+import { Card, CardActions, CardContent, CardHeader, Divider, Grid, IconButton, Typography } from '@mui/material'
 import type { GetServerSideProps, NextPage } from 'next'
 import { unstable_getServerSession } from 'next-auth'
 import Link from 'next/link'
@@ -65,10 +65,11 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
   const handleCopyShirtInfo = () => {
     if (document) {
       const containerInfo = document.getElementById('shirts-quantity')
-      const info = containerInfo.innerText.replace(/\n\n/g, '\n')
-
-      navigator.clipboard.writeText(info)
-      toast('Conteúdo copiado com sucesso!', { type: 'info', position: 'bottom-right' })
+      const info = containerInfo?.innerText?.replace(/\n\n/g, '\n')
+      if (info) {
+        navigator.clipboard.writeText(info)
+        toast('Conteúdo copiado com sucesso!', { type: 'info', position: 'bottom-right' })
+      }
     }
   }
 
@@ -91,27 +92,21 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
       <Grid container>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Card>
-            <Grid container alignItems="center" pr={2} justifyContent="space-between">
-              <CardHeader title="Qtd de camisetas" />
-              <IconButton onClick={handleCopyShirtInfo}>
-                <ContentCopy />
-              </IconButton>
-            </Grid>
-            <CardContent>
-              <Grid container id="shirts-quantity">
-                <Grid item xs={12} flex={1}>
-                  {renderShirtStatistics()}
-                </Grid>
-              </Grid>
-            </CardContent>
+            <CardHeader
+              title="Qtd de camisetas"
+              action={
+                <IconButton onClick={handleCopyShirtInfo}>
+                  <ContentCopy />
+                </IconButton>
+              }
+            />
+            <Divider />
+
+            <CardContent id="shirts-quantity">{renderShirtStatistics()}</CardContent>
             <CardActions>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography variant="body1" fontWeight={700} align="right">
-                    Total: {statistics?.total}
-                  </Typography>
-                </Grid>
-              </Grid>
+              <Typography variant="body1" fontWeight={700} align="right">
+                Total: {statistics?.total}
+              </Typography>
             </CardActions>
           </Card>
         </Grid>

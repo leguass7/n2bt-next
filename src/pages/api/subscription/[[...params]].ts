@@ -328,6 +328,7 @@ class SubscriptionHandler {
       .distinct()
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
       .orderBy('User.name', 'ASC')
+      .addOrderBy('Subscription.paid', 'DESC')
       .groupBy('Subscription.userId')
 
     if (search)
