@@ -3,31 +3,6 @@ import type { ISubscription } from '~/server-side/useCases/subscriptions/subscri
 
 export type PreparedSubscription = ISubscription & { key?: string; pair?: ISubscription }
 
-export function prepareDto1(data: ISubscription[]): PreparedSubscription[] {
-  const withPartner = data.filter(f => !!f?.partner)
-  // const withoutPartner = data.filter(f => !f?.partner)
-
-  const result: PreparedSubscription[] = []
-
-  withPartner.forEach(({ partner, ...sub }) => {
-    const has = result.find(f => f.userId === sub.userId || f.userId === sub.partnerId)
-    // const has = result.find(f => f.userId === sub.userId)
-    if (has) return
-    const add: PreparedSubscription = { ...sub, partner, key: `sub-${sub.id}` }
-    const foundPair = data.find(f => {
-      return f.categoryId === sub.categoryId && f.userId === sub.partnerId && f.partnerId === sub.userId
-    })
-    if (foundPair) {
-      add.key = `sub-${sub.id}-${foundPair.id}`
-      add.pair = foundPair
-    }
-
-    result.push(add)
-  })
-
-  return result.sort(compareValues('id', 'asc'))
-}
-
 export type Pair = {
   id: string
   categoryId: number
@@ -38,30 +13,37 @@ export type Pair = {
 }
 
 export function prepareDto(data: ISubscription[] = []): Pair[] {
-  const result: Pair[] = []
-  const arrRef = [...data.sort(compareValues('id', 'asc'))]
+  const pairs: Pair[] = []
+
+  let dataf = data.sort(compareValues('id', 'asc')).map(f => ({ ...f }))
 
   const findSubscriptionByUserId = (id: string, catId: number) => {
-    return data.find(f => f.categoryId === catId && f.userId === id)
+    const found = dataf.sort(compareValues('id', 'asc')).find(f => !!(f.categoryId === catId && f.userId === id))
+    dataf = dataf.filter(f => !!(f.categoryId === catId && f.userId !== id))
+    const result = found ? Object.assign({}, { ...found }) : null
+    return result
   }
 
-  arrRef?.forEach(({ categoryId, userId, partnerId, ...subscription }) => {
-    const foudByUser = result.find(f => f.categoryId === categoryId && f.userId === userId)
+  data.sort(compareValues('id', 'asc')).forEach(({ categoryId, userId, partnerId, ...subscription }) => {
+    const foudByUser = pairs.find(f => f.categoryId === categoryId && f.userId === userId)
     if (!foudByUser) {
-      const foundByPartner = result.find(f => f.categoryId === categoryId && f.partnerId === userId)
+      const foundByPartner = pairs.find(f => f.categoryId === categoryId && f.partnerId === userId)
       if (!foundByPartner) {
         const partnerSubscription = findSubscriptionByUserId(partnerId, categoryId)
-        result.push({
+        const n: Pair = {
           categoryId,
           userId,
           partnerId,
           userSubscription: { categoryId, userId, partnerId, ...subscription },
-          partnerSubscription,
-          id: `tempkey-${subscription?.id}-${partnerSubscription?.id}`
-        })
+          partnerSubscription: partnerSubscription || undefined,
+          id: `tempkey-${subscription?.id}${partnerSubscription?.id ? `-${partnerSubscription.id}` : ''}`
+        }
+        pairs.push(n)
+      } else {
+        //
       }
     }
   })
 
-  return result
+  return pairs
 }

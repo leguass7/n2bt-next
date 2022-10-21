@@ -27,7 +27,7 @@ export type SelectHandler = (userId: IUser['id'], data?: IUser) => any
 type Props = {
   open?: boolean
   onClose?: () => void
-  onSelect?: (userId: IUser['id'], data?: IUser) => void
+  onSelect?: SelectHandler
   fixedFilter?: { categoryId?: number; tournamentId?: number }
   message?: string
   notFoundMessage?: string

@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import EditIcon from '@mui/icons-material/Edit'
+import ImportExportIcon from '@mui/icons-material/ImportExport'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PaidIcon from '@mui/icons-material/Paid'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -56,6 +57,11 @@ export const MenuButton: React.FC<Props> = ({ useId, enableDelete }) => {
   const handleClickPayment = () => push(`/admin/users/payments?useId=${useId}`)
   const handleDelete = () => setCustom({ deleteId: useId })
 
+  const handleTranferData = () => {
+    setCustom({ transferId: useId })
+    handleCloseMenu()
+  }
+
   const handleEdit = () => {
     setCustom({ editId: useId })
     handleCloseMenu()
@@ -91,16 +97,17 @@ export const MenuButton: React.FC<Props> = ({ useId, enableDelete }) => {
         <MenuItemStyled onClick={withClick(handleClickPayment)} disableRipple>
           <PaidIcon /> Pagamentos
         </MenuItemStyled>
-        {/* <MenuItemStyled onClick={withClick(handleClickSubscriptions)} disableRipple>
-          <HowToRegIcon /> Inscrições
-        </MenuItemStyled> */}
-        {/* <MenuItemStyled onClick={withClick(handleClickSubCards)} disableRipple>
-          <GroupIcon /> Inscrições agrupadas
-        </MenuItemStyled> */}
         <Divider />
         <MenuItemStyled onClick={withClick(handleDownload, true)} disableRipple disabled={!!downloading}>
           <ListItemIcon>{downloading ? <CircularProgress size={22} /> : <DownloadIcon />}</ListItemIcon>
           <ListItemText primary="Baixar inscrições" secondary="Download no Excel" />
+        </MenuItemStyled>
+        <Divider />
+        <MenuItemStyled onClick={withClick(handleTranferData)} disableRipple>
+          <ListItemIcon>
+            <ImportExportIcon />
+          </ListItemIcon>
+          <ListItemText primary="Transferir dados" secondary="Corrigir cadastro duplicado" />
         </MenuItemStyled>
         <Divider />
         <MenuItemStyled onClick={withClick(handleEdit)} disableRipple>
