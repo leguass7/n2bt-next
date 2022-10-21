@@ -74,54 +74,55 @@ const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
   }
 
   return (
-    <LayoutAdmin>
-      <Grid container py={2} justifyContent="space-between">
-        <Link href="/admin/tournaments">
-          <a>
-            <ArrowBack fontSize="large" htmlColor="#fff" />
-          </a>
-        </Link>
+    <>
+      <LayoutAdmin>
+        <Grid container py={2} justifyContent="space-between">
+          <Link href="/admin/tournaments">
+            <a>
+              <ArrowBack fontSize="large" htmlColor="#fff" />
+            </a>
+          </Link>
 
-        <Typography variant="h4" align="center">
-          Relatório
-        </Typography>
+          <Typography variant="h4" align="center">
+            Relatório
+          </Typography>
 
-        <span />
-      </Grid>
+          <span />
+        </Grid>
 
-      <Grid container>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
+        <Grid container>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Card>
+              <CardHeader
+                title="Qtd de camisetas"
+                action={
+                  <IconButton onClick={handleCopyShirtInfo}>
+                    <ContentCopy />
+                  </IconButton>
+                }
+              />
+              <Divider />
+
+              <CardContent id="shirts-quantity">{renderShirtStatistics()}</CardContent>
+              <CardActions>
+                <Typography variant="body1" fontWeight={700} align="right">
+                  Total: {statistics?.total}
+                </Typography>
+              </CardActions>
+            </Card>
+          </Grid>
+        </Grid>
+
+        <Grid pt={5} container>
           <Card>
-            <CardHeader
-              title="Qtd de camisetas"
-              action={
-                <IconButton onClick={handleCopyShirtInfo}>
-                  <ContentCopy />
-                </IconButton>
-              }
-            />
-            <Divider />
-
-            <CardContent id="shirts-quantity">{renderShirtStatistics()}</CardContent>
-            <CardActions>
-              <Typography variant="body1" fontWeight={700} align="right">
-                Total: {statistics?.total}
-              </Typography>
-            </CardActions>
+            <CardContent>
+              <TableReport data={data} fetchData={fetchData} />
+            </CardContent>
           </Card>
         </Grid>
-      </Grid>
-
-      <Grid pt={5} container>
-        <Card>
-          <CardContent>
-            <TableReport data={data} fetchData={fetchData} />
-          </CardContent>
-        </Card>
-      </Grid>
-
+      </LayoutAdmin>
       {loading ? <CircleLoading /> : null}
-    </LayoutAdmin>
+    </>
   )
 }
 

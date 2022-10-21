@@ -81,6 +81,7 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
       prefetch(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
       prefetch(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
       prefetch(`/admin/tournaments/sub-cards?tournamentId=${tournamentId}`)
+      prefetch(`/admin/tournaments/report?tournamentId=${tournamentId}`)
     }
   }, [prefetch, open, tournamentId])
 
@@ -105,16 +106,28 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
           <ListItemText primary="Checkin" secondary="Marcar presença no torneio" />
         </MenuItemStyled>
         <MenuItemStyled onClick={withClick(handleClickSubscriptions)} disableRipple>
-          <HowToRegIcon /> Inscrições
+          <ListItemIcon>
+            <HowToRegIcon />
+          </ListItemIcon>
+          <ListItemText primary="Inscrições" secondary="Lista des inscritos" />
         </MenuItemStyled>
         <MenuItemStyled onClick={withClick(handleClickReport)} disableRipple>
-          <AssessmentIcon /> Relatório
+          <ListItemIcon>
+            <AssessmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Relatório" secondary="Relação de tamanho de camisetas" />
         </MenuItemStyled>
         <MenuItemStyled onClick={withClick(handleClickSubCards)} disableRipple>
-          <GroupIcon /> Inscrições agrupadas
+          <ListItemIcon>
+            <GroupIcon />
+          </ListItemIcon>
+          <ListItemText primary="Duplas inscritas" secondary="Inscrições agrupadas por duplas" />
         </MenuItemStyled>
         <MenuItemStyled onClick={withClick(handleClickRanking)} disableRipple>
-          <MilitaryTechIcon /> Ranking
+          <ListItemIcon>
+            <MilitaryTechIcon />
+          </ListItemIcon>
+          <ListItemText primary="Ranking" secondary="Gerenciar por categoria" />
         </MenuItemStyled>
         <Divider />
         <MenuItemStyled onClick={withClick(handleDownload, true)} disableRipple disabled={!!downloading}>
