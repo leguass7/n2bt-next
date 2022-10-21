@@ -2,7 +2,6 @@ import { BadRequestException, createHandler, HttpCode, Post, Req } from 'next-ap
 
 import { wait } from '~/helpers'
 import { prepareConnection } from '~/server-side/database/conn'
-import type { IArena } from '~/server-side/useCases/arena/arena.dto'
 import { Arena } from '~/server-side/useCases/arena/arena.entity'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
