@@ -1,5 +1,4 @@
 import { CustomTable } from '~/components/CustomTable'
-// import type { TableFetchParams } from '~/components/CustomTable/types'
 import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
