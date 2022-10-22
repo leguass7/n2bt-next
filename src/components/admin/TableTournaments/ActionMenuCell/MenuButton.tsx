@@ -60,7 +60,7 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
   const handleClickRanking = () => push(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
   const handleClickSubscriptions = () => push(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
   const handleClickSubCards = () => push(`/admin/tournaments/sub-cards?tournamentId=${tournamentId}`)
-  const handleClickReport = () => push(`/admin/tournaments/report?tournamentId=${tournamentId}`)
+  const handleClickReport = () => push(`/admin/tournaments/shirts-report?tournamentId=${tournamentId}`)
   const handleDelete = () => setCustom({ deleteId: tournamentId })
 
   const handleEdit = () => {
@@ -81,7 +81,7 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
       prefetch(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
       prefetch(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
       prefetch(`/admin/tournaments/sub-cards?tournamentId=${tournamentId}`)
-      prefetch(`/admin/tournaments/report?tournamentId=${tournamentId}`)
+      prefetch(`/admin/tournaments/shirts-report?tournamentId=${tournamentId}`)
     }
   }, [prefetch, open, tournamentId])
 
