@@ -1,16 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
-import { Button, Grid } from '@mui/material'
 import { useRouter } from 'next/router'
 
 import { CircleLoading } from '~/components/CircleLoading'
-import { SimpleModal } from '~/components/Common/SimpleModal'
 import { AllowContactModal } from '~/components/Modals/AllowContactModal'
 import { useAppAuth } from '~/hooks/useAppAuth'
-import { useIsMounted } from '~/hooks/useIsMounted'
-import { useOnceCall } from '~/hooks/useOnceCall'
-import { IUser } from '~/server-side/useCases/user/user.dto'
-import { updateUser } from '~/services/api/user'
 
 import { LayoutAppBar } from './LayoutAppBar'
 import { LayoutProvider } from './LayoutProvider'
