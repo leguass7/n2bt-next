@@ -104,33 +104,33 @@ export const FormRegister: React.FC<Props> = ({ onCancel, userId, onSuccess }) =
     <>
       <Form ref={formRef} onSubmit={handleSubmit} initialData={data} key={`form-${data.id}`} role="form">
         <Grid container>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             <InputText name="name" label="Nome *" />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             <InputText name="email" label="e-mail *" />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             <InputText name="nick" label="Apelido no BT" />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             <InputDate name="birday" label="Data de nascimento *" maxDate={sub(new Date(), { years: 5 })} minDate={sub(new Date(), { years: 75 })} />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             <InputMask name="cpf" label="CPF" mask={'999.999.999-99'} alwaysShowMask={false} />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             <InputMask name="phone" label="Telefone" mask={'(99) 9 9999-9999'} alwaysShowMask={false} />
           </Grid>
         </Grid>
 
         <Grid container>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             <FlexContainer justify="center" verticalPad={10}>
               <InputSelects name="shirtSize" label="Tamanho da camisa" options={shirtSizes} defaultSelected={userData?.shirtSize || 'M'} />
             </FlexContainer>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} lg={6}>
             {/* <FlexContainer verticalPad={10}>
               <InputSelects name="category" label="Categoria" options={categories} defaultSelected={userData?.category || 'B'} />
             </FlexContainer> */}
