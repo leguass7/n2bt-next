@@ -10,6 +10,7 @@ import { Layout } from '~/components/app/Layout'
 import { FormRegister } from '~/components/forms/UnForm/FormRegister'
 import { BoxCenter, FlexContainer, H4 } from '~/components/styled'
 import { UserPanelTabs } from '~/components/User/UserPanel/UserPanelTabs'
+import { UserPermissions } from '~/components/User/UserPermissions'
 import { useAppAuth } from '~/hooks/useAppAuth'
 import { CardContainer } from '~/styles'
 
@@ -35,7 +36,10 @@ const MeRegisterPage: NextPage<PageProps> = ({}) => {
         </FlexContainer>
         <CardContainer>
           <UserPanelTabs value={tab} onChange={setTab} />
-          <CardContent>{tab === 'info' ? <FormRegister /> : null}</CardContent>
+          <CardContent>
+            {tab === 'info' ? <FormRegister /> : null}
+            {tab === 'permissions' ? <UserPermissions /> : null}
+          </CardContent>
         </CardContainer>
       </BoxCenter>
 

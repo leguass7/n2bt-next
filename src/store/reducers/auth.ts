@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface IAuthAppState {
   readonly loading: boolean
+  readonly allowedContact?: boolean | null
   readonly token: string
   readonly expiration?: Date | null
   readonly nick?: string | null
@@ -19,7 +20,8 @@ const initialState: IAuthAppState = {
   level: 0,
   completed: false,
   error: null,
-  recoverCode: null
+  recoverCode: null,
+  allowedContact: null
 }
 
 export const slice = createSlice({
