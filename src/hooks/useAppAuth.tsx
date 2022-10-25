@@ -23,6 +23,7 @@ export function useAppAuth() {
   const level = useSelector<AppStoreState, number>(state => state?.auth?.level || 0)
   const completed = useSelector<AppStoreState, boolean>(state => !!state?.auth?.completed)
   const loadingUser = useSelector<AppStoreState, boolean>(state => !!state?.auth?.loading)
+  const allowedContact = useSelector<AppStoreState, boolean>(state => !!state?.auth?.allowedContact)
 
   const userData = useMemo(() => {
     const { user = {}, ...rest } = data || {}
@@ -85,7 +86,7 @@ export function useAppAuth() {
     [requestMe, updateAppAuth]
   )
 
-  return { loading, logOut, completedAuth, updateAppAuth, requestMe, authenticated, userData, authorize }
+  return { loading, logOut, completedAuth, updateAppAuth, requestMe, authenticated, userData, authorize, allowedContact }
 }
 
 export function useAppRecoverCode(): [string, (code?: string) => void] {
