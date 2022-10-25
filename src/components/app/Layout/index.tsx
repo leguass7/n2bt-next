@@ -33,7 +33,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, isProtected }) => {
         <LayoutContainer>{!loading ? children : null}</LayoutContainer>
         <Menu />
       </LayoutProvider>
-      {!forbidden ? <AllowContactModal /> : null}
+      {/* {!forbidden ? <AllowContactModal /> : null} */}
       {loading ? <CircleLoading /> : null}
     </>
   )
