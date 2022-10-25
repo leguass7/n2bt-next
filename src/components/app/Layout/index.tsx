@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { SimpleModal } from '~/components/Common/SimpleModal'
+import { AllowContactModal } from '~/components/Modals/AllowContactModal'
 import { useAppAuth } from '~/hooks/useAppAuth'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
@@ -23,32 +24,13 @@ type LayoutProps = {
 
 export const Layout: React.FC<LayoutProps> = ({ children, isProtected }) => {
   const { push } = useRouter()
-  const { authenticated, loading, requestMe, updateAppAuth } = useAppAuth()
-  const isMounted = useIsMounted()
-  const [data, setData] = useState<IUser>({})
-
-  const getMe = useCallback(async () => {
-    const { success, user = {} } = await requestMe()
-    if (isMounted() && success) setData(user)
-  }, [isMounted, requestMe])
+  const { authenticated, loading } = useAppAuth()
 
   const forbidden = useMemo(() => !!isProtected && !authenticated && !loading, [isProtected, authenticated, loading])
-
-  useOnceCall(getMe, !forbidden)
 
   useEffect(() => {
     if (forbidden) push('/login')
   }, [push, forbidden])
-
-  const handleClick = (allow: boolean) => async () => {
-    const id = data?.id
-    if (!id) return
-
-    await updateUser(data.id, { allowedContact: !!allow }).then(({ success }) => {
-      if (success) updateAppAuth({ allowedContact: !!allow })
-      getMe()
-    })
-  }
 
   return (
     <>
@@ -57,23 +39,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, isProtected }) => {
         <LayoutContainer>{!loading ? children : null}</LayoutContainer>
         <Menu />
       </LayoutProvider>
-      {!forbidden ? (
-        <SimpleModal
-          open={data?.allowedContact === null}
-          onToggle={() => handleClick(false)}
-          title="Deseja ser notificado quando houver outro torneio?"
-        >
-          <Grid container justifyContent="center" pt={2} alignItems="center">
-            <Button onClick={handleClick(false)} variant="outlined" sx={{ mr: 2 }}>
-              Não
-            </Button>
-
-            <Button onClick={handleClick(true)} variant="contained">
-              Sim
-            </Button>
-          </Grid>
-        </SimpleModal>
-      ) : null}
+      {!forbidden ? <AllowContactModal /> : null}
       {loading ? <CircleLoading /> : null}
     </>
   )
