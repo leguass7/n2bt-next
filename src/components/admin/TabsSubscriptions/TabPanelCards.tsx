@@ -54,7 +54,7 @@ export const TabPanelCards: React.FC<TabPanelCardsProps> = ({ value, index, cate
             </Toolbar>
           </FlexContainer>
           <Divider />
-          <SubscriptionList categoryId={categoryId} tournamentId={tournamentId} onLoad={onLoad} />
+          <SubscriptionList categoryName={categoryName} categoryId={categoryId} tournamentId={tournamentId} onLoad={onLoad} />
         </>
       )}
     </div>

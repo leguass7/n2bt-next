@@ -39,11 +39,12 @@ export type Edited = {
   points?: number
 }
 type Props = {
+  categoryName?: string
   categoryId: number
   tournamentId: number
   onLoad?: OnLoadHanlder
 }
-export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, onLoad }) => {
+export const SubscriptionList: React.FC<Props> = ({ categoryName, categoryId, tournamentId, onLoad }) => {
   const [adding, setAdding] = useState(false)
   const [open, setOpen] = useState<string[]>([])
   const [edited, setEdited] = useState<Edited[]>([])
@@ -120,7 +121,7 @@ export const SubscriptionList: React.FC<Props> = ({ categoryId, tournamentId, on
                     />
                   )}
                 </CardContent>
-                <Divider />
+                <Divider sx={{ fontSize: 10, mt: 0, mb: 0 }}>{categoryName}</Divider>
                 <CardActions>
                   <Stack direction={'row'} justifyContent="space-between" spacing={1} sx={{ ml: 1, width: '100%' }}>
                     <ActionVerified
