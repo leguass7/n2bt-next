@@ -5,18 +5,22 @@ import { CustomTable } from '~/components/CustomTable'
 import type { TableFetchParams } from '~/components/CustomTable/types'
 import { FlexContainer, Text } from '~/components/styled'
 import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
+import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { paginateSubscription } from '~/services/api/subscriptions'
 
 import { Actions } from './Actions'
 import { columns } from './columns'
 
-const pageSize = 32
+const pageSize = 1000
+
+export type FetchHandler = (data: ISubscription[]) => any
 type Props = {
   tournamentId: number
   categoryId: number
+  onFetchData?: FetchHandler
 }
 
-export const TableSubscriptions: React.FC<Props> = ({ categoryId, tournamentId }) => {
+export const TableSubscriptions: React.FC<Props> = ({ categoryId, tournamentId, onFetchData }) => {
   const [loading, setLoading] = useState(false)
   const [records, setRecords] = useState([])
   const [total, setTotal] = useState(0)
@@ -30,8 +34,9 @@ export const TableSubscriptions: React.FC<Props> = ({ categoryId, tournamentId }
         setRecords(result?.data || [])
         setTotal(result?.total || 0)
       }
+      if (onFetchData) onFetchData(result?.data || [])
     },
-    [categoryId]
+    [categoryId, onFetchData]
   )
 
   return (
