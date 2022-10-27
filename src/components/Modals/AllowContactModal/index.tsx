@@ -1,18 +1,22 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { Button, Grid } from '@mui/material'
 
 import { SimpleModal } from '~/components/Common/SimpleModal'
+import { wait } from '~/helpers'
 import { useAppAuth } from '~/hooks/useAppAuth'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { IUser } from '~/server-side/useCases/user/user.dto'
 import { updateUser } from '~/services/api/user'
 
-interface Props {}
+interface Props {
+  delayInSeconds?: number
+}
 
-export const AllowContactModal: React.FC<Props> = () => {
+export const AllowContactModal: React.FC<Props> = ({ delayInSeconds = 60 }) => {
   const { requestMe, updateAppAuth } = useAppAuth()
+  const [hide, setHide] = useState(false)
 
   const [data, setData] = useState<IUser>({})
   const isMounted = useIsMounted()
@@ -34,8 +38,20 @@ export const AllowContactModal: React.FC<Props> = () => {
     })
   }
 
-  return (
-    <SimpleModal open={data?.allowedContact === null} onToggle={() => handleClick(false)} title="Deseja ser notificado quando houver outro torneio?">
+  const handleRenderDelay = useCallback(async () => {
+    setHide(true)
+
+    wait(delayInSeconds * 1000).then(() => {
+      setHide(false)
+    })
+  }, [delayInSeconds])
+
+  useEffect(() => {
+    handleRenderDelay()
+  }, [handleRenderDelay])
+
+  return !hide ? (
+    <SimpleModal open={data?.allowedContact === null} onToggle={handleClick(false)} title="Deseja ser notificado quando houver outro torneio?">
       <Grid container justifyContent="center" pt={2} alignItems="center">
         <Button onClick={handleClick(false)} variant="outlined" sx={{ mr: 2 }}>
           Não
@@ -46,5 +62,5 @@ export const AllowContactModal: React.FC<Props> = () => {
         </Button>
       </Grid>
     </SimpleModal>
-  )
+  ) : null
 }
