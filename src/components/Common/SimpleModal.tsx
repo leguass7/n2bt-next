@@ -19,7 +19,7 @@ export const SimpleModal: React.FC<Props> = ({ children, title = '', open = fals
         <PaperContainer>
           <ModalHeader>
             <Typography variant="h5">{title}</Typography>
-            <IconButton onClick={onToggle}>
+            <IconButton disableRipple onClick={onToggle}>
               <CloseIcon />
             </IconButton>
           </ModalHeader>
@@ -37,6 +37,7 @@ const ModalContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
+  outline: none;
   max-width: 600px;
 `
 

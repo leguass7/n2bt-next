@@ -3,7 +3,7 @@ import React, { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 
 import { CircleLoading } from '~/components/CircleLoading'
-// import { AllowContactModal } from '~/components/Modals/AllowContactModal'
+import { AllowContactModal } from '~/components/Modals/AllowContactModal'
 import { useAppAuth } from '~/hooks/useAppAuth'
 
 import { LayoutAppBar } from './LayoutAppBar'
@@ -33,7 +33,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, isProtected }) => {
         <LayoutContainer>{!loading ? children : null}</LayoutContainer>
         <Menu />
       </LayoutProvider>
-      {/* {!forbidden ? <AllowContactModal /> : null} */}
+      {!forbidden ? <AllowContactModal /> : null}
       {loading ? <CircleLoading /> : null}
     </>
   )
