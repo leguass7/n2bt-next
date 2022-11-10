@@ -1,16 +1,19 @@
 import React, { useCallback, useState } from 'react'
 
-import Card from '@mui/material/Card'
-import Divider from '@mui/material/Divider'
 import type { NextPage, GetServerSideProps } from 'next'
 import { unstable_getServerSession } from 'next-auth'
+import dynamic from 'next/dynamic'
 
-import { TableCheckin } from '~/components/admin/TableCheckin'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
-import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
+import { CircleLoading } from '~/components/CircleLoading'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
 import { listCategories } from '~/services/api/category'
+
+const DynamicPagePresence = dynamic(() => import('~/components/admin/PagePresence').then(({ PagePresence }) => PagePresence), {
+  loading: () => <CircleLoading />,
+  ssr: false
+})
 
 type PageProps = {
   tournamentId?: number
@@ -33,12 +36,7 @@ const AdminTournamentsPresencePage: NextPage<PageProps> = ({ tournamentId }) => 
 
   return (
     <LayoutAdmin>
-      <Divider sx={{ mt: 1, mb: 1 }} />
-      <Card>
-        <TableActionsProvider>
-          <TableCheckin tournamentId={tournamentId} categories={categories} />
-        </TableActionsProvider>
-      </Card>
+      <DynamicPagePresence categories={categories} tournamentId={tournamentId} />
     </LayoutAdmin>
   )
 }
