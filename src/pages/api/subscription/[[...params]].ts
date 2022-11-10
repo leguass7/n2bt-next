@@ -301,8 +301,54 @@ class SubscriptionHandler {
     return { success: true, subscriptionId: subscription?.id, subscription }
   }
 
+  @Get('/report/download')
+  @JwtAuthGuard()
+  async downloadReport(@Req() req: AuthorizedPaginationApiRequest, @Res() res: NextApiResponse) {
+    const { auth, query } = req
+    const isAdmin = !!(auth?.level >= 8)
+    if (!isAdmin) throw new ForbiddenException()
+
+    const tournamentId = +query?.tournamentId
+    if (!tournamentId) throw new BadRequestException('Torneio não encontrado')
+
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Subscription)
+
+    const repoQuery = repo
+      .createQueryBuilder('Subscription')
+      .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtDelivered'])
+      .innerJoin('Subscription.category', 'Category')
+      .innerJoin('Subscription.user', 'User')
+      .addSelect(['Category.id', 'Category.tournamentId', 'Category.limit', 'Category.title'])
+      .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize', 'User.email', 'User.phone'])
+      .where('Subscription.actived = :actived ', { actived: true })
+      .distinct()
+      .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
+      .orderBy('User.name', 'ASC')
+      .addOrderBy('Subscription.paid', 'DESC')
+      .groupBy('Subscription.userId')
+
+    const subscriptions = await repoQuery.getMany()
+
+    const sheet = factoryXlsxService()
+    const data = subscriptions.map(subscriptionToSheetDto)
+    if (!data?.length) throw new BadRequestException('Arquivo vazio')
+
+    const result = await sheet.createDownloadResource('xlsx', data)
+
+    const stream = typeof result.resource === 'string' ? Buffer.from(result.resource, result.encode) : result.resource
+
+    res.writeHead(200, {
+      'Content-Type': result.mimeType,
+      'Content-Length': stream.length
+    })
+    return res.end(stream)
+
+    // return { success: true, subscriptions }
+  }
+
   @Get('/report')
-  @IfAuth()
+  @JwtAuthGuard()
   async report(@Req() req: AuthorizedPaginationApiRequest) {
     const { auth, query } = req
 
