@@ -7,8 +7,8 @@ import { parseJSON } from 'date-fns'
 import { date, object, ref, string } from 'yup'
 
 import { CircleLoading } from '~/components/CircleLoading'
+import { Datetimepicker } from '~/components/forms/UnForm/Datetimepicker'
 import { Input } from '~/components/forms/UnForm/Input'
-import { InputDate } from '~/components/forms/UnForm/InputDate'
 import { validateFormData } from '~/helpers/validation'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { IResponseTournament, ITournament } from '~/server-side/useCases/tournament/tournament.dto'
@@ -89,8 +89,8 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
         <Input placeholder="nome" type="text" name="title" label="Nome" />
         <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
         <Stack direction="column" spacing={1} pt={2}>
-          <InputDate label="Início das incrições" name="subscriptionStart" minDate={new Date()} clearable />
-          <InputDate label="Fim das incrições" name="subscriptionEnd" clearable />
+          <Datetimepicker label="Início das incrições" name="subscriptionStart" minDate={new Date()} />
+          <Datetimepicker label="Fim das incrições" name="subscriptionEnd" />
         </Stack>
 
         {/* {tournamentId ? (
