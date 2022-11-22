@@ -12,7 +12,7 @@
     }
   },
 
-  "postCreateCommand": "docker network create database && docker run --name mysql -v mysqldata:/var/lib/mysql --network database -e MYSQL_ROOT_PASSWORD=root -p 3307:3306 -d mysql && docker run --name pma -d --network database -e PMA_HOST=mysql -e PMA_USER=root -e PMA_PASSWORD=root -p 8080:80 phpmyadmin/phpmyadmin && docker run --name cache -d -e REDIS_PORT=6379 -v redis_lib:/var/lib/redis -v redis_data:/data -p 6379:6379 redis:alpine && docker update --restart unless-stopped $(docker ps -q)",
+  "postCreateCommand": "docker run --name mysql -v mysqldata:/var/lib/mysql --network database -e MYSQL_ROOT_PASSWORD=root -p 3307:3306 -d mysql && docker run --name pma -d --network database -e PMA_HOST=mysql -e PMA_USER=root -e PMA_PASSWORD=root -p 8080:80 phpmyadmin/phpmyadmin && docker run --name cache -d -e REDIS_PORT=6379 -v redis_lib:/var/lib/redis -v redis_data:/data -p 6379:6379 redis:alpine && docker update --restart unless-stopped $(docker ps -q)",
 
   // Configure tool-specific properties.
   "customizations": {
@@ -34,6 +34,7 @@
   "features": {
     "docker-from-docker": "20.10",
     "git": "latest",
-    "github-cli": "latest"
+	"github-cli": "latest",
+	"ghcr.io/devcontainers/features/git-lfs:1": {}
   }
 }
