@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import { FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import { number, object } from 'yup'
 
@@ -32,20 +33,17 @@ export type FormRankingProps = {
 }
 
 export const FormRanking: React.FC<FormRankingProps> = ({ onInvalid, onSuccess, onFailed, onCancel, rankingId }) => {
-  const formRef = useRef()
+  const formRef = useRef<FormHandles>()
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<Partial<IRanking>>(null)
 
   const fetchData = useCallback(async () => {
     if (rankingId && rankingId > 0) {
       setLoading(true)
       const response = await getRanking(rankingId)
       setLoading(false)
-      if (response?.success) {
-        setData(response?.ranking)
-      } else {
-        toast.error(response?.message || 'Erro ao recuperar ranking')
-      }
+
+      if (response?.success) formRef.current.setData(response?.ranking)
+      else toast.error(response?.message || 'Erro ao recuperar ranking')
     }
   }, [rankingId])
 
@@ -75,8 +73,8 @@ export const FormRanking: React.FC<FormRankingProps> = ({ onInvalid, onSuccess, 
 
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit} role="form" initialData={data} key={`form-${data?.id || ''}`}>
-        <Input placeholder="pontos" type="number" name="points" label="Pontos" />
+      <Form ref={formRef} onSubmit={handleSubmit} role="form">
+        <Input type="number" name="points" label="Pontos" />
         <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 2 }}>
           {onCancel ? (
             <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onCancel}>

@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import { FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import { object, string } from 'yup'
 
@@ -32,9 +33,9 @@ export type FormArenaProps = {
 }
 
 export const FormArena: React.FC<FormArenaProps> = ({ onInvalid, onSuccess, onFailed, onCancel, arenaId }) => {
-  const formRef = useRef()
+  const formRef = useRef<FormHandles>()
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<Partial<IArena>>(null)
+  // const [data, setData] = useState<Partial<IArena>>(null)
 
   const fetchData = useCallback(async () => {
     if (arenaId && arenaId > 0) {
@@ -42,7 +43,8 @@ export const FormArena: React.FC<FormArenaProps> = ({ onInvalid, onSuccess, onFa
       const response = await getArena(arenaId)
       setLoading(false)
       if (response?.success) {
-        setData(response?.arena)
+        formRef.current.setData(response?.arena)
+        // setData(response?.arena)
       }
     }
   }, [arenaId])
@@ -73,9 +75,9 @@ export const FormArena: React.FC<FormArenaProps> = ({ onInvalid, onSuccess, onFa
 
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit} role="form" initialData={data} key={`form-${data?.id || ''}`}>
-        <Input placeholder="nome" type="text" name="title" label="Nome" />
-        <Input placeholder="descrição" type="text" name="description" label="Descrição" />
+      <Form ref={formRef} onSubmit={handleSubmit} role="form">
+        <Input type="text" name="title" label="Nome" />
+        <Input type="text" name="description" label="Descrição" />
         <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 2 }}>
           {onCancel ? (
             <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onCancel}>
