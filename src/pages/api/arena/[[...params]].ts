@@ -28,6 +28,7 @@ class ArenaHandler {
   }
 
   @Get('/:arenaId')
+  @JwtAuthGuard()
   @HttpCode(200)
   async one(@Req() req: AuthorizedApiRequest) {
     const { auth, query } = req
@@ -35,7 +36,7 @@ class ArenaHandler {
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(Arena)
-    const arena = await repo.findOne({ where: { id: arenaId, published: auth?.level <= 8 ? undefined : true } })
+    const arena = await repo.findOne({ where: { id: arenaId, published: auth?.level >= 8 ? undefined : true } })
     if (!arena) throw new BadRequestException()
 
     return { success: true, arena }
