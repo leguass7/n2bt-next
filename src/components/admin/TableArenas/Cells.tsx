@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import { Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import Switch from '@mui/material/Switch'
 import Tooltip from '@mui/material/Tooltip'
@@ -17,6 +18,17 @@ import { updateArena } from '~/services/api/arena'
 import type { IArenaActions } from './Actions'
 
 type Props = ICustomCellProps<IArena>
+
+export const ArenaNameCell: React.FC<Props> = ({ record }) => {
+  const { title = '', description = '' } = record
+
+  return (
+    <CellContainer>
+      <Typography variant="h6">{title}</Typography>
+      <Typography variant="caption">{description}</Typography>
+    </CellContainer>
+  )
+}
 
 export const SwitchCell: React.FC<Props> = ({ record }) => {
   const [checked, setChecked] = useState(!!record?.published)
@@ -42,7 +54,6 @@ export const DateCell: React.FC<Props> = ({ record }) => {
   return (
     <CellContainer>
       <Text textSize={14}>{date}</Text>
-      <br />
       <Text textSize={12}>{time}</Text>
     </CellContainer>
   )
