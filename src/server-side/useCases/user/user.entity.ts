@@ -55,7 +55,7 @@ export class User {
   birday?: Date | string | null
 
   @Column({ default: null })
-  allowedContact?: boolean | null
+  allowedContact?: boolean
 
   @Column({ nullable: true, default: false })
   completed?: boolean
