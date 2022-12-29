@@ -8,6 +8,12 @@ import type { User } from '~/server-side/useCases/user/user.entity'
 
 import { Checkin } from '../checkin/checkin.entity'
 
+export enum TournamentModality {
+  BEACH_TENNIS = 1,
+  BEACH_VOLEI = 2,
+  FUTVOLEI = 3
+}
+
 @Entity('tournaments')
 export class Tournament {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
@@ -27,6 +33,9 @@ export class Tournament {
 
   @Column({ type: 'datetime', nullable: true, precision: null })
   expires: Date
+
+  @Column({ type: 'enum', enum: Object.values(TournamentModality), default: TournamentModality.BEACH_TENNIS })
+  modality?: TournamentModality
 
   @Column({ nullable: true, default: 200 })
   limitUsers?: number
