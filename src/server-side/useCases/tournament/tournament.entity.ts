@@ -9,9 +9,9 @@ import type { User } from '~/server-side/useCases/user/user.entity'
 import { Checkin } from '../checkin/checkin.entity'
 
 export enum TournamentModality {
-  BEACH_TENNIS = 1,
-  BEACH_VOLEI = 2,
-  FUTVOLEI = 3
+  BEACH_TENNIS = 'BEACH_TENNIS',
+  BEACH_VOLEI = 'BEACH_VOLEI',
+  FUTVOLEI = 'FUTVOLEI'
 }
 
 @Entity('tournaments')
