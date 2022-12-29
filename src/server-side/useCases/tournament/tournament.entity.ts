@@ -7,12 +7,7 @@ import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
 import { Checkin } from '../checkin/checkin.entity'
-
-export enum TournamentModality {
-  BEACH_TENNIS = 'BEACH_TENNIS',
-  BEACH_VOLEI = 'BEACH_VOLEI',
-  FUTVOLEI = 'FUTVOLEI'
-}
+import { TournamentModality } from './tournament.dto'
 
 @Entity('tournaments')
 export class Tournament {

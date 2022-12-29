@@ -14,7 +14,7 @@ import Select, { SelectItem } from '~/components/forms/UnForm/Select'
 import { validateFormData } from '~/helpers/validation'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { IResponseTournament, ITournament } from '~/server-side/useCases/tournament/tournament.dto'
-import { TournamentModality } from '~/server-side/useCases/tournament/tournament.entity'
+import { TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
 import { getTournament, storeTournament } from '~/services/api/tournament'
 
 type FormData = Partial<ITournament> & {}
