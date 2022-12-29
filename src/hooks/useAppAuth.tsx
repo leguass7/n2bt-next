@@ -62,14 +62,14 @@ export function useAppAuth() {
         completed: response?.user?.completed,
         error: null
       }
-    } else {
+    } else if (authenticated) {
       toast.error(response?.message || 'Erro de autenticação')
       uData = { error: `${response?.message}` }
     }
     updateAppAuth({ loading: false, ...uData })
 
     return response
-  }, [updateAppAuth])
+  }, [updateAppAuth, authenticated])
 
   const authorize = useCallback(
     async ({ email, password }: PayloadSignin) => {
