@@ -4,16 +4,22 @@ import Stepper from '@mui/material/Stepper'
 
 import { ColorlibConnector, ColorlibStepIcon } from './stepperUtils'
 
-const steps = ['Cadastro', 'Categoria', 'Selecionar dupla', 'Pagamento']
+const allSteps = ['Cadastro', 'Categoria', 'Selecionar dupla', 'Pagamento']
+
+function steps(hidePartnerSelection = false) {
+  const withoutPartner = allSteps.filter(step => step !== 'Selecionar dupla')
+  return hidePartnerSelection ? withoutPartner : allSteps
+}
 
 interface Props {
   step?: number
+  hidePartnerSelection?: boolean
 }
 
-export const SubscriptionStepper: React.FC<Props> = ({ step = 1 }) => {
+export const SubscriptionStepper: React.FC<Props> = ({ step = 1, hidePartnerSelection }) => {
   return (
     <Stepper alternativeLabel activeStep={step} connector={<ColorlibConnector />}>
-      {steps.map(label => (
+      {steps(hidePartnerSelection).map(label => (
         <Step key={label}>
           <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
         </Step>

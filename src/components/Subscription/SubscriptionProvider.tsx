@@ -9,6 +9,7 @@ import type { IResponseSubscription, ISubscription } from '~/server-side/useCase
 import type { IUser } from '~/server-side/useCases/user/user.dto'
 import { generatePayment } from '~/services/api/payment'
 import { createPublicSubscription } from '~/services/api/subscriber'
+import { createSubscriptionNoPartner } from '~/services/api/subscription-no-partner'
 
 export interface ISubscriptionProviderContext {
   subscription: ISubscription
@@ -19,8 +20,8 @@ export interface ISubscriptionProviderContext {
   setCategory: Dispatch<SetStateAction<ICategory>>
   partner?: IUser | null
   setPartner?: Dispatch<SetStateAction<IUser>>
-  saveSubscription: () => Promise<IResponseSubscription>
-  generatePixPayment: (subId: number) => Promise<IResponseGeneratePix>
+  saveSubscription: (noPartner?: boolean) => Promise<IResponseSubscription>
+  generatePixPayment: (subId: number, noPartner?: boolean) => Promise<IResponseGeneratePix>
   payment?: IResponseGeneratePix
   setPayment?: Dispatch<SetStateAction<IResponseGeneratePix>>
   clearSubscription: () => void
@@ -46,19 +47,24 @@ export const SubscriptionProvider: React.FC<Props> = ({ children, tournamentId, 
     setCategory(null)
   }, [])
 
-  const saveSubscription = useCallback(async () => {
-    if (!category || !partner) return null
-    const response = await createPublicSubscription({ categoryId: category?.id, partnerId: partner?.id, value: category.price })
-    if (response?.success) {
-      setSubscription(response?.subscription)
-    } else {
-      toast.error(response?.message || 'Erro ao gerar inscrição')
-    }
-    return response
-  }, [category, partner])
+  const saveSubscription = useCallback(
+    async (noPartner = false) => {
+      const requiredPartner = !noPartner && !partner
+      if (!category || requiredPartner) return null
 
-  const generatePixPayment = useCallback(async (subId: number) => {
-    const response = await generatePayment(subId)
+      const createSubscription = noPartner ? createSubscriptionNoPartner : createPublicSubscription
+      const response = await createSubscription({ categoryId: category?.id, partnerId: partner?.id, value: category.price })
+
+      if (response?.success) setSubscription(response?.subscription)
+      else toast.error(response?.message || 'Erro ao gerar inscrição')
+
+      return response
+    },
+    [category, partner]
+  )
+
+  const generatePixPayment = useCallback(async (subId: number, noPartner = false) => {
+    const response = await generatePayment(subId, noPartner)
     if (response.success) {
       setPayment(response)
     }
