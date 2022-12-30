@@ -30,7 +30,7 @@ export class Tournament {
   expires: Date
 
   @Column({ type: 'enum', enum: Object.values(TournamentModality), default: TournamentModality.BEACH_TENNIS })
-  modality?: TournamentModality
+  modality?: keyof typeof TournamentModality
 
   @Column({ nullable: true, default: 200 })
   limitUsers?: number
