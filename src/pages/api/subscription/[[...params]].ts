@@ -8,9 +8,11 @@ import type { AuthorizedPaginationApiRequest } from '~/server-side/services/Pagi
 import { factoryXlsxService } from '~/server-side/services/XlsxService'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
+import { SubscriptionNoPartner } from '~/server-side/useCases/subscription-no-partner/subscription-no-partner.entity'
 import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
 import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
+import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
 const userSearchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
 const searchFields = ['Subscription.id', 'User.name', 'Partner.name']
@@ -172,7 +174,12 @@ class SubscriptionHandler {
     if (!tournamentId) throw new BadRequestException('not_found_tournamentId')
 
     const ds = await prepareConnection()
-    const repo = ds.getRepository(Subscription)
+    const tournamentRepo = ds.getRepository(Tournament)
+
+    const tournament = await tournamentRepo.findOne({ where: { id: tournamentId } })
+
+    const hasPartner = tournament.modality === 'BEACH_TENNIS'
+    const repo = hasPartner ? ds.getRepository(Subscription) : ds.getRepository(SubscriptionNoPartner)
 
     const total = await repo
       .createQueryBuilder('Subscription')
@@ -182,6 +189,7 @@ class SubscriptionHandler {
       .where({ actived: true })
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
       .getCount()
+
     return { success: true, total }
   }
 
