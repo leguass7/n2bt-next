@@ -3,6 +3,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGenerat
 import { transformer } from '~/server-side/database/transformer'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
+import { SubscriptionNoPartner } from '../subscription-no-partner/subscription-no-partner.entity'
 import { Subscription } from '../subscriptions/subscriptions.entity'
 import { PaymentMethod } from './payment.dto'
 import type { PaymentMeta } from './payment.dto'
@@ -60,6 +61,9 @@ export class Payment {
   // relations
   @OneToMany(() => Subscription, subscription => subscription.payment)
   subscriptions?: Subscription[]
+
+  @OneToMany(() => SubscriptionNoPartner, subscriptionNoPartner => subscriptionNoPartner.payment)
+  subscriptionsNoPatner?: SubscriptionNoPartner[]
 
   @ManyToOne('User', 'payments', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId', referencedColumnName: 'id', foreignKeyConstraintName: 'payments_userId_fkey' })

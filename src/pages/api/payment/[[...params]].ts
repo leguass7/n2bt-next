@@ -9,6 +9,7 @@ import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import { PaymentMethod, ResponseApiPixEndToEnd } from '~/server-side/useCases/payment/payment.dto'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { checkPaymentService, generatePaymentService } from '~/server-side/useCases/payment/payment.service'
+import { SubscriptionNoPartner } from '~/server-side/useCases/subscription-no-partner/subscription-no-partner.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
 
@@ -48,8 +49,10 @@ class PaymentHandler {
     const userId = auth?.userId
     if (!userId) throw new BadRequestException('Usuário não encontrado')
 
+    const noPartner = query?.noPartner === 'true'
+
     const ds = await prepareConnection()
-    const repoSub = ds.getRepository(Subscription)
+    const repoSub = noPartner ? ds.getRepository(SubscriptionNoPartner) : ds.getRepository(Subscription)
 
     const subscription = await repoSub
       .createQueryBuilder('Subscription')

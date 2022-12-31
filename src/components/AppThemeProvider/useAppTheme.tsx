@@ -10,7 +10,7 @@ export function useAppTheme(): IUseAppTheme {
   const { theme, isDark, matchRules, setIsDark, setThemeName, themeName } = useContext(ThemeContext)
 
   const { breakpoints } = useTheme()
-  const isMobile = useMediaQuery(breakpoints.down('md'))
+  const isMobile = useMediaQuery(breakpoints.down('sm'))
 
   /**
    * @function matchingBackgroudText

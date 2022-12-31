@@ -12,6 +12,7 @@ import { User } from '~/server-side/useCases/user/user.entity'
 import { VerificationToken } from '~/server-side/useCases/verification-token/verification-token.entity'
 
 import { Checkin } from '../useCases/checkin/checkin.entity'
+import { SubscriptionNoPartner } from '../useCases/subscription-no-partner/subscription-no-partner.entity'
 
 export const entities = [
   User,
@@ -25,6 +26,7 @@ export const entities = [
   Ranking,
   Pair,
   Subscription,
+  SubscriptionNoPartner,
   Config,
   Checkin
 ]

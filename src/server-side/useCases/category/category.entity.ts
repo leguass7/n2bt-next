@@ -5,6 +5,8 @@ import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions
 import type { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
+import { SubscriptionNoPartner } from '../subscription-no-partner/subscription-no-partner.entity'
+
 export type CategoryGender = 'M' | 'F' | 'MF'
 
 @Entity('categories')
@@ -64,6 +66,9 @@ export class Category {
 
   @OneToMany(() => Subscription, subscription => subscription.category)
   subscriptions: Subscription[]
+
+  @OneToMany(() => SubscriptionNoPartner, subscription => subscription.category)
+  subscriptionsNoPartner: SubscriptionNoPartner[]
 
   @OneToMany(() => Ranking, ranking => ranking.category)
   rankings: Ranking[]

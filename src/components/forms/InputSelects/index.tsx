@@ -40,6 +40,9 @@ export const InputSelects: React.FC<Props<any>> = ({ name, themeColor = 'primary
       name: fieldName,
       getValue: () => {
         return category
+      },
+      setValue(input, value) {
+        setCategory(value)
       }
     })
   }, [fieldName, registerField, category])

@@ -7,6 +7,7 @@ import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
 import { Checkin } from '../checkin/checkin.entity'
+import { TournamentModality } from './tournament.dto'
 
 @Entity('tournaments')
 export class Tournament {
@@ -27,6 +28,9 @@ export class Tournament {
 
   @Column({ type: 'datetime', nullable: true, precision: null })
   expires: Date
+
+  @Column({ type: 'enum', enum: Object.values(TournamentModality), default: TournamentModality.BEACH_TENNIS })
+  modality?: keyof typeof TournamentModality
 
   @Column({ nullable: true, default: 200 })
   limitUsers?: number

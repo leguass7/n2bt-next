@@ -8,8 +8,10 @@ export async function createPayment(subscriptionId: number, data: Partial<Paymen
   return response
 }
 
-export async function generatePayment(subscriptionId: number): Promise<IResponseGeneratePix> {
-  const response = await apiService.get(`/payment/generate/${subscriptionId}`)
+export async function generatePayment(subscriptionId: number, noPartner = false): Promise<IResponseGeneratePix> {
+  const params = new URLSearchParams({ noPartner } as any)
+  const query = params ? `?${params}` : ''
+  const response = await apiService.get(`/payment/generate/${subscriptionId}${query}`)
   return response
 }
 

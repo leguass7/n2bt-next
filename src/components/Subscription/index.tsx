@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+
+import { TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
 
 import { Main, SliderItem } from '../PassRollLayout'
 import { icons } from './stepperUtils'
@@ -12,16 +14,19 @@ import { SubscriptionStepper } from './SubscriptionStepper'
 interface Props {
   tournamentId: number
   maxSubscription: number
+  modality: keyof typeof TournamentModality
 }
 
-export const Subscription: React.FC<Props> = ({ tournamentId, maxSubscription }) => {
+export const Subscription: React.FC<Props> = ({ tournamentId, maxSubscription, modality }) => {
   const [step, setStep] = useState(0)
   const handleChange = (index: number) => setStep(index - 1)
+
+  const hidePartnerStep = useMemo(() => modality !== 'BEACH_TENNIS', [modality])
 
   return (
     <SubscriptionProvider tournamentId={tournamentId} maxSubscription={maxSubscription}>
       <div style={{ width: '100%' }}>
-        <SubscriptionStepper step={step} />
+        <SubscriptionStepper hidePartnerSelection={hidePartnerStep} step={step} />
         <Main name="subscription" onSliderChange={handleChange}>
           <SliderItem>
             <StepStart icon={icons[1]} />
@@ -29,11 +34,13 @@ export const Subscription: React.FC<Props> = ({ tournamentId, maxSubscription })
           <SliderItem>
             <StepCategory icon={icons[2]} />
           </SliderItem>
+          {!hidePartnerStep ? (
+            <SliderItem>
+              <StepPartner icon={icons[3]} />
+            </SliderItem>
+          ) : null}
           <SliderItem>
-            <StepPartner icon={icons[3]} />
-          </SliderItem>
-          <SliderItem>
-            <StepPayment icon={icons[4]} />
+            <StepPayment noPartner={hidePartnerStep} icon={icons[4]} />
           </SliderItem>
         </Main>
       </div>

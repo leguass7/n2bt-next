@@ -9,14 +9,18 @@ import type { Subscription } from '~/server-side/useCases/subscriptions/subscrip
 
 import { useSubscription } from '../../SubscriptionProvider'
 
-export const Summary: React.FC = () => {
+interface Props {
+  noPartner?: boolean
+}
+
+export const Summary: React.FC<Props> = ({ noPartner = false }) => {
   const [loading, setLoading] = useState(false)
   const { category, partner, saveSubscription, subscription } = useSubscription()
 
   const handleGenerateClick = async () => {
     if (!subscription?.id) {
       setLoading(true)
-      await saveSubscription()
+      await saveSubscription(noPartner)
       setLoading(false)
     }
   }
