@@ -9,7 +9,7 @@ import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import { PaymentMethod, ResponseApiPixEndToEnd } from '~/server-side/useCases/payment/payment.dto'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { checkPaymentService, generatePaymentService } from '~/server-side/useCases/payment/payment.service'
-import { SubscriptionNoPartner } from '~/server-side/useCases/subscription-no-partner/subscription-no-partner.entity'
+import { SubscriptionNoPartner } from '~/server-side/useCases/subscription-no-partner_remove/subscription-no-partner.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
 
