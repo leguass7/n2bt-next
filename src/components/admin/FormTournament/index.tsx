@@ -31,7 +31,7 @@ export type SuccessHandler = (reason: SuccessReason, response?: IResponseTournam
 const schema = object().shape({
   title: string().required('titulo do torneio requerido'),
   description: string(),
-  subscriptionStart: date().nullable().min(new Date(), 'A data de início não pode ser no passado'),
+  subscriptionStart: date().nullable(),
   subscriptionEnd: date().nullable().min(ref('subscriptionStart'), 'Fim das inscrições é menor do que o início delas')
 })
 
@@ -105,7 +105,7 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
         <br />
         <Select name="modality" items={modalities} label="Modalidade do torneio" />
         <Stack direction="column" spacing={1} pt={2}>
-          <Datetimepicker label="Início das inscrições" name="subscriptionStart" minDate={new Date()} />
+          <Datetimepicker label="Início das inscrições" name="subscriptionStart" />
           <Datetimepicker label="Fim das inscrições" name="subscriptionEnd" />
         </Stack>
         <Stack direction="row" justifyContent="center" spacing={1} pt={2} pb={2}>

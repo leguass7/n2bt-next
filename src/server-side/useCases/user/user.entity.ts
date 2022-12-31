@@ -14,7 +14,6 @@ import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
 import { Image } from '../image/image.entity'
-import { SubscriptionNoPartner } from '../subscription-no-partner/subscription-no-partner.entity'
 
 enum UserGender {
   F = 'F',
@@ -91,9 +90,6 @@ export class User {
   // relations subscriptions
   @OneToMany(() => Subscription, subscription => subscription.user)
   userSubscriptions?: Subscription[]
-
-  @OneToMany(() => SubscriptionNoPartner, subscription => subscription.user)
-  userSubscriptionsNoPartner?: SubscriptionNoPartner[]
 
   @OneToMany(() => Subscription, subscription => subscription.partner)
   partnerSubscriptions?: Subscription[]

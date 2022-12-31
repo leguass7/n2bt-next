@@ -8,7 +8,6 @@ import { Pair } from '~/server-side/useCases/pair/pair.entity'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import { Session } from '~/server-side/useCases/session/session.entity'
-import { SubscriptionNoPartner } from '~/server-side/useCases/subscription-no-partner/subscription-no-partner.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
@@ -26,7 +25,6 @@ export const entities = [
   Ranking,
   Pair,
   Subscription,
-  SubscriptionNoPartner,
   Config,
   Checkin,
   Image
