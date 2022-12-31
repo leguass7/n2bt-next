@@ -17,37 +17,41 @@ import type { User } from '~/server-side/useCases/user/user.entity'
 
 import type { IImageMetadata } from './image.dto'
 
+export type ImageFeature = 'tournament' | 'category'
 @Entity('images')
 export class Image {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
   id: number
 
   @Column({ type: 'enum', enum: ['tournament', 'category'] })
-  feature: number
+  feature: ImageFeature
 
   @Column({ unsigned: true, nullable: false })
   featureId: number
 
-  @Column()
-  label: string
+  @Column({ default: null, nullable: true })
+  label?: string
 
   @Column({ type: 'longtext', default: null, nullable: true })
   url: string
 
   @Column({ unsigned: true, nullable: true, default: 0 })
-  size: number
+  size?: number
 
   @Column({ unsigned: true, nullable: true, default: 0 })
-  width: number
+  width?: number
 
   @Column({ unsigned: true, nullable: true, default: 0 })
-  height: number
+  height?: number
+
+  @Column({ default: null, nullable: true })
+  mimetype: string
 
   @Column({ type: 'json', default: null, nullable: true })
-  metaData: IImageMetadata
+  metaData?: IImageMetadata
 
   @Column({ nullable: true, default: true })
-  actived: boolean
+  actived?: boolean
 
   @Column({ type: 'uuid', nullable: true, length: 36 })
   createdBy?: string
@@ -57,7 +61,7 @@ export class Image {
 
   // relations
   @ManyToOne('Tournament', 'images', { onDelete: 'NO ACTION', onUpdate: 'NO ACTION', createForeignKeyConstraints: false })
-  @JoinColumn({ name: 'tournamentId', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'featureId', referencedColumnName: 'id' })
   tournament: Tournament
 
   // relations user
