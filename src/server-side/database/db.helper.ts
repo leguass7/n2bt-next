@@ -2,6 +2,7 @@ import camelcaseKeys from 'camelcase-keys'
 import type { SelectQueryBuilder } from 'typeorm'
 
 import { formatInTimeZone } from '~/helpers/dates'
+import { tryJson } from '~/helpers/object'
 import { ArrayOrder } from '~/server-side/services/PaginateService'
 
 type DateTostringBetweenDto = {
@@ -95,14 +96,26 @@ export function parseOrderDto({ order, table, ignoreFields = [], orderFields = [
   }
 }
 
-// export function phpSerializeDto<T = Record<string, any>>(data: T): string
-// export function phpSerializeDto<T = Record<string, any>>(data: string): T
-// export function phpSerializeDto<T = string>(data: T): string[]
-// export function phpSerializeDto<T = any[]>(data: T): string
-// export function phpSerializeDto<T = Record<string, any>>(data: any): any {
-//   if (typeof data === 'string') {
-//     return (data ? unserialize(data) : {}) as T
-//   }
-//   // const a = data ? serialize(data) : null;
-//   return data ? (serialize(data) as string) : null
-// }
+export function conventFieldInDto<T extends Record<string, any>>(input: T | string): string | T {
+  if (typeof input !== 'string') {
+    try {
+      const result = JSON.stringify(input) || null
+      return result
+    } catch (error) {
+      return null
+    }
+  }
+  return input
+}
+
+export function conventFieldOutDto<T extends Record<string, any>>(input: string | T): T {
+  if (typeof input === 'string') {
+    try {
+      const result = tryJson(input) || {}
+      return result
+    } catch (error) {
+      return null
+    }
+  }
+  return input
+}

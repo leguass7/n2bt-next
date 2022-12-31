@@ -2,11 +2,12 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 
 import type { Arena } from '~/server-side/useCases/arena/arena.entity'
 import { Category } from '~/server-side/useCases/category/category.entity'
+import { Checkin } from '~/server-side/useCases/checkin/checkin.entity'
+import { Image } from '~/server-side/useCases/image/image.entity'
 import { Pair } from '~/server-side/useCases/pair/pair.entity'
 import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
-import { Checkin } from '../checkin/checkin.entity'
 import { TournamentModality } from './tournament.dto'
 
 @Entity('tournaments')
@@ -84,4 +85,8 @@ export class Tournament {
 
   @OneToMany(() => Checkin, checkins => checkins.tournament)
   checkins?: Checkin[]
+
+  // relations Images
+  @OneToMany(() => Image, images => images.createdUser)
+  createdImages?: Image[]
 }
