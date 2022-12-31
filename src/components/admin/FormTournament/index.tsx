@@ -131,7 +131,7 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
         {loading ? <CircleLoading /> : null}
       </SliderItem>
       <SliderItem>
-        <UploadImage />
+        <UploadImage tournamentId={tournamentId} onCancel={onCancel} />
       </SliderItem>
     </Main>
   )
