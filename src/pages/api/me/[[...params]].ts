@@ -8,7 +8,6 @@ import type { AuthorizedPaginationApiRequest } from '~/server-side/services/Pagi
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import { checkPaymentService } from '~/server-side/useCases/payment/payment.service'
-import { SubscriptionNoPartner } from '~/server-side/useCases/subscription-no-partner/subscription-no-partner.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
 
@@ -73,42 +72,26 @@ class MeHandler {
     const categoryId = +query?.categoryId || 0
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
-    const noPartnerRepo = ds.getRepository(SubscriptionNoPartner)
-
-    const noPartnerQueryDb = noPartnerRepo
-      .createQueryBuilder('SubscriptionNoPartner')
-      .select()
-      .addSelect(['Category.id', 'Category.title', 'Category.tournamentId', 'Category.price'])
-      .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
-      .innerJoin('SubscriptionNoPartner.category', 'Category')
-      .innerJoin('Category.tournament', 'Tournament')
-      .orderBy('SubscriptionNoPartner.createdAt', 'DESC')
-      .where({ userId: auth?.userId, actived: true })
-
     const queryDb = repo
       .createQueryBuilder('Subscription')
       .select()
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email'])
       .addSelect(['Category.id', 'Category.title', 'Category.tournamentId', 'Category.price'])
       .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Category.tournament', 'Tournament')
       .orderBy('Subscription.createdAt', 'DESC')
       .addOrderBy('Partner.name', 'ASC')
       .where({ userId: auth?.userId, actived: true })
 
-    if (categoryId) {
-      queryDb.andWhere({ categoryId })
-      noPartnerQueryDb.andWhere({ categoryId })
-    }
+    if (categoryId) queryDb.andWhere({ categoryId })
 
     parseOrderDto({ order, table: 'Subscription', orderFields: subsOrderFields }).querySetup(queryDb)
 
     const subscriptions = await queryDb.getMany()
-    const subscriptionsNoPartner = await noPartnerQueryDb.getMany()
 
-    return { success: true, subscriptions: subscriptions.concat(subscriptionsNoPartner) }
+    return { success: true, subscriptions }
   }
 
   @Get('/')
