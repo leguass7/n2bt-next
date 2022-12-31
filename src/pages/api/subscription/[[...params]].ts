@@ -279,18 +279,20 @@ class SubscriptionHandler {
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
 
-    const { categoryId, partnerId, value, paid, userId } = body
+    const { categoryId, partnerId, value, paid } = body
+    const userId = isAdmin ? body?.userId ?? currentUserId : currentUserId
 
     const newSubscription: Partial<Subscription> = {
       actived: true,
       paid: isAdmin ? !!paid : false,
       categoryId,
       partnerId,
-      userId: isAdmin ? userId : currentUserId,
+      userId,
+      createdBy: userId,
       value
     }
 
-    const hasSubscription = await repo.findOne({ where: { categoryId, userId: isAdmin ? userId : currentUserId, actived: true } })
+    const hasSubscription = await repo.findOne({ where: { categoryId, userId, actived: true } })
     if (hasSubscription) await repo.update(hasSubscription.id, { actived: false, updatedBy: currentUserId })
 
     const data = repo.create(newSubscription)
