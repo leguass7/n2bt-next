@@ -5,7 +5,7 @@ import type { RequestMulterFile } from '~/server-side/api.interface'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 
-const upload = multer({
+const uploadMiddle = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 1024 * 500 }
 }).single('file')
@@ -13,7 +13,7 @@ const upload = multer({
 class UploadHandler {
   @Post('/tournament/:tournamentId')
   @JwtAuthGuard()
-  @UseMiddleware(upload)
+  @UseMiddleware(uploadMiddle)
   @HttpCode(200)
   async uploadImage(@Req() req: Omit<AuthorizedApiRequest, 'body'>, @UploadedFile() file: RequestMulterFile) {
     const { auth, query } = req
