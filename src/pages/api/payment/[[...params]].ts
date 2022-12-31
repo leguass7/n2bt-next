@@ -9,7 +9,6 @@ import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import { PaymentMethod, ResponseApiPixEndToEnd } from '~/server-side/useCases/payment/payment.dto'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { checkPaymentService, generatePaymentService } from '~/server-side/useCases/payment/payment.service'
-import { SubscriptionNoPartner } from '~/server-side/useCases/subscription-no-partner_remove/subscription-no-partner.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
 
@@ -49,12 +48,10 @@ class PaymentHandler {
     const userId = auth?.userId
     if (!userId) throw new BadRequestException('Usuário não encontrado')
 
-    const noPartner = query?.noPartner === 'true'
-
     const ds = await prepareConnection()
-    const repoSub = noPartner ? ds.getRepository(SubscriptionNoPartner) : ds.getRepository(Subscription)
+    const repo = ds.getRepository(Subscription)
 
-    const subscription = await repoSub
+    const subscription = await repo
       .createQueryBuilder('Subscription')
       .select()
       .addSelect(['Category.id', 'Category.tournamentId', 'Category.price'])
@@ -75,7 +72,7 @@ class PaymentHandler {
 
     if (subscription?.payment) {
       if (subscription?.payment?.paid) {
-        await repoSub.update(subscription?.id, { paid: true })
+        await repo.update(subscription?.id, { paid: true })
         throw new BadRequestException('Pagamento já realizado')
       }
       // adquirir dados de pagamento e responser ao cliente
@@ -86,7 +83,7 @@ class PaymentHandler {
     const repoPay = ds.getRepository(Payment)
     const payment = await repoPay.save({ actived: true, createdBy: userId, userId, overdue, value: price, method: PaymentMethod.PIX })
     if (!payment) throw new BadRequestException('Erro ao criar pagamento')
-    await repoSub.update(subscription?.id, { paymentId: payment.id })
+    await repo.update(subscription?.id, { paymentId: payment.id })
 
     // PIX
     const user = await ds.getRepository(User).findOneBy({ id: userId })
