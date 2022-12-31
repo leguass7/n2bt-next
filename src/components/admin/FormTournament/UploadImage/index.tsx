@@ -36,7 +36,7 @@ export const UploadImage: React.FC<Props> = ({ tournamentId, onCancel }) => {
 
       data.append('file', resizedFile, `${tournamentId}-${file.name}.${file.name.split('.')[1]}`)
 
-      const response = await apiService.uploadXMLHttp('/tournament/upload', data, p => setProgress(p))
+      const response = await apiService.uploadXMLHttp(`/upload/tournament/${tournamentId}`, data, p => setProgress(p))
 
       if (response?.success) {
         setProgress(0)

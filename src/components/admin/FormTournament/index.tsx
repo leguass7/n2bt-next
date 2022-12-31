@@ -11,14 +11,12 @@ import { CircleLoading } from '~/components/CircleLoading'
 import { Datetimepicker } from '~/components/forms/UnForm/Datetimepicker'
 import { Input } from '~/components/forms/UnForm/Input'
 import Select, { SelectItem } from '~/components/forms/UnForm/Select'
-import { Main, SliderItem, usePassRoll } from '~/components/PassRollLayout'
+import { usePassRoll } from '~/components/PassRollLayout'
 import { validateFormData } from '~/helpers/validation'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { IResponseTournament, ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
 import { getTournament, storeTournament } from '~/services/api/tournament'
-
-import { UploadImage } from './UploadImage'
 
 type FormData = Partial<ITournament> & {}
 
@@ -100,39 +98,33 @@ export const FormTournament: React.FC<FormTournamentProps> = ({ onInvalid, onSuc
   // data.subscriptionExpiration
 
   return (
-    <Main name="form-tournament">
-      <SliderItem>
-        <Form ref={formRef} onSubmit={handleSubmit} role="form">
-          <Input placeholder="nome" type="text" name="title" label="Nome" />
-          <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
-          <br />
-          <Select name="modality" items={modalities} label="Modalidade do torneio" />
-          <Stack direction="column" spacing={1} pt={2}>
-            <Datetimepicker label="Início das inscrições" name="subscriptionStart" minDate={new Date()} />
-            <Datetimepicker label="Fim das inscrições" name="subscriptionEnd" />
-          </Stack>
-          <Stack direction="row" justifyContent="center" spacing={1} pt={2} pb={2}>
-            <IconButton disabled={!tournamentId} onClick={handleClickImage}>
-              <Tooltip title="Imagem da capa">
-                <AddPhotoAlternateIcon />
-              </Tooltip>
-            </IconButton>
-            {onCancel ? (
-              <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onCancel}>
-                {'Cancelar'}
-              </Button>
-            ) : null}
-            <Button color="primary" variant="contained" type="submit" disabled={!!loading}>
-              {'Enviar'}
+    <>
+      <Form ref={formRef} onSubmit={handleSubmit} role="form">
+        <Input placeholder="nome" type="text" name="title" label="Nome" />
+        <Input placeholder="descrição" type="text" multiline name="description" label="Descrição" />
+        <br />
+        <Select name="modality" items={modalities} label="Modalidade do torneio" />
+        <Stack direction="column" spacing={1} pt={2}>
+          <Datetimepicker label="Início das inscrições" name="subscriptionStart" minDate={new Date()} />
+          <Datetimepicker label="Fim das inscrições" name="subscriptionEnd" />
+        </Stack>
+        <Stack direction="row" justifyContent="center" spacing={1} pt={2} pb={2}>
+          <IconButton disabled={!tournamentId} onClick={handleClickImage}>
+            <Tooltip title="Imagem da capa">
+              <AddPhotoAlternateIcon />
+            </Tooltip>
+          </IconButton>
+          {onCancel ? (
+            <Button color="primary" variant="outlined" type="button" disabled={!!loading} onClick={onCancel}>
+              {'Cancelar'}
             </Button>
-          </Stack>
-        </Form>
-
-        {loading ? <CircleLoading /> : null}
-      </SliderItem>
-      <SliderItem>
-        <UploadImage tournamentId={tournamentId} onCancel={onCancel} />
-      </SliderItem>
-    </Main>
+          ) : null}
+          <Button color="primary" variant="contained" type="submit" disabled={!!loading}>
+            {'Enviar'}
+          </Button>
+        </Stack>
+      </Form>
+      {loading ? <CircleLoading /> : null}
+    </>
   )
 }
