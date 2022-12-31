@@ -82,7 +82,7 @@ export class ApiService {
   async uploadXMLHttp(url: string, body?: FormData, onProgress?: ProgressHandler): Promise<UploadResponse> {
     return new Promise<UploadResponse>(resolve => {
       const request = new XMLHttpRequest()
-      request.open('POST', '/upload')
+      request.open('POST', `${this.options.baseUrl}${url}`)
       request.upload.addEventListener('progress', e => {
         const percentCompleted = e ? (e.loaded / e.total) * 100 : 0
         if (onProgress) onProgress(percentCompleted, e)
