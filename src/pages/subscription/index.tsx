@@ -55,7 +55,7 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
             </Stack>
           </>
         ) : (
-          <DynamicSubscription tournamentId={tournamentId} maxSubscription={tournament?.maxSubscription} />
+          <DynamicSubscription modality={tournament?.modality} tournamentId={tournamentId} maxSubscription={tournament?.maxSubscription} />
         )}
       </BoxCenter>
     </Layout>
@@ -88,12 +88,19 @@ export const getServerSideProps: GetServerSideProps<Props> = async context => {
   const tournament = await repo.findOne({ where: { id: tournamentId } })
   const isExpired = !!(tournament?.subscriptionEnd && differenceInMinutes(tournament?.subscriptionEnd, new Date()) <= 0)
 
+  const data = {
+    title: tournament?.title,
+    description: tournament?.description,
+    maxSubscription: tournament?.maxSubscription,
+    modality: tournament?.modality
+  }
+
   return {
     props: {
       session,
       isExpired,
       tournamentId,
-      tournament: { title: tournament?.title, description: tournament?.description, maxSubscription: tournament?.maxSubscription }
+      tournament: data
     }
   }
 }

@@ -41,3 +41,5 @@ export async function deletetTournament(tournamentId: number): Promise<IResponse
   const response = await apiService.delete(`/tournament/${tournamentId}`)
   return response
 }
+
+// upload image

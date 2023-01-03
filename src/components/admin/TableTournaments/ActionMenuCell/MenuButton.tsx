@@ -27,8 +27,10 @@ import type { ITournamentActions } from '../Actions'
 type FunctionItem = (...any: any[]) => any
 type Props = {
   tournamentId: number
+  noPartner?: boolean
 }
-export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
+
+export const MenuButton: React.FC<Props> = ({ tournamentId, noPartner = false }) => {
   const [downloading, setDownloading] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { push, prefetch } = useRouter()
@@ -117,12 +119,14 @@ export const MenuButton: React.FC<Props> = ({ tournamentId }) => {
           </ListItemIcon>
           <ListItemText primary="Relatório" secondary="Relação de tamanho de camisetas" />
         </MenuItemStyled>
-        <MenuItemStyled onClick={withClick(handleClickSubCards)} disableRipple>
-          <ListItemIcon>
-            <GroupIcon />
-          </ListItemIcon>
-          <ListItemText primary="Duplas inscritas" secondary="Inscrições agrupadas por duplas" />
-        </MenuItemStyled>
+        {!noPartner ? (
+          <MenuItemStyled onClick={withClick(handleClickSubCards)} disableRipple>
+            <ListItemIcon>
+              <GroupIcon />
+            </ListItemIcon>
+            <ListItemText primary="Duplas inscritas" secondary="Inscrições agrupadas por duplas" />
+          </MenuItemStyled>
+        ) : null}
         <MenuItemStyled onClick={withClick(handleClickRanking)} disableRipple>
           <ListItemIcon>
             <MilitaryTechIcon />

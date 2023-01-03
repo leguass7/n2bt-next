@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 
-import GroupIcon from '@mui/icons-material/Group'
-import Button from '@mui/material/Button'
 import CardContent from '@mui/material/CardContent'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
-import Stack from '@mui/material/Stack'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { FlexContainer, Paragraph, Text } from '~/components/styled'
@@ -63,13 +60,13 @@ export const CollapseCharts: React.FC<Props> = ({ expanded, tournamentId, limitU
         </FlexContainer>
       </CardContent>
       <Divider />
-      <CardContent>
+      {/* <CardContent>
         <Stack direction={'row'} spacing={1} justifyContent="center" sx={{ mt: 1 }}>
           <Button href={`/tournament/about/${tournamentId}`} startIcon={<GroupIcon />}>
             Duplas inscritas
           </Button>
         </Stack>
-      </CardContent>
+      </CardContent> */}
     </Collapse>
   )
 }

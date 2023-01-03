@@ -72,14 +72,13 @@ class MeHandler {
     const categoryId = +query?.categoryId || 0
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
-
     const queryDb = repo
       .createQueryBuilder('Subscription')
       .select()
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email'])
       .addSelect(['Category.id', 'Category.title', 'Category.tournamentId', 'Category.price'])
       .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Category.tournament', 'Tournament')
       .orderBy('Subscription.createdAt', 'DESC')

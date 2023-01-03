@@ -144,15 +144,14 @@ export const NameCell: React.FC<Props> = ({ record }) => {
     <CellContainer>
       <FlexContainer justify="flex-start" gap={8}>
         <AvatarGroup>
-          [
           <Avatar src={normalizeImageSrc(user?.image)} sx={{ bgcolor: genderColors[user?.gender] }}>
             {stringAvatar(user?.name)}
           </Avatar>
-          ,
-          <Avatar src={normalizeImageSrc(partner?.image)} sx={{ bgcolor: genderColors[partner?.gender] }}>
-            {stringAvatar(partner?.name)}
-          </Avatar>
-          ]
+          {partner?.name ? (
+            <Avatar src={normalizeImageSrc(partner?.image)} sx={{ bgcolor: genderColors[partner?.gender] }}>
+              {stringAvatar(partner?.name)}
+            </Avatar>
+          ) : null}
         </AvatarGroup>
         <div>
           <FlexContainer justify="flex-start">
