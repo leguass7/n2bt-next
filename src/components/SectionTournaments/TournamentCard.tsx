@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useResizeDetector } from 'react-resize-detector'
 
@@ -17,8 +17,11 @@ import gfm from 'remark-gfm'
 import { getTournamentImage } from '~/config/constants'
 import { round } from '~/helpers'
 import { validDate } from '~/helpers/date'
+import { useIsMounted } from '~/hooks/useIsMounted'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
+import { getImageFromFeature } from '~/services/api/image'
 
+import { CircleLoading } from '../CircleLoading'
 import { MkContainer } from '../styled'
 import { CollapseCharts } from './CollapseCharts'
 import { ExpandMore } from './ExpandMore'
@@ -30,6 +33,10 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
   const { prefetch } = useRouter()
   const [expanded, setExpanded] = useState(false)
 
+  const [image, setImage] = useState<string>(null)
+  const [loading, setLoading] = useState(false)
+  const isMounted = useIsMounted()
+
   const expiresDate = validDate(expires)
   const subExpiresDate = validDate(subscriptionEnd)
 
@@ -38,6 +45,21 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
   useEffect(() => {
     prefetch(`/subscription?tournamentId=${id}`)
   }, [prefetch, id])
+
+  const fetchData = useCallback(async () => {
+    if (!id) return null
+    setLoading(true)
+    const { success, images } = await getImageFromFeature('tournament', id)
+
+    if (isMounted()) {
+      setLoading(false)
+      if (success && images?.length) setImage(images[0]?.url)
+    }
+  }, [id, isMounted])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   const handleExpandClick = () => setExpanded(old => !old)
 
@@ -60,10 +82,12 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
     return round(w / 1.777777777777778, 0)
   }
 
+  const src = image ? image : getTournamentImage(id)
+
   // console.log('width', width, getMediaWidth())
   return (
     <Card ref={ref}>
-      <CardMedia component="img" height={getMediaHeight()} image={getTournamentImage(id)} alt={title} />
+      <CardMedia component="img" height={getMediaHeight()} image={src} alt={title} />
       <CardContent>
         <div style={{ maxWidth: 290 }}>
           <Typography gutterBottom variant="h5" component="div">
@@ -89,6 +113,8 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
         </ExpandMore>
       </CardActions>
       <CollapseCharts tournamentId={id} expanded={!!expanded} limitUsers={limitUsers} />
+
+      {loading ? <CircleLoading /> : null}
     </Card>
   )
 }
