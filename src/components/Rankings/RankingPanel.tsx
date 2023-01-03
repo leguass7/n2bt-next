@@ -13,7 +13,7 @@ import gfm from 'remark-gfm'
 import { compareValues } from '~/helpers/array'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { ICategory } from '~/server-side/useCases/category/category.dto'
-import { ITournament, TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
+import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { listCategories } from '~/services/api/category'
 import { Content } from '~/styles'
 
