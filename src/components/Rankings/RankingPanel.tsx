@@ -13,7 +13,7 @@ import gfm from 'remark-gfm'
 import { compareValues } from '~/helpers/array'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { ICategory } from '~/server-side/useCases/category/category.dto'
-import { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
+import { ITournament, TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
 import { listCategories } from '~/services/api/category'
 import { Content } from '~/styles'
 
@@ -21,6 +21,7 @@ import { CircleLoading } from '../CircleLoading'
 import { ITab, SimpleTab } from '../Common/SimpleTab'
 import { MkContainer } from '../styled'
 import { ListPartners } from '../User/ListPartners'
+import { ListUsers } from '../User/ListUsers'
 import { RankingList } from './RankingList'
 
 function categoriesDto(cats: ICategory[], mista?: boolean): ICategory[] {
@@ -35,9 +36,10 @@ const constGender = {
 interface Props {
   tournamentId: number
   tournament?: ITournament
+  hasPairs?: boolean
 }
 
-export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} }) => {
+export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {}, hasPairs }) => {
   const { push } = useRouter()
   const [categories, setCategories] = useState<ICategory[]>([])
   const [categoryId, setCategoryId] = useState<number>(null)
@@ -85,7 +87,7 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
 
   if (loading) return <CircleLoading />
 
-  const title = expired ? 'Rankings do torneio' : 'Duplas do torneio'
+  const title = expired ? 'Rankings do torneio' : hasPairs ? 'Duplas do torneio' : 'Participantes do torneio'
 
   return (
     <Content>
@@ -113,7 +115,8 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {} })
       <SimpleTab value={categoryId} sx={{ boxShadow: '1px 2px 1px #0003' }} onChange={handleTabChange} tabs={categoryTabs} />
 
       {!!categoryId && expired ? <RankingList tournamentId={tournamentId} categoryId={categoryId} /> : null}
-      {!!categoryId && !expired ? <ListPartners categoryId={categoryId} /> : null}
+      {!!categoryId && !expired && hasPairs ? <ListPartners categoryId={categoryId} /> : null}
+      {!!categoryId && !expired && !hasPairs ? <ListUsers categoryId={categoryId} /> : null}
     </Content>
   )
 }

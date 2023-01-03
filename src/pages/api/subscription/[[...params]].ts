@@ -45,7 +45,7 @@ class SubscriptionHandler {
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender', 'Partner.completed'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .where({ actived: true })
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
 
@@ -94,7 +94,7 @@ class SubscriptionHandler {
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender', 'Partner.completed'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .where({ categoryId, actived: true })
 
     if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
@@ -126,7 +126,7 @@ class SubscriptionHandler {
       .addSelect(['User.id', 'User.name', 'User.image', 'User.email', 'User.nick', 'User.gender'])
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender'])
       .innerJoin('Subscription.user', 'User')
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .where({ categoryId, actived: true })
 
     parseOrderDto({ order, table: 'Subscription', orderFields }).querySetup(queryDb)
@@ -430,7 +430,7 @@ class SubscriptionHandler {
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender', 'Partner.completed'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .where({ categoryId, actived: true })
 
     if (onlyConfirmed) queryDb.andWhere(`Subscription.verified IS NOT NULL`)
