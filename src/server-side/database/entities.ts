@@ -13,6 +13,8 @@ import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
 import { VerificationToken } from '~/server-side/useCases/verification-token/verification-token.entity'
 
+import { Block } from '../useCases/block/block.entity'
+
 export const entities = [
   User,
   Session,
@@ -27,5 +29,6 @@ export const entities = [
   Subscription,
   Config,
   Checkin,
-  Image
+  Image,
+  Block
 ]

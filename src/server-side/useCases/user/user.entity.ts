@@ -13,6 +13,7 @@ import { Session } from '~/server-side/useCases/session/session.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
+import { Block } from '../block/block.entity'
 import { Image } from '../image/image.entity'
 
 enum UserGender {
@@ -166,4 +167,11 @@ export class User {
   // relations Images
   @OneToMany(() => Image, images => images.createdUser)
   createdImages?: Image[]
+
+  // relations blocks
+  @OneToMany(() => Block, blocks => blocks.createdBy)
+  createdBlocks?: Block[]
+
+  @OneToMany(() => Block, blocks => blocks.updatedBy)
+  updatedBlocks?: Block[]
 }
