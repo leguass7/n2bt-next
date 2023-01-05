@@ -13,6 +13,7 @@ import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
 import { VerificationToken } from '~/server-side/useCases/verification-token/verification-token.entity'
 
+import { BlockField } from '../useCases/block-field/block-field.entity'
 import { Block } from '../useCases/block/block.entity'
 
 export const entities = [
@@ -30,5 +31,6 @@ export const entities = [
   Config,
   Checkin,
   Image,
-  Block
+  Block,
+  BlockField
 ]

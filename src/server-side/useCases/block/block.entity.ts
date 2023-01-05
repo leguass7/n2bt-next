@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
+
+import { BlockField } from '../block-field/block-field.entity'
 
 @Entity('blocks')
 export class Block {
@@ -13,6 +15,9 @@ export class Block {
 
   @Column({ default: false })
   actived?: boolean
+
+  @OneToMany(() => BlockField, blockField => blockField.blockId)
+  fields?: BlockField[]
 
   // Relations
   @Column({ length: 36 })
