@@ -13,8 +13,9 @@ import { Session } from '~/server-side/useCases/session/session.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
-import { Block } from '../block/block.entity'
+import { Appointment } from '../appointment/appointment.entity'
 import { Image } from '../image/image.entity'
+import { PlayField } from '../play-field/play-field.entity'
 
 enum UserGender {
   F = 'F',
@@ -168,10 +169,20 @@ export class User {
   @OneToMany(() => Image, images => images.createdUser)
   createdImages?: Image[]
 
-  // relations blocks
-  @OneToMany(() => Block, blocks => blocks.createdBy)
-  createdBlocks?: Block[]
+  // relations play fields
+  @OneToMany(() => PlayField, field => field.createdBy)
+  createdPlayFields?: PlayField[]
 
-  @OneToMany(() => Block, blocks => blocks.updatedBy)
-  updatedBlocks?: Block[]
+  @OneToMany(() => PlayField, field => field.updatedBy)
+  updatedPlayFields?: PlayField[]
+
+  // relations appointments
+  @OneToMany(() => Appointment, appointment => appointment.userId)
+  appointments?: Appointment[]
+
+  @OneToMany(() => Appointment, appointment => appointment.createdBy)
+  createdAppointments?: Appointment[]
+
+  @OneToMany(() => Appointment, appointment => appointment.updatedBy)
+  updatedAppointments?: Appointment[]
 }

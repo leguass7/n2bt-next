@@ -4,6 +4,8 @@ import { Config } from '~/server-side/useCases/config/config.entity'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
+import { PlayField } from '../play-field/play-field.entity'
+
 @Entity('arenas')
 export class Arena {
   @PrimaryGeneratedColumn('increment', { unsigned: true })
@@ -52,4 +54,8 @@ export class Arena {
   // relations Configs
   @OneToMany(() => Config, config => config.arena)
   configs?: Config[]
+
+  // relations PlayField
+  @OneToMany(() => PlayField, field => field.arenaId)
+  playFields?: PlayField[]
 }
