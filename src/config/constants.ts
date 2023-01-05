@@ -35,6 +35,8 @@ export const tournamentImages = [
   //
 ]
 
+export const siteName = 'Circuito Esportivo de Areia'
+
 export const getTournamentImage = (tournamentId: number) => {
   return tournamentImages.find(f => f.id === tournamentId)?.image?.src || tournamentImages[0]?.image?.src
 }

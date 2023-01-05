@@ -5,6 +5,7 @@ import Head from 'next/head'
 
 import { Layout } from '~/components/app/Layout'
 import { RankingPanel } from '~/components/Rankings/RankingPanel'
+import { siteName } from '~/config/constants'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { ITournament, TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
 import { getTournament } from '~/services/api/tournament'
@@ -34,7 +35,9 @@ const TournamentAboutPage: NextPage<PageProps> = ({ tournamentId }) => {
   return (
     <Layout>
       <Head>
-        <title>{data?.title} N2BT Beach Tennis</title>
+        <title>
+          {data?.title} {siteName}
+        </title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
       <RankingPanel hasPairs={hasPairs} tournament={data} tournamentId={tournamentId} />

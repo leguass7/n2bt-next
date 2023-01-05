@@ -11,6 +11,7 @@ import { FormRegister } from '~/components/forms/UnForm/FormRegister'
 import { BoxCenter, FlexContainer, H4 } from '~/components/styled'
 import { UserPanelTabs } from '~/components/User/UserPanel/UserPanelTabs'
 import { UserPermissions } from '~/components/User/UserPermissions'
+import { siteName } from '~/config/constants'
 import { useAppAuth } from '~/hooks/useAppAuth'
 import { CardContainer } from '~/styles'
 
@@ -26,7 +27,7 @@ const MeRegisterPage: NextPage<PageProps> = ({}) => {
   return (
     <Layout>
       <Head>
-        <title>Cadastro - N2BT Beach Tennis</title>
+        <title>Cadastro - {siteName}</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
 

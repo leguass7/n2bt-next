@@ -37,7 +37,7 @@ export const LayoutAppBar: React.FC = () => {
         </IconButton> */}
         <Link href={'/'} passHref>
           <a>
-            <Image width={64} height={64} layout="fixed" alt="Logo" src="/logo.png" />
+            <Image width={64} height={64} layout="intrinsic" alt="Logo" src="/logo.png" />
             {/* <LogoSvg height={48} color="#fff" /> */}
           </a>
         </Link>
