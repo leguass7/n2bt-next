@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 
 import { LayoutSigin } from '~/components/app/LayoutSigin'
 import { SigninSlider } from '~/components/Login'
+import { siteName } from '~/config/constants'
 import { useAppAuth } from '~/hooks/useAppAuth'
 
 interface LoginPageProps {
@@ -37,7 +38,7 @@ const Login: NextPage<LoginPageProps> = ({ uaString, tournamentId }) => {
   return (
     <LayoutSigin>
       <Head>
-        <title>N2BT Beach Tennis - Login</title>
+        <title>{siteName} - Login</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
       <SigninSlider uaString={uaString} />

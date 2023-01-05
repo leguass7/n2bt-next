@@ -5,6 +5,7 @@ import Head from 'next/head'
 import { Layout } from '~/components/app/Layout'
 import { SectionLogo } from '~/components/SectionLogo'
 import { SectionTournaments } from '~/components/SectionTournaments'
+import { siteName } from '~/config/constants'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 
 interface HomePageProps {
@@ -17,7 +18,7 @@ const Home: NextPage<HomePageProps> = ({ tournaments }) => {
   return (
     <Layout>
       <Head>
-        <title>N2BT Beach Tennis</title>
+        <title>{siteName}</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
       <SectionLogo />

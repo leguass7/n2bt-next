@@ -1,6 +1,6 @@
-import React from 'react'
+import Image from 'next/image'
 
-import { RaqueteSvg } from '~/components/svg/RaqueteSvg'
+// import { RaqueteSvg } from '~/components/svg/RaqueteSvg'
 
 import { FlexContainer } from '../styled'
 
@@ -10,7 +10,8 @@ export const SectionLogo: React.FC = () => {
   return (
     <section>
       <FlexContainer justify="center">
-        <RaqueteSvg width={240} />
+        {/* <RaqueteSvg width={240} /> */}
+        <Image width={240} height={240} src="/logo.png" alt="Torneios" />
       </FlexContainer>
     </section>
   )

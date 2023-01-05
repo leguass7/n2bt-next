@@ -14,6 +14,7 @@ import {
   Req
 } from 'next-api-decorators'
 
+import { siteName } from '~/config/constants'
 import { formatDate } from '~/helpers/date'
 import { generatePassword } from '~/helpers/string'
 import { prepareConnection } from '~/server-side/database/conn'
@@ -214,7 +215,7 @@ class UserHandler {
 
     const sent = await mailService.send({
       from: 'lesbr3@gmail.com',
-      subject: 'N2BT - Recuperação de senha',
+      subject: `${siteName} - Recuperação de senha`,
       to: user.email,
       html: `<p>
       Seu c&oacute;digo para recupera&ccedil;&atilde;o de senha:<br /><br /><strong style="font-size:26px">${publicCode}</strong><br /><br />

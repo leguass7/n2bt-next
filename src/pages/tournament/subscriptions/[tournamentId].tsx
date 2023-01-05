@@ -14,6 +14,7 @@ import { Layout } from '~/components/app/Layout'
 import { CircleLoading } from '~/components/CircleLoading'
 import { SectionPairSubscriptions } from '~/components/SectionPairSubscriptions'
 import { FlexContainer, MkContainer } from '~/components/styled'
+import { siteName } from '~/config/constants'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { prepareConnection } from '~/server-side/database/conn'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
@@ -51,7 +52,9 @@ const TournamentAboutPage: NextPage<PageProps> = ({ tournamentId, tournament }) 
   return (
     <Layout>
       <Head>
-        <title>Inscrições {tournament?.title} - N2BT Beach Tennis</title>
+        <title>
+          Inscrições {tournament?.title} - {siteName}
+        </title>
         <meta name="description" content={`Inscrições realizadas no ${tournament?.title}. Beach Tennis, Aulas, Torneios e muito mais`} />
       </Head>
       <Typography variant="h2" align="center" sx={{ m: 2 }}>

@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { Layout } from '~/components/app/Layout'
 import { CircleLoading } from '~/components/CircleLoading'
 import { BoxCenter, FlexContainer, H4, Paragraph } from '~/components/styled'
+import { siteName } from '~/config/constants'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
@@ -35,7 +36,9 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
   return (
     <Layout>
       <Head>
-        <title>{tournament?.title} - N2BT Beach Tennis</title>
+        <title>
+          {tournament?.title} - {siteName}
+        </title>
         <meta name="description" content={description} />
       </Head>
       <BoxCenter>
