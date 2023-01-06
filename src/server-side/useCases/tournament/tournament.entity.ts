@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
 import type { Arena } from '~/server-side/useCases/arena/arena.entity'
-import { Category } from '~/server-side/useCases/category/category.entity'
-import { Checkin } from '~/server-side/useCases/checkin/checkin.entity'
-import { Image } from '~/server-side/useCases/image/image.entity'
-import { Pair } from '~/server-side/useCases/pair/pair.entity'
-import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
+import type { Category } from '~/server-side/useCases/category/category.entity'
+import type { Checkin } from '~/server-side/useCases/checkin/checkin.entity'
+import type { Image } from '~/server-side/useCases/image/image.entity'
+import type { Pair } from '~/server-side/useCases/pair/pair.entity'
+import type { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
 import { TournamentModality } from './tournament.dto'
@@ -61,13 +61,13 @@ export class Tournament {
   subscriptionEnd: Date
 
   // relations
-  @OneToMany(() => Category, category => category.tournament)
+  @OneToMany('Category', (category: Category) => category.tournament)
   categories?: Category[]
 
-  @OneToMany(() => Ranking, ranking => ranking.tournament)
+  @OneToMany('Ranking', (ranking: Ranking) => ranking.tournament)
   rankings?: Ranking[]
 
-  @OneToMany(() => Pair, pair => pair.tournament)
+  @OneToMany('Pair', (pair: Pair) => pair.tournament)
   pairs?: Pair[]
 
   @ManyToOne('Arena', 'tournaments', { onDelete: 'CASCADE' })
@@ -83,10 +83,10 @@ export class Tournament {
   @JoinColumn({ name: 'updatedBy', referencedColumnName: 'id', foreignKeyConstraintName: 'tournaments_updatedBy_fkey' })
   updatedUser?: User
 
-  @OneToMany(() => Checkin, checkins => checkins.tournament)
+  @OneToMany('Checkin', (checkins: Checkin) => checkins.tournament)
   checkins?: Checkin[]
 
   // relations Images
-  @OneToMany(() => Image, images => images.createdUser)
+  @OneToMany('Image', (images: Image) => images.createdUser)
   createdImages?: Image[]
 }

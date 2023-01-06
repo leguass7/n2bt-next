@@ -1,8 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm'
-import { OneToMany } from 'typeorm/decorator/relations/OneToMany'
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from 'typeorm'
 
-import { Appointment } from '../appointment/appointment.entity'
-import { Arena } from '../arena/arena.entity'
+import type { Appointment } from '../appointment/appointment.entity'
+import type { Arena } from '../arena/arena.entity'
 
 @Entity('play_fields')
 export class PlayField {
@@ -43,10 +42,10 @@ export class PlayField {
   updatedBy: string
 
   // Relations
-  @ManyToOne(() => Arena, arena => arena.playFields)
+  @ManyToOne('Arena', (arena: Arena) => arena.playFields)
   arena?: Arena
 
-  @OneToMany(() => Appointment, appointment => appointment.fieldId)
+  @OneToMany('Appointment', (appointment: Appointment) => appointment.fieldId)
   appointments?: Appointment
 
   // Timestamps

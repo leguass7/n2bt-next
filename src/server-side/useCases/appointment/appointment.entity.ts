@@ -1,12 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { ManyToOne } from 'typeorm/decorator/relations/ManyToOne'
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm'
 
-import { PlayField } from '../play-field/play-field.entity'
-import { User } from '../user/user.entity'
+import type { PlayField } from '../play-field/play-field.entity'
+import type { User } from '../user/user.entity'
 
 @Entity('appointments')
 export class Appointment {
-  @PrimaryGeneratedColumn('increment', { unsigned: true })
+  @PrimaryGeneratedColumn('increment', { unsigned: true, type: 'int' })
   id: number
 
   @Column({ default: false })
@@ -33,10 +32,10 @@ export class Appointment {
   @Column({ length: 36 })
   updatedBy: string
   // Relations
-  @ManyToOne(() => User, user => user.appointments)
+  @ManyToOne('User', (user: User) => user.appointments)
   user?: User
 
-  @ManyToOne(() => PlayField, field => field)
+  @ManyToOne('PlayField', (field: PlayField) => field)
   field?: PlayField
 
   // Timestamps
