@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 import { toast } from 'react-toastify'
 
 import AddIcon from '@mui/icons-material/Add'
@@ -83,19 +84,21 @@ export const Actions: React.FC = () => {
       <Divider />
       <Modal open={!!custom?.editId} onClose={handleClose} keepMounted={false}>
         <BoxCenter spacing={1}>
-          <Card>
-            <CardHeader title={`${title} Torneio`} />
-            <Divider />
-            <CardContent>
-              <Main name="form-tournament">
-                <SliderItem>
-                  <FormTournament arenaId={arenaId} tournamentId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
-                </SliderItem>
-                <SliderItem>
-                  <UploadImage tournamentId={custom?.editId} />
-                </SliderItem>
-              </Main>
-            </CardContent>
+          <Card sx={{ maxHeight: '90vh' }}>
+            <PerfectScrollbar>
+              <CardHeader title={`${title} Torneio`} />
+              <Divider />
+              <CardContent>
+                <Main name="form-tournament">
+                  <SliderItem>
+                    <FormTournament arenaId={arenaId} tournamentId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
+                  </SliderItem>
+                  <SliderItem>
+                    <UploadImage tournamentId={custom?.editId} />
+                  </SliderItem>
+                </Main>
+              </CardContent>
+            </PerfectScrollbar>
           </Card>
         </BoxCenter>
       </Modal>

@@ -6,7 +6,9 @@ import { toast } from 'react-toastify'
 import { Button, Stack, LinearProgress } from '@mui/material'
 
 import { usePassRoll } from '~/components/PassRollLayout'
+import { useOnceCall } from '~/hooks/useOnceCall'
 import { apiService } from '~/services/api/api.service'
+import { getImageFromFeature } from '~/services/api/image'
 
 import { DropZoneContainer, ImageContainer, ImagePreview } from './styles'
 
@@ -28,6 +30,8 @@ export const UploadImage: React.FC<Props> = ({ tournamentId, onCancel }) => {
   const [srcPreview, setSrcPreview] = useState<string>(null)
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState(false)
+  const [image, setImage] = useState<string>(null)
+  const [loading, setLoading] = useState(false)
 
   const processUpload = useCallback(
     async (file: File) => {
@@ -68,20 +72,32 @@ export const UploadImage: React.FC<Props> = ({ tournamentId, onCancel }) => {
     onDrop,
     accept: { 'image/jpeg': [], 'image/png': [] },
     multiple: false,
-    maxSize
-    // disabled: !!uploading || !enabledUpload,
+    maxSize,
+    disabled: !!loading
   })
+
+  const fetchData = useCallback(async () => {
+    if (!tournamentId) return null
+    setLoading(true)
+    const { success, images } = await getImageFromFeature('tournament', tournamentId)
+    setLoading(false)
+    if (success && images?.length) setImage(images[0]?.url)
+  }, [tournamentId])
+
+  useOnceCall(fetchData)
 
   // 345x194
   const handleClickBack = () => goTo(1)
 
   const cancelEnabled = !progress || !!error
 
+  const imageSrc = srcPreview || image
+
   return (
     <div>
       <DropZoneContainer {...getRootProps()}>
         <ImageContainer>
-          {srcPreview ? <ImagePreview src={srcPreview} /> : null}
+          {imageSrc ? <ImagePreview src={imageSrc} /> : null}
           <input ref={inputRef} {...getInputProps()} />
         </ImageContainer>
       </DropZoneContainer>
