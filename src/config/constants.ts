@@ -1,3 +1,4 @@
+import imgCard from '~/assets/card.png'
 import imgDunas from '~/assets/dunas-out-large.jpg'
 import imgOriginal from '~/assets/original-1ano.jpg'
 import imgSpeed from '~/assets/primeira-speed.jpg'
@@ -38,7 +39,7 @@ export const tournamentImages = [
 export const siteName = 'Circuito Esportivo de Areia'
 
 export const getTournamentImage = (tournamentId: number) => {
-  return tournamentImages.find(f => f.id === tournamentId)?.image?.src || tournamentImages[0]?.image?.src
+  return tournamentImages.find(f => f.id === tournamentId)?.image?.src || imgCard?.src
 }
 
 export const categoryGenders: CategoryOption[] = [

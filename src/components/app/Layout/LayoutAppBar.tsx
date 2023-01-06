@@ -1,19 +1,15 @@
 import React from 'react'
 
-// import MenuIcon from '@mui/icons-material/Menu'
 import AppBar from '@mui/material/AppBar'
 import Button from '@mui/material/Button'
-// import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
-// import { LogoSvg } from '~/components/svg/LogoSvg'
+import { LogoCEAHorizontal } from '~/components/svg/LogoCEAHorizontal'
 import { useAppAuth } from '~/hooks/useAppAuth'
 
-// import { useMenu } from './LayoutProvider'
 import { ProfilePopover } from './ProfilePopover'
 
 export const LayoutAppBar: React.FC = () => {
@@ -31,13 +27,14 @@ export const LayoutAppBar: React.FC = () => {
 
   return (
     <AppBar sx={{ backgroundColor: theme.colors.primary }}>
-      <Toolbar>
+      <Toolbar sx={{ alignContent: 'center', alignItems: 'center' }}>
         {/* <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={toogleMenu}>
           <MenuIcon />
         </IconButton> */}
         <Link href={'/'} passHref>
           <a>
-            <Image width={64} height={64} layout="intrinsic" alt="Logo" src="/logo.png" />
+            <LogoCEAHorizontal color="#fff" height={50} white={theme.colors.primary} />
+            {/* <Image width={64} height={64} layout="intrinsic" alt="Logo" src="/logo.png" /> */}
             {/* <LogoSvg height={48} color="#fff" /> */}
           </a>
         </Link>

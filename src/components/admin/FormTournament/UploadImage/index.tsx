@@ -13,7 +13,7 @@ import { DropZoneContainer, ImageContainer, ImagePreview } from './styles'
 const maxSize = 1024 * 500
 function resizeFile(file: File) {
   return new Promise(resolve => {
-    Resizer.imageFileResizer(file, 345, 194, 'JPEG', 75, 0, uri => resolve(uri), 'file', 345, 194)
+    Resizer.imageFileResizer(file, 345, 194, 'JPEG', 95, 0, uri => resolve(uri), 'file', 345, 194)
   })
 }
 
