@@ -49,9 +49,9 @@ class PaymentHandler {
     if (!userId) throw new BadRequestException('Usuário não encontrado')
 
     const ds = await prepareConnection()
-    const repoSub = ds.getRepository(Subscription)
+    const repo = ds.getRepository(Subscription)
 
-    const subscription = await repoSub
+    const subscription = await repo
       .createQueryBuilder('Subscription')
       .select()
       .addSelect(['Category.id', 'Category.tournamentId', 'Category.price'])
@@ -72,7 +72,7 @@ class PaymentHandler {
 
     if (subscription?.payment) {
       if (subscription?.payment?.paid) {
-        await repoSub.update(subscription?.id, { paid: true })
+        await repo.update(subscription?.id, { paid: true })
         throw new BadRequestException('Pagamento já realizado')
       }
       // adquirir dados de pagamento e responser ao cliente
@@ -83,7 +83,7 @@ class PaymentHandler {
     const repoPay = ds.getRepository(Payment)
     const payment = await repoPay.save({ actived: true, createdBy: userId, userId, overdue, value: price, method: PaymentMethod.PIX })
     if (!payment) throw new BadRequestException('Erro ao criar pagamento')
-    await repoSub.update(subscription?.id, { paymentId: payment.id })
+    await repo.update(subscription?.id, { paymentId: payment.id })
 
     // PIX
     const user = await ds.getRepository(User).findOneBy({ id: userId })

@@ -14,3 +14,9 @@ export interface IResponseTournament extends IResponseApi {
 export interface IResponseTournaments extends IResponseApi {
   tournaments: ITournament[]
 }
+
+export enum TournamentModality {
+  BEACH_TENNIS = 'BEACH_TENNIS',
+  BEACH_VOLEI = 'BEACH_VOLEI',
+  FUTVOLEI = 'FUTVOLEI'
+}

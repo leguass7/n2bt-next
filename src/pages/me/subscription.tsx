@@ -13,6 +13,7 @@ import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { ModalPix, ModalPixCloseHandler } from '~/components/ModalPix'
 import { Paragraph } from '~/components/styled'
 import { SubscriptionItem } from '~/components/SubscriptionItem'
+import { siteName } from '~/config/constants'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { listMeSubscriptions } from '~/services/api/me'
@@ -59,7 +60,7 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
   return (
     <Layout isProtected>
       <Head>
-        <title>Minhas inscrições - N2BT Beach Tennis</title>
+        <title>Minhas inscrições - {`${siteName}`}</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
       <Typography variant="h5" component="div" align="center" sx={{ m: 2 }}>

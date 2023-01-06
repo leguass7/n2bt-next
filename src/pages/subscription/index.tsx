@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { Layout } from '~/components/app/Layout'
 import { CircleLoading } from '~/components/CircleLoading'
 import { BoxCenter, FlexContainer, H4, Paragraph } from '~/components/styled'
+import { siteName } from '~/config/constants'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
@@ -35,7 +36,9 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
   return (
     <Layout>
       <Head>
-        <title>{tournament?.title} - N2BT Beach Tennis</title>
+        <title>
+          {tournament?.title} - {siteName}
+        </title>
         <meta name="description" content={description} />
       </Head>
       <BoxCenter>
@@ -55,7 +58,7 @@ const SubscriptionPage: NextPage<Props> = ({ tournamentId, tournament, isExpired
             </Stack>
           </>
         ) : (
-          <DynamicSubscription tournamentId={tournamentId} maxSubscription={tournament?.maxSubscription} />
+          <DynamicSubscription modality={tournament?.modality} tournamentId={tournamentId} maxSubscription={tournament?.maxSubscription} />
         )}
       </BoxCenter>
     </Layout>
@@ -88,12 +91,19 @@ export const getServerSideProps: GetServerSideProps<Props> = async context => {
   const tournament = await repo.findOne({ where: { id: tournamentId } })
   const isExpired = !!(tournament?.subscriptionEnd && differenceInMinutes(tournament?.subscriptionEnd, new Date()) <= 0)
 
+  const data = {
+    title: tournament?.title,
+    description: tournament?.description,
+    maxSubscription: tournament?.maxSubscription,
+    modality: tournament?.modality
+  }
+
   return {
     props: {
       session,
       isExpired,
       tournamentId,
-      tournament: { title: tournament?.title, description: tournament?.description, maxSubscription: tournament?.maxSubscription }
+      tournament: data
     }
   }
 }

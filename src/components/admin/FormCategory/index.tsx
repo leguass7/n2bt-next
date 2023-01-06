@@ -4,6 +4,7 @@ import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import { number, object, ref, string } from 'yup'
 
@@ -41,18 +42,15 @@ export type FormCategoryProps = {
 }
 
 export const FormCategory: React.FC<FormCategoryProps> = ({ onInvalid, onSuccess, onFailed, onCancel, categoryId, tournamentId }) => {
-  const formRef = useRef()
+  const formRef = useRef<FormHandles>()
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<Partial<ICategory>>(null)
 
   const fetchData = useCallback(async () => {
     if (categoryId && categoryId > 0) {
       setLoading(true)
       const response = await getCategory(categoryId)
       setLoading(false)
-      if (response?.success) {
-        setData(response?.category)
-      }
+      if (response?.success) formRef.current?.setData?.(response?.category)
     }
   }, [categoryId])
 
@@ -82,9 +80,9 @@ export const FormCategory: React.FC<FormCategoryProps> = ({ onInvalid, onSuccess
 
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit} role="form" initialData={data} key={`form-${data?.id || ''}`}>
+      <Form ref={formRef} onSubmit={handleSubmit} role="form">
         <FlexContainer verticalPad={10}>
-          <InputSelects name="gender" label="Gênero" options={categoryGenders} defaultSelected={data?.gender || 'M'} />
+          <InputSelects name="gender" label="Gênero" options={categoryGenders} defaultSelected={'M'} />
         </FlexContainer>
         <Grid container>
           <Grid item xs={6}>

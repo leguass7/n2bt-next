@@ -45,7 +45,7 @@ class SubscriptionHandler {
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender', 'Partner.completed'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .where({ actived: true })
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
 
@@ -94,7 +94,7 @@ class SubscriptionHandler {
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender', 'Partner.completed'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .where({ categoryId, actived: true })
 
     if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
@@ -126,7 +126,7 @@ class SubscriptionHandler {
       .addSelect(['User.id', 'User.name', 'User.image', 'User.email', 'User.nick', 'User.gender'])
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender'])
       .innerJoin('Subscription.user', 'User')
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .where({ categoryId, actived: true })
 
     parseOrderDto({ order, table: 'Subscription', orderFields }).querySetup(queryDb)
@@ -182,6 +182,7 @@ class SubscriptionHandler {
       .where({ actived: true })
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
       .getCount()
+
     return { success: true, total }
   }
 
@@ -278,21 +279,21 @@ class SubscriptionHandler {
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
 
-    const { categoryId, partnerId, value, paid, userId } = body
+    const { categoryId, partnerId, value, paid } = body
+    const userId = isAdmin ? body?.userId ?? currentUserId : currentUserId
 
     const newSubscription: Partial<Subscription> = {
       actived: true,
       paid: isAdmin ? !!paid : false,
       categoryId,
       partnerId,
-      userId: isAdmin ? userId : currentUserId,
+      userId,
+      createdBy: userId,
       value
     }
 
-    const hasSubscription = await repo.findOne({ where: { categoryId, userId: isAdmin ? userId : currentUserId, actived: true } })
-    if (hasSubscription) {
-      await repo.update(hasSubscription.id, { actived: false, updatedBy: currentUserId })
-    }
+    const hasSubscription = await repo.findOne({ where: { categoryId, userId, actived: true } })
+    if (hasSubscription) await repo.update(hasSubscription.id, { actived: false, updatedBy: currentUserId })
 
     const data = repo.create(newSubscription)
     const subscription = await repo.save(data)
@@ -429,7 +430,7 @@ class SubscriptionHandler {
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email', 'Partner.nick', 'Partner.gender', 'Partner.completed'])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
-      .innerJoin('Subscription.partner', 'Partner')
+      .leftJoin('Subscription.partner', 'Partner')
       .where({ categoryId, actived: true })
 
     if (onlyConfirmed) queryDb.andWhere(`Subscription.verified IS NOT NULL`)

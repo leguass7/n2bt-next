@@ -13,6 +13,8 @@ import { Session } from '~/server-side/useCases/session/session.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
+import { Image } from '../image/image.entity'
+
 enum UserGender {
   F = 'F',
   M = 'M'
@@ -55,7 +57,7 @@ export class User {
   birday?: Date | string | null
 
   @Column({ default: null })
-  allowedContact?: boolean | null
+  allowedContact?: boolean
 
   @Column({ nullable: true, default: false })
   completed?: boolean
@@ -160,4 +162,8 @@ export class User {
   // relations checkin
   @OneToMany(() => Checkin, checkins => checkins.tournament)
   checkins?: Checkin[]
+
+  // relations Images
+  @OneToMany(() => Image, images => images.createdUser)
+  createdImages?: Image[]
 }

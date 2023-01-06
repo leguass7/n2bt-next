@@ -18,11 +18,14 @@ import { Summary } from './Summary'
 
 interface Props {
   icon: React.ReactNode
+  noPartner?: boolean
 }
 
-export const StepPayment: React.FC<Props> = ({ icon }) => {
+export const StepPayment: React.FC<Props> = ({ icon, noPartner }) => {
   const { goTo } = usePassRoll('subscription')
   const { subscription } = useSubscription()
+
+  const handleBack = () => goTo(noPartner ? 2 : 3)
 
   return (
     <BoxCenter style={{ paddingTop: 12, minHeight: '50vh' }}>
@@ -31,12 +34,12 @@ export const StepPayment: React.FC<Props> = ({ icon }) => {
         <Divider />
         <CardContent>
           <Grid container direction="column" alignItems="center" sx={{ width: '100%' }}>
-            {subscription?.id ? <Payment /> : <Summary />}
+            {subscription?.id ? <Payment noPartner={noPartner} /> : <Summary noPartner={noPartner} />}
           </Grid>
         </CardContent>
         <Divider />
         <CardActions style={{ justifyContent: 'flex-end' }}>
-          <Button type="button" variant="contained" onClick={() => goTo(3)} startIcon={<ArrowLeftIcon />} disabled={!!subscription?.id}>
+          <Button type="button" variant="contained" onClick={handleBack} startIcon={<ArrowLeftIcon />} disabled={!!subscription?.id}>
             Voltar
           </Button>
         </CardActions>

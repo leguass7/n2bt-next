@@ -27,7 +27,7 @@ type Props = ISubscription & {
   onPixClick?: (id: number) => Promise<any>
 }
 
-export const SubscriptionItem: React.FC<Props> = ({ id, partner, category, disableActions, onDelete, onPixClick, paymentId, paid, value }) => {
+export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, disableActions, onDelete, onPixClick, paymentId, paid, value }) => {
   const [loading, setLoading] = useState(false)
   const { isMobile } = useAppTheme()
 
@@ -46,7 +46,7 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner, category, disab
 
   return (
     <Card sx={{ maxWidth: isMobile ? '100%' : 340, mb: 1 }}>
-      {isMobile ? <CardMedia component="img" image={getTournamentImage(category?.tournamentId)} alt="Live from space album cover" /> : null}
+      <CardMedia component="img" image={getTournamentImage(category?.tournamentId)} alt="Live from space album cover" />
       <CardContent>
         <Typography component="div" variant="h5">
           {category?.title}
