@@ -23,7 +23,7 @@ const globBackground = css`
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: contain;
-    /* background-image: url(${groundImg.src}); */
+    background-image: url(${groundImg.src});
   }
 `
 

@@ -89,7 +89,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
     <Card ref={ref}>
       <CardMedia component="img" height={getMediaHeight()} image={src} alt={title} />
       <CardContent>
-        <div style={{ maxWidth: 290 }}>
+        <div style={{ maxWidth: 290, maxHeight: expanded ? 'none' : 120, overflow: expanded ? 'visible' : 'hidden' }}>
           <Typography gutterBottom variant="h5" component="div">
             {title}
           </Typography>

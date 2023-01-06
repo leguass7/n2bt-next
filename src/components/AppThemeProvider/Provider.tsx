@@ -39,6 +39,8 @@ const createMuiTheme = (theme: IAppTheme) => {
         // default: darken(theme.colors.background, 0.1)
         // default: '#5599b1'
         // default: '#6AC294'
+        default: '#6BC2B5'
+        // default: '#67B2C7'
       }
     }
   })

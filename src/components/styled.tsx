@@ -13,6 +13,7 @@ export const Text = styled.span<TextProps & { verticalPad?: number; horizontalPa
   text-transform: ${({ transform = 'none' }) => transform};
   font-style: ${({ textStyle = 'normal' }) => textStyle};
   padding: ${({ horizontalPad = 0, verticalPad = 0 }) => `${verticalPad}px ${horizontalPad}px`};
+  text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
 `
 
 export const TextCell = styled(Text)`
