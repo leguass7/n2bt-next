@@ -15,10 +15,6 @@ export class CreatePlayFieldDTO implements Partial<PlayField> {
   @IsNumber()
   price?: number
 
-  @IsOptional()
-  @IsBoolean()
-  paid?: boolean
-
   @IsNotEmpty()
   @IsDate()
   startDate: Date
@@ -35,11 +31,11 @@ export class CreatePlayFieldDTO implements Partial<PlayField> {
   @IsInt()
   arenaId: number
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   createdBy: string
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   updatedBy: string
 }

@@ -7,6 +7,7 @@ export interface IResponseApi {
 
 export interface NewResponseApi<T = any> {
   data?: T
+  message?: string
 }
 
 // export interface QueryPagination {

@@ -15,10 +15,6 @@ export class UpdatePlayFieldDTO implements Partial<PlayField> {
   @IsBoolean()
   actived?: boolean
 
-  @IsBoolean()
-  @IsOptional()
-  paid?: boolean
-
   @IsDate()
   @IsOptional()
   startDate?: Date

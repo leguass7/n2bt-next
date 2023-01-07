@@ -1,7 +1,9 @@
-import { Body, createHandler, Get, InternalServerErrorException, Param, Patch, Post, Query, ValidationPipe } from 'next-api-decorators'
+import { Body, createHandler, Get, InternalServerErrorException, Param, Patch, Post, Query, Req, ValidationPipe } from 'next-api-decorators'
 import type { DataSource } from 'typeorm'
+import type { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
 
 import { prepareConnection } from '~/server-side/database/conn'
+import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import { CreatePlayFieldDTO } from '~/server-side/useCases/play-field/dto/create-play-field.dto'
 import { FilterPlayFieldDTO } from '~/server-side/useCases/play-field/dto/filter-play-field.dto'
@@ -22,7 +24,9 @@ class PlayFieldHandler {
     const ds = await this.connection
     const repo = ds.getRepository(PlayField)
 
-    const data = (await repo.find({ where: { ...filter, arenaId } })) ?? []
+    const defaultFilter: FindOptionsWhere<PlayField> = { arenaId, actived: true }
+
+    const data = (await repo.find({ where: { ...filter, ...defaultFilter } })) ?? []
 
     return { data }
   }
@@ -42,26 +46,31 @@ class PlayFieldHandler {
 
   @Post()
   @JwtAuthGuard()
-  async create(@Body(Pipe) dto: CreatePlayFieldDTO) {
+  async create(@Body(Pipe) dto: CreatePlayFieldDTO, @Req() req: AuthorizedApiRequest<any, any>) {
     const ds = await this.connection
     const repo = ds.getRepository(PlayField)
 
-    const data = await repo.save(dto)
+    const { userId } = req?.auth
+
+    const defaultValues = { createdBy: userId, updatedBy: userId, actived: true }
+
+    const data = await repo.save({ ...defaultValues, ...dto })
     if (!data) throw new InternalServerErrorException('Error in field creation')
 
-    return { data }
+    return { data, message: 'Campo criado com sucesso' }
   }
 
   @Patch('/:fieldId')
   @JwtAuthGuard()
-  async update(@Param('fieldId') fieldId: number, @Body(Pipe) dto: UpdatePlayFieldDTO) {
+  async update(@Param('fieldId') fieldId: number, @Body(Pipe) dto: UpdatePlayFieldDTO, @Req() req: AuthorizedApiRequest<any, any>) {
     const ds = await this.connection
     const repo = ds.getRepository(PlayField)
+    const { userId } = req?.auth
 
-    const data = await repo.update(fieldId, dto)
+    const data = await repo.update(fieldId, { ...dto, createdBy: userId, updatedBy: userId })
     if (!data) throw new InternalServerErrorException('Error in field update')
 
-    return { data }
+    return { data, message: 'Campo atualizado com sucesso' }
   }
 }
 
