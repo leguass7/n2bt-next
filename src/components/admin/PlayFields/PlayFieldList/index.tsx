@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { Add } from '@mui/icons-material'
-import { Grid, IconButton, Typography } from '@mui/material'
+import Grid from '@mui/material/Grid'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { SimpleModal } from '~/components/Common/SimpleModal'
@@ -13,6 +12,7 @@ import { Content } from '~/styles'
 import { PlayFieldDelete } from '../PlayFieldDelete'
 import { PlayFieldForm } from '../PlayFieldForm'
 import { PlayFieldItem } from './PlayFieldItem'
+import { PlayFieldListHeader } from './PlayFieldListHeader'
 
 interface Props {
   children?: React.ReactNode
@@ -64,14 +64,14 @@ export const PlayFieldList: React.FC<Props> = ({ arenaId }) => {
     [toggleDeleteModal]
   )
 
-  const handleToggleForm = useCallback(() => {
+  const handleCloseForm = useCallback(() => {
     setFieldId(null)
     fetchData()
 
     toggleFormModal()
   }, [toggleFormModal, fetchData])
 
-  const handleToggleDelete = useCallback(() => {
+  const handleCloseDelete = useCallback(() => {
     setFieldId(null)
     fetchData()
 
@@ -80,15 +80,8 @@ export const PlayFieldList: React.FC<Props> = ({ arenaId }) => {
 
   return (
     <Content>
-      <Grid container alignItems="center" justifyContent="space-between">
-        <span />
-        <Typography variant="h4" align="center" py={2}>
-          Campos
-        </Typography>
-        <IconButton onClick={toggleFormModal}>
-          <Add />
-        </IconButton>
-      </Grid>
+      <PlayFieldListHeader onReload={fetchData} onAdd={toggleFormModal} />
+
       <Grid container py={4} spacing={3}>
         {fields?.length
           ? fields.map(({ id, ...rest }) => {
@@ -102,12 +95,14 @@ export const PlayFieldList: React.FC<Props> = ({ arenaId }) => {
             })
           : null}
       </Grid>
-      <SimpleModal open={openFormModal} onToggle={handleToggleForm} title="Criar/Editar campo">
-        <PlayFieldForm arenaId={arenaId} onSuccess={handleToggleForm} fieldId={fieldId} />
+
+      <SimpleModal open={openFormModal} onToggle={handleCloseForm} title="Criar/Editar campo">
+        <PlayFieldForm arenaId={arenaId} onSuccess={handleCloseForm} fieldId={fieldId} />
       </SimpleModal>
-      <SimpleModal open={openDeleteModal} onToggle={handleToggleDelete} title="Deseja mesmo excluir esse campo?">
-        <PlayFieldDelete onSuccess={handleToggleDelete} fieldId={fieldId} />
+      <SimpleModal open={openDeleteModal} onToggle={handleCloseDelete} title="Deseja mesmo excluir esse campo?">
+        <PlayFieldDelete onSuccess={handleCloseDelete} fieldId={fieldId} />
       </SimpleModal>
+
       {loading ? <CircleLoading /> : null}
     </Content>
   )
