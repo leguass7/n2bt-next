@@ -5,6 +5,10 @@ export interface IResponseApi {
   message?: string | string[]
 }
 
+export interface NewResponseApi<T = any> {
+  data?: T
+}
+
 // export interface QueryPagination {
 //   page?: number
 //   size?: number

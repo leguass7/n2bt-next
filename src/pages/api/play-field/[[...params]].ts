@@ -22,7 +22,7 @@ class PlayFieldHandler {
     const ds = await this.connection
     const repo = ds.getRepository(PlayField)
 
-    const data = await repo.find({ where: { ...filter, arenaId } })
+    const data = (await repo.find({ where: { ...filter, arenaId } })) ?? []
 
     return { data }
   }
