@@ -9,5 +9,6 @@ export const adminRoutes: Route[] = [
   { id: 'admin.menu.users', path: '/admin/users', label: 'Cadastro de Atletas' },
   { id: 'admin.menu.arenas', path: '/admin/arenas', label: 'Cadastro de Arenas' },
   { id: 'admin.menu.tournaments', path: '/admin/tournaments', label: 'Torneios' },
-  { id: 'admin.menu.fields', path: '/admin/fields', label: 'Campos' }
+  { id: 'admin.menu.fields', path: '/admin/fields', label: 'Campos' },
+  { id: 'admin.menu.appointments', path: '/admin/appointments', label: 'Agendamentos' }
 ]
