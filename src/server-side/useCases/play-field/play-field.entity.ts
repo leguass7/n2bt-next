@@ -8,7 +8,7 @@ export class PlayField {
   @PrimaryGeneratedColumn('increment', { unsigned: true, type: 'int' })
   id: number
 
-  @Column({ unique: true })
+  @Column()
   label: string
 
   @Column({ type: 'double', unsigned: true, default: 0 })
