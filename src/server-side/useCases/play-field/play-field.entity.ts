@@ -20,9 +20,6 @@ export class PlayField {
   @Column({ default: false })
   actived?: boolean
 
-  @Column({ default: false })
-  paid?: boolean
-
   @Column()
   startDate: Date
 
