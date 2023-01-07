@@ -11,10 +11,6 @@ export class UpdatePlayFieldDTO implements Partial<PlayField> {
   @IsOptional()
   price?: number
 
-  @IsInt()
-  @IsOptional()
-  appointmentLimit?: number
-
   @IsOptional()
   @IsBoolean()
   actived?: boolean
@@ -33,7 +29,7 @@ export class UpdatePlayFieldDTO implements Partial<PlayField> {
 
   @IsInt()
   @IsOptional()
-  breakInMinutes?: number
+  interval?: number
 
   @IsInt()
   @IsOptional()

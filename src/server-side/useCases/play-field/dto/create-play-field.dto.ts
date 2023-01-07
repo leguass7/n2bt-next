@@ -16,10 +16,6 @@ export class CreatePlayFieldDTO implements Partial<PlayField> {
   price?: number
 
   @IsOptional()
-  @IsInt()
-  appointmentLimit?: number
-
-  @IsOptional()
   @IsBoolean()
   paid?: boolean
 
@@ -33,7 +29,7 @@ export class CreatePlayFieldDTO implements Partial<PlayField> {
 
   @IsNotEmpty()
   @IsInt()
-  breakInMinutes: number
+  interval: number
 
   @IsNotEmpty()
   @IsInt()

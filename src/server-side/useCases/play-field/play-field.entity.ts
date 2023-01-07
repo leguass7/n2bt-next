@@ -14,9 +14,6 @@ export class PlayField {
   @Column({ type: 'double', unsigned: true, default: 0 })
   price?: number
 
-  @Column({ type: 'smallint', unsigned: true, default: 1 })
-  appointmentLimit?: number
-
   @Column({ default: false })
   actived?: boolean
 
@@ -27,7 +24,7 @@ export class PlayField {
   endDate: Date
 
   @Column({ unsigned: true, type: 'int' })
-  breakInMinutes: number
+  interval: number
 
   @Column({ unsigned: true })
   arenaId: number
