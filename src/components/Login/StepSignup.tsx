@@ -2,12 +2,12 @@ import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { FormSignup } from '~/components/forms/UnForm/FormSignup'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
-import { LogoSvg } from '~/components/svg/LogoSvg'
 
 interface Props {}
 
@@ -19,7 +19,8 @@ export const StepSignup: React.FC<Props> = () => {
       <BoxCenter>
         <Card sx={{ width: 400, maxWidth: '100%', ml: 1, mr: 1 }}>
           <FlexContainer justify="center" verticalPad={8}>
-            <LogoSvg height={72} />
+            {/* <LogoSvg height={72} /> */}
+            <Image height={150} width={150} layout="fixed" src="/logo.svg" alt="Logo" />
           </FlexContainer>
           <Divider />
           <CardContent>
