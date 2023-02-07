@@ -1,5 +1,6 @@
 import { NextPage } from 'next'
 
+import { AppointmentPanel } from '~/components/admin/Appointment/AppointmentPanel'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 
 interface Props {
@@ -7,7 +8,11 @@ interface Props {
 }
 
 const AdminAppointmentPage: NextPage<Props> = () => {
-  return <LayoutAdmin>Página de agendamentos</LayoutAdmin>
+  return (
+    <LayoutAdmin>
+      <AppointmentPanel />
+    </LayoutAdmin>
+  )
 }
 
 export default AdminAppointmentPage
