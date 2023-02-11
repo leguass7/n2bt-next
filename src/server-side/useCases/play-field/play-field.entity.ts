@@ -39,8 +39,8 @@ export class PlayField {
   @ManyToOne('Arena', (arena: Arena) => arena.playFields)
   arena?: Arena
 
-  @OneToMany('Appointment', (appointment: Appointment) => appointment.fieldId)
-  appointments?: Appointment
+  @OneToMany('Appointment', (appointment: Appointment) => appointment.field)
+  appointments?: Appointment[]
 
   // Timestamps
   @CreateDateColumn()

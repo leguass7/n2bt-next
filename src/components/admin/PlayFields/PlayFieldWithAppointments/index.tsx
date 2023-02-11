@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { List, ListItem } from '@mui/material'
+import { List } from '@mui/material'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { useIsMounted } from '~/hooks/useIsMounted'
@@ -10,11 +10,10 @@ import { listPlayFieldInArena } from '~/services/api/play-field'
 import { PlayFieldSelectItem } from './PlayFieldSelectItem'
 
 interface Props {
-  onSelect?: (id: number) => void
   arenaId?: number
 }
 
-export const PlayFieldSelect: React.FC<Props> = ({ arenaId, onSelect }) => {
+export const PlayFieldWithAppointments: React.FC<Props> = ({ arenaId }) => {
   const [fields, setFields] = useState<PlayField[]>([])
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMounted()
@@ -39,7 +38,7 @@ export const PlayFieldSelect: React.FC<Props> = ({ arenaId, onSelect }) => {
       <List>
         {fields?.length
           ? fields.map(field => {
-              return <PlayFieldSelectItem onSelect={onSelect} key={`field-${field.id}`} {...field} />
+              return <PlayFieldSelectItem key={`field-${field.id}`} {...field} />
             })
           : null}
       </List>
