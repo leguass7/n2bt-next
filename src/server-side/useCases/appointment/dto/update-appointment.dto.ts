@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsNumber, IsOptional } from 'class-validator'
+import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from 'class-validator'
 
 import type { Appointment } from '../appointment.entity'
 
