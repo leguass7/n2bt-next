@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsDate, IsOptional } from 'class-validator'
 
 import type { PlayField } from '../play-field.entity'
 

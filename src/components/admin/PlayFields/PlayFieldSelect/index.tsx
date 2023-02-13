@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { List, ListItem } from '@mui/material'
+import { List } from '@mui/material'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { useIsMounted } from '~/hooks/useIsMounted'
