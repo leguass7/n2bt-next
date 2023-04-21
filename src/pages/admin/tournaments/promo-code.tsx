@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 
 import type { NextPage, GetServerSideProps } from 'next'
 import { unstable_getServerSession } from 'next-auth'
@@ -6,9 +6,7 @@ import dynamic from 'next/dynamic'
 
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 import { CircleLoading } from '~/components/CircleLoading'
-import { useOnceCall } from '~/hooks/useOnceCall'
 import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
-import { listCategories } from '~/services/api/category'
 
 const DynamicPromoCode = dynamic(() => import('~/components/admin/PagePromoCode').then(({ PagePromoCode }) => PagePromoCode), {
   loading: () => <CircleLoading />,
@@ -20,19 +18,6 @@ type PageProps = {
 }
 
 const AdminTournamentsPromoCodePage: NextPage<PageProps> = ({ tournamentId }) => {
-  const [, setLoading] = useState(false)
-
-  // const fetchData = useCallback(async () => {
-  //   setLoading(true)
-  //   const result = await listCategories(tournamentId, { order: 'asc', orderby: 'title' })
-  //   setLoading(false)
-  //   if (result?.success) {
-  //     setCategories(result?.categories || [])
-  //   }
-  // }, [tournamentId])
-
-  // useOnceCall(fetchData)
-
   return (
     <LayoutAdmin>
       <DynamicPromoCode tournamentId={tournamentId} />

@@ -1,7 +1,8 @@
 import React from 'react'
 
-import { Card, Divider } from '@mui/material'
+import { Card } from '@mui/material'
 
+import { TablePromoCode } from '~/components/admin/TablePromoCode'
 import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
 
 type Props = {
@@ -9,11 +10,10 @@ type Props = {
 }
 export const PagePromoCode: React.FC<Props> = ({ tournamentId }) => {
   return (
-    <>
-      <Divider sx={{ mt: 1, mb: 1 }} />
-      <Card>
-        <TableActionsProvider>{/* <TableCheckin tournamentId={tournamentId} categories={categories} /> */}</TableActionsProvider>
-      </Card>
-    </>
+    <Card>
+      <TableActionsProvider>
+        <TablePromoCode tournamentId={tournamentId} />
+      </TableActionsProvider>
+    </Card>
   )
 }
