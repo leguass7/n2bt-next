@@ -7,6 +7,7 @@ import DownloadIcon from '@mui/icons-material/Download'
 import EditIcon from '@mui/icons-material/Edit'
 import GroupIcon from '@mui/icons-material/Group'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
+import LoyaltyIcon from '@mui/icons-material/Loyalty'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -58,6 +59,7 @@ export const MenuButton: React.FC<Props> = ({ tournamentId, noPartner = false })
     }
   }
 
+  const handleClickPromoCode = () => push(`/admin/tournaments/promo-code?tournamentId=${tournamentId}`)
   const handleClickCheckin = () => push(`/admin/tournaments/presence?tournamentId=${tournamentId}`)
   const handleClickRanking = () => push(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
   const handleClickSubscriptions = () => push(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
@@ -79,6 +81,7 @@ export const MenuButton: React.FC<Props> = ({ tournamentId, noPartner = false })
 
   useEffect(() => {
     if (open) {
+      prefetch(`/admin/tournaments/promo-code?tournamentId=${tournamentId}`)
       prefetch(`/admin/tournaments/presence?tournamentId=${tournamentId}`)
       prefetch(`/admin/tournaments/ranking?tournamentId=${tournamentId}`)
       prefetch(`/admin/tournaments/subscriptions?tournamentId=${tournamentId}`)
@@ -132,6 +135,12 @@ export const MenuButton: React.FC<Props> = ({ tournamentId, noPartner = false })
             <MilitaryTechIcon />
           </ListItemIcon>
           <ListItemText primary="Ranking" secondary="Gerenciar por categoria" />
+        </MenuItemStyled>
+        <MenuItemStyled onClick={withClick(handleClickPromoCode)} disableRipple>
+          <ListItemIcon>
+            <LoyaltyIcon />
+          </ListItemIcon>
+          <ListItemText primary="Código promocional" secondary="Gerenciar códigos promocionais" />
         </MenuItemStyled>
         <Divider />
         <MenuItemStyled onClick={withClick(handleDownload, true)} disableRipple disabled={!!downloading}>
