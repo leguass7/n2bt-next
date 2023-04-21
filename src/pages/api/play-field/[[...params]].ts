@@ -26,7 +26,7 @@ class PlayFieldHandler {
 
     const defaultFilter: FindOptionsWhere<PlayField> = { arenaId, actived: true }
 
-    const data = (await repo.find({ where: { ...filter, ...defaultFilter } })) ?? []
+    const data = (await repo.find({ where: { ...filter, ...defaultFilter }, relations: ['appointments'] })) ?? []
 
     return { data }
   }
