@@ -1,7 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
-import { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
-import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
+import type { PromoCode } from '~/server-side/useCases/promo-code/promo-code.entity'
+import type { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
+import type { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import type { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
@@ -62,10 +63,10 @@ export class Category {
   @JoinColumn({ name: 'tournamentId', referencedColumnName: 'id', foreignKeyConstraintName: 'categories_tournamentId_fkey' })
   tournament: Tournament
 
-  @OneToMany(() => Subscription, subscription => subscription.category)
+  @OneToMany('Subscription', (subscription: Subscription) => subscription.category)
   subscriptions: Subscription[]
 
-  @OneToMany(() => Ranking, ranking => ranking.category)
+  @OneToMany('Ranking', (ranking: Ranking) => ranking.category)
   rankings: Ranking[]
 
   // relations user
@@ -76,4 +77,8 @@ export class Category {
   @ManyToOne('User', 'updatedCategories', { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'updatedBy', referencedColumnName: 'id', foreignKeyConstraintName: 'categories_updatedBy_fkey' })
   updatedUser?: User
+
+  // relations PromoCode
+  @OneToMany('PromoCode', (promoCode: PromoCode) => promoCode.category)
+  promoCodes?: PromoCode[]
 }

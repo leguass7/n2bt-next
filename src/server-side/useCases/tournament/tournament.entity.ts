@@ -5,6 +5,7 @@ import type { Category } from '~/server-side/useCases/category/category.entity'
 import type { Checkin } from '~/server-side/useCases/checkin/checkin.entity'
 import type { Image } from '~/server-side/useCases/image/image.entity'
 import type { Pair } from '~/server-side/useCases/pair/pair.entity'
+import type { PromoCode } from '~/server-side/useCases/promo-code/promo-code.entity'
 import type { Ranking } from '~/server-side/useCases/ranking/ranking.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
@@ -89,4 +90,8 @@ export class Tournament {
   // relations Images
   @OneToMany('Image', (images: Image) => images.createdUser)
   createdImages?: Image[]
+
+  // relations PromoCode
+  @OneToMany('PromoCode', (promoCode: PromoCode) => promoCode.tournament)
+  promoCodes?: PromoCode[]
 }
