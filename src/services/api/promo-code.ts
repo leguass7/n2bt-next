@@ -13,8 +13,22 @@ export async function listPromoCodes(tournamentId: number, params: TableFetchPar
   return response
 }
 
-export async function storePromoCode(data: Partial<IPromoCode>): Promise<IResponsePromoCode> {
-  const response = await apiService.patch(`/promo-code/store`, data)
+export async function updatePromoCode(promoCodeId: number, data: Partial<IPromoCode>): Promise<IResponsePromoCode> {
+  const response = await apiService.patch(`/promo-code/${promoCodeId}`, data)
+  return response
+}
+
+export async function createPromoCode(data: Partial<IPromoCode>): Promise<IResponsePromoCode> {
+  const response = await apiService.post(`/promo-code`, data)
+  return response
+}
+
+export async function storePromoCode({ id, ...data }: Partial<IPromoCode>): Promise<IResponsePromoCode> {
+  const handler = () => {
+    if (id && id > 0) return updatePromoCode(id, data)
+    return createPromoCode(data)
+  }
+  const response = await handler()
   return response
 }
 
