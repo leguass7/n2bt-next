@@ -6,6 +6,15 @@ import type { ImageFeature } from '~/server-side/useCases/image/image.dto'
 import { Image } from '~/server-side/useCases/image/image.entity'
 
 class ImageHandler {
+  @Get('/tournament/:tournamentId')
+  @HttpCode(200)
+  async uploadTournamentImage(@Param('tournamentId') tournamentId: number) {
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Image)
+    const image = await repo.findOne({ where: { featureId: tournamentId, feature: 'tournament' }, order: { createdAt: 'DESC' } })
+    return { success: true, image }
+  }
+
   @Get('/:feature/:featureId')
   @JwtAuthGuard()
   @HttpCode(200)
