@@ -19,7 +19,7 @@ import { round } from '~/helpers'
 import { validDate } from '~/helpers/date'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
-import { getImageFromFeature } from '~/services/api/image'
+import { getImageByTournamentId } from '~/services/api/image'
 
 import { CircleLoading } from '../CircleLoading'
 import { MkContainer } from '../styled'
@@ -33,7 +33,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
   const { prefetch } = useRouter()
   const [expanded, setExpanded] = useState(false)
 
-  const [image, setImage] = useState<string>(null)
+  const [imageSrc, setImageSrc] = useState<string>(null)
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMounted()
 
@@ -49,11 +49,11 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
   const fetchData = useCallback(async () => {
     if (!id) return null
     setLoading(true)
-    const { success, images } = await getImageFromFeature('tournament', id)
+    const { success, image } = await getImageByTournamentId(id)
 
     if (isMounted()) {
       setLoading(false)
-      if (success && images?.length) setImage(images[0]?.url)
+      if (success && image) setImageSrc(image?.url)
     }
   }, [id, isMounted])
 
@@ -82,9 +82,8 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
     return round(w / 1.777777777777778, 0)
   }
 
-  const src = image ? image : getTournamentImage(id)
+  const src = imageSrc ? imageSrc : getTournamentImage(id)
 
-  // console.log('width', width, getMediaWidth())
   return (
     <Card ref={ref}>
       <CardMedia component="img" height={getMediaHeight()} image={src} alt={title} />
