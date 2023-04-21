@@ -37,6 +37,12 @@ export class PromoCode {
   @Column({ type: 'datetime', nullable: false, precision: null, default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date
 
+  @Column({ type: 'uuid', nullable: true, length: 36, default: null })
+  updatedBy?: string
+
+  @Column({ type: 'datetime', nullable: true, precision: null, default: null })
+  updatedAt?: Date
+
   // relations Tournament
   @ManyToOne('Tournament', 'promoCodes', { onDelete: 'CASCADE', onUpdate: 'NO ACTION', createForeignKeyConstraints: true })
   @JoinColumn({ name: 'tournamentId', referencedColumnName: 'id', foreignKeyConstraintName: 'promo_tournamentId_fkey' })
