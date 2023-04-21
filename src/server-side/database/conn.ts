@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { DataSource } from 'typeorm'
+import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm'
 import type { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions'
 
 import { databaseUrl } from '../config'
@@ -49,4 +49,10 @@ export function prepareConnection() {
   }
 
   return connectionReadyPromise
+}
+
+export async function getRepo<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): Promise<Repository<Entity>> {
+  const ds = await prepareConnection()
+  const repo = ds.getRepository(target)
+  return repo
 }
