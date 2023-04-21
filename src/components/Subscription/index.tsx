@@ -21,7 +21,7 @@ export const Subscription: React.FC<Props> = ({ tournamentId, maxSubscription, m
   const [step, setStep] = useState(0)
   const handleChange = (index: number) => setStep(index - 1)
 
-  const hidePartnerStep = useMemo(() => modality !== 'BEACH_TENNIS', [modality])
+  const hidePartnerStep = useMemo(() => modality !== 'BEACH_TENNIS' && modality !== 'BEACH_VOLEI_EM_DUPLA', [modality])
 
   return (
     <SubscriptionProvider tournamentId={tournamentId} maxSubscription={maxSubscription}>
