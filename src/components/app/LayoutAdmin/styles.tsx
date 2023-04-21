@@ -8,5 +8,5 @@ export const LayoutContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.l}px;
   padding-top: 72px;
   overflow-x: hidden;
-  border: 1px dashed #f00;
+  border: 0;
 `
