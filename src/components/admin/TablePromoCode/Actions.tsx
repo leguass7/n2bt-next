@@ -73,7 +73,7 @@ export const Actions: React.FC<Props> = ({ tournamentId }) => {
       </FlexContainer>
       <Divider />
       <SimpleModal title={`${title} código promocional`} open={!!custom?.editId} onToggle={handleClose}>
-        <FormPromoCode tournamentId={tournamentId} onSuccess={handleSuccess} onCancel={handleClose} />
+        <FormPromoCode tournamentId={tournamentId} promoCodeId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
       </SimpleModal>
     </>
   )
