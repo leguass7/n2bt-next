@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Index } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm'
 
 import type { Category } from '~/server-side/useCases/category/category.entity'
+import type { Payment } from '~/server-side/useCases/payment/payment.entity'
 import type { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
@@ -24,6 +25,9 @@ export class PromoCode {
   @Index('code', { unique: true })
   @Column({ length: 20, nullable: false })
   code: string
+
+  @Column({ nullable: false, default: 0.1, type: 'float' })
+  discount?: number
 
   @Column({ type: 'json', default: null, nullable: true })
   metaData?: Record<string, any>
@@ -57,4 +61,8 @@ export class PromoCode {
   @ManyToOne('User', 'createdPromoCodes', { onDelete: 'CASCADE', onUpdate: 'NO ACTION', createForeignKeyConstraints: true, nullable: false })
   @JoinColumn({ name: 'createdBy', referencedColumnName: 'id', foreignKeyConstraintName: 'promo_code_createdBy_fkey' })
   createdUser: User
+
+  // relations payment
+  @OneToMany('Payment', (payment: Payment) => payment.promoCode)
+  payments?: Payment[]
 }

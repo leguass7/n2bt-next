@@ -53,7 +53,7 @@ export const Actions: React.FC<Props> = ({ tournamentId }) => {
             Códigos promocionais
           </Text>
         </div>
-        <Toolbar>
+        <Toolbar sx={{ gap: 1 }}>
           <IconButton onClick={emitFetch}>
             <Tooltip title="Atualizar lista" arrow>
               <Refresh />

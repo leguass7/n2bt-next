@@ -1,9 +1,10 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
 import { transformer } from '~/server-side/database/transformer'
+import type { PromoCode } from '~/server-side/useCases/promo-code/promo-code.entity'
+import type { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
-import { Subscription } from '../subscriptions/subscriptions.entity'
 import { PaymentMethod } from './payment.dto'
 import type { PaymentMeta } from './payment.dto'
 
@@ -42,7 +43,7 @@ export class Payment {
   @Column({ nullable: true, default: true })
   actived?: boolean
 
-  @Column({ type: 'varchar', nullable: true, default: null, length: 36 })
+  @Column({ type: 'uuid', nullable: true, default: null, length: 36 })
   createdBy?: string
 
   @Column({ type: 'datetime', nullable: true, precision: null, default: () => 'CURRENT_TIMESTAMP' })
@@ -57,8 +58,11 @@ export class Payment {
   @Column({ type: 'json', nullable: true, default: null })
   meta?: PaymentMeta
 
+  @Column({ nullable: true, default: null, unsigned: true })
+  promoCodeId?: number
+
   // relations
-  @OneToMany(() => Subscription, subscription => subscription.payment)
+  @OneToMany('Subscription', (subscription: Subscription) => subscription.payment)
   subscriptions?: Subscription[]
 
   @ManyToOne('User', 'payments', { onDelete: 'CASCADE' })
@@ -72,4 +76,8 @@ export class Payment {
   @ManyToOne('User', 'updatedPayments', { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'updatedBy', referencedColumnName: 'id', foreignKeyConstraintName: 'payments_updatedBy_fkey' })
   userUpdated?: User
+
+  @ManyToOne('PromoCode', 'payments', { onDelete: 'RESTRICT', onUpdate: 'RESTRICT', nullable: true })
+  @JoinColumn({ name: 'promoCodeId', referencedColumnName: 'id', foreignKeyConstraintName: 'payments_promoCodeId_fkey' })
+  promoCode?: PromoCode
 }
