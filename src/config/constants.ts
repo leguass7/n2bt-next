@@ -31,6 +31,7 @@ export const shirtSizes: CategoryOption[] = [
   { id: 'XG', label: 'XG' }
 ]
 
+/** Lista de imagens pre definidas para entrar no build (bundle do nextJs) */
 export const tournamentImages = [
   { id: 1, image: imgSpeed },
   { id: 2, image: imgOriginal },
