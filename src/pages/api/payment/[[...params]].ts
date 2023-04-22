@@ -1,5 +1,5 @@
 import { differenceInMinutes } from 'date-fns'
-import { BadRequestException, createHandler, Get, HttpCode, Post, Req } from 'next-api-decorators'
+import { BadRequestException, createHandler, Get, HttpCode, Post, Query, Req, ValidationPipe } from 'next-api-decorators'
 
 import { mergeDeep } from '~/helpers/object'
 import { prepareConnection } from '~/server-side/database/conn'
@@ -9,8 +9,14 @@ import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import { PaymentMethod, ResponseApiPixEndToEnd } from '~/server-side/useCases/payment/payment.dto'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { checkPaymentService, generatePaymentService } from '~/server-side/useCases/payment/payment.service'
+import { PromoCode } from '~/server-side/useCases/promo-code/promo-code.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
+
+import { valueWithDiscount } from './payment.helper'
+import { SearchPaymentDto } from './search-payment.dto'
+
+const Pipe = ValidationPipe({ whitelist: true })
 
 class PaymentHandler {
   @Post('/check/:paymentId')
@@ -67,6 +73,19 @@ class PaymentHandler {
     const price = subscription?.value || subscription?.category?.price
     if (!price) throw new BadRequestException('Inscrição sem preço')
 
+    const promoRepo = ds.getRepository(PromoCode)
+    const repoPay = ds.getRepository(Payment)
+    const code = req.query?.promoCode
+
+    const promo = code ? await promoRepo.findOne({ where: { actived: true, code } }) : null
+    const paymentsWithPromo = promo?.id ? await repoPay.find({ where: { promoCodeId: promo?.id } }) : []
+
+    const notExpired = paymentsWithPromo?.length < promo?.usageLimit
+    const usedByUser = paymentsWithPromo?.find?.(payment => payment.userId === userId)
+    const applyDiscount = notExpired && !usedByUser
+
+    const priceWithDiscount = applyDiscount ? valueWithDiscount(price, promo?.discount || 0) : price
+
     const overdue = subscription?.category?.tournament?.subscriptionEnd
     if (!overdue) throw new BadRequestException('Data de vencimento inválida')
 
@@ -80,8 +99,15 @@ class PaymentHandler {
     }
 
     // gerar pagamento
-    const repoPay = ds.getRepository(Payment)
-    const payment = await repoPay.save({ actived: true, createdBy: userId, userId, overdue, value: price, method: PaymentMethod.PIX })
+    const payment = await repoPay.save({
+      actived: true,
+      createdBy: userId,
+      userId,
+      overdue,
+      value: priceWithDiscount,
+      promoCodeId: promo?.id,
+      method: PaymentMethod.PIX
+    })
     if (!payment) throw new BadRequestException('Erro ao criar pagamento')
     await repo.update(subscription?.id, { paymentId: payment.id })
 
@@ -92,7 +118,7 @@ class PaymentHandler {
     const apiPix = await createApiPix()
     const expiracao = differenceInMinutes(overdue, new Date())
 
-    const cob = await generatePaymentService(apiPix, { expiracao, paymentId: payment?.id, user, value: price })
+    const cob = await generatePaymentService(apiPix, { expiracao, paymentId: payment?.id, user, value: priceWithDiscount })
     if (!cob || !cob?.success) {
       // eslint-disable-next-line no-console
       console.error(cob?.message, cob?.messageError)
@@ -111,6 +137,18 @@ class PaymentHandler {
       txid: cob?.txid,
       expires: expiracao
     }
+  }
+
+  @Get('/search')
+  @JwtAuthGuard()
+  async search(@Query(Pipe) filter: SearchPaymentDto) {
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Payment)
+
+    const where = { ...filter }
+    const payments = await repo.find({ where })
+
+    return { payments }
   }
 
   @Post('/:paymentId')

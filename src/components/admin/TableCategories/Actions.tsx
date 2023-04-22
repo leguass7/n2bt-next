@@ -81,15 +81,7 @@ export const Actions: React.FC = () => {
       </FlexContainer>
       <Divider />
       <SimpleModal title={`${title} categoria`} open={!!custom?.editId} onToggle={handleClose}>
-        {/* <BoxCenter spacing={1}>
-          <Card sx={{ maxWidth: '100%', minWidth: 500 }}>
-            <CardHeader title={`${title} Categoria`} />
-            <Divider />
-            <CardContent> */}
         <FormCategory tournamentId={tournamentId} categoryId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
-        {/* </CardContent>
-          </Card>
-        </BoxCenter> */}
       </SimpleModal>
       <Modal open={!!custom?.deleteId} onClose={handleClose} keepMounted={false}>
         <BoxCenter spacing={1}>

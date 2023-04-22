@@ -102,3 +102,12 @@ export function getName(name: string) {
 
   return `${names[0]} ${names[1]}`
 }
+
+export function generatePromoCode(size = 6) {
+  // return timeStamp().toLowerCase().slice(-6);
+  return Math.random()
+    .toString(36)
+    .replace(/[ilLI|`oO0]/g, '')
+    .slice(size * -1)
+    .toUpperCase()
+}

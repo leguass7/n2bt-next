@@ -73,7 +73,7 @@ export class Subscription {
   category: Category
 
   // relations payment
-  @ManyToOne('Payment', 'subscriptions', { onDelete: 'SET NULL' })
+  @ManyToOne('Payment', 'subscriptions', { cascade: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'paymentId', referencedColumnName: 'id', foreignKeyConstraintName: 'subscriptions_paymentId_fkey' })
   payment?: Payment
 }

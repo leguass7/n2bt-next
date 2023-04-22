@@ -3,6 +3,8 @@ import type { IRequestCreateImmediateCharge } from 'brpix-api-node'
 import type { IResponseApi } from '~/server-side/api.interface'
 import type { IUser } from '~/server-side/useCases/user/user.dto'
 
+import { Payment } from './payment.entity'
+
 export enum PaymentMethod {
   PIX = 'PIX',
   CASH = 'CASH'
@@ -48,6 +50,10 @@ export interface IResponseGeneratePix extends IResponseApi {
   paymentId?: number
   txid?: string
   expires?: number
+}
+
+export interface IResponsePayments extends IResponseApi {
+  payments: Payment[]
 }
 
 export type PaymentMeta = { loc?: IResponseCob['loc']; horario?: Date | string; endToEndId?: string }
