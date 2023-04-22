@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { Alert, AlertTitle, Button, Stack } from '@mui/material'
 
@@ -25,6 +26,8 @@ export const RemoveAction: React.FC<Props> = ({ onClose, onSuccess }) => {
       if (!!response.success) {
         if (onSuccess) onSuccess(response)
         else if (onClose) onClose()
+      } else {
+        toast.error(response?.message || 'Erro ao remover código promocional')
       }
     }
   }
