@@ -78,7 +78,7 @@ class PaymentHandler {
     const code = req.query?.promoCode
 
     const promo = code ? await promoRepo.findOne({ where: { actived: true, code } }) : null
-    const paymentsWithPromo = await repoPay.find({ where: { promoCodeId: promo.id } })
+    const paymentsWithPromo = promo?.id ? await repoPay.find({ where: { promoCodeId: promo?.id } }) : []
 
     const notExpired = paymentsWithPromo?.length < promo?.usageLimit
     const usedByUser = paymentsWithPromo?.find?.(payment => payment.userId === userId)
