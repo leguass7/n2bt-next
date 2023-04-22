@@ -4,8 +4,8 @@ import type { DataSource } from 'typeorm'
 import { mergeDeep } from '~/helpers/object'
 import { removeAll } from '~/helpers/string'
 import { createApiPix } from '~/server-side/services/pix'
+import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
-import { Subscription } from '../subscriptions/subscriptions.entity'
 import type { GeneratePayment, IResponseGeneratePix, PaymentMeta, ResultPixPaid } from './payment.dto'
 import { Payment } from './payment.entity'
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useResizeDetector } from 'react-resize-detector'
 
@@ -26,10 +26,12 @@ import { MkContainer } from '../styled'
 import { CollapseCharts } from './CollapseCharts'
 import { ExpandMore } from './ExpandMore'
 
-type Props = Partial<ITournament> & {}
+export type TournamentCardProps = Partial<ITournament> & {}
 
-export const TournamentCard: React.FC<Props> = ({ id, title, description, expires, download, subscriptionEnd, limitUsers, arena }) => {
+export const TournamentCard: React.FC<TournamentCardProps> = ({ id, title, description, expires, download, subscriptionEnd, limitUsers, arena }) => {
+  const contentRef = useRef<HTMLDivElement>()
   const { ref, width } = useResizeDetector()
+
   const { prefetch } = useRouter()
   const [expanded, setExpanded] = useState(false)
 
@@ -44,6 +46,7 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
 
   useEffect(() => {
     prefetch(`/subscription?tournamentId=${id}`)
+    prefetch(`/tournament/about/${id}`)
   }, [prefetch, id])
 
   const fetchData = useCallback(async () => {
@@ -88,7 +91,10 @@ export const TournamentCard: React.FC<Props> = ({ id, title, description, expire
     <Card ref={ref}>
       <CardMedia component="img" height={getMediaHeight()} image={src} alt={title} />
       <CardContent>
-        <div style={{ maxWidth: 290, maxHeight: expanded ? 'none' : 120, overflow: expanded ? 'visible' : 'hidden' }}>
+        <div
+          ref={contentRef}
+          style={{ maxWidth: 290, maxHeight: expanded ? 'none' : 120, minHeight: 120, overflow: expanded ? 'visible' : 'hidden' }}
+        >
           <Typography gutterBottom variant="h5" component="div">
             {title}
           </Typography>

@@ -45,3 +45,8 @@ export async function searchPromoCode(filter: SearchPromoCodeDto): Promise<IResp
   const response = await apiService.get(`/promo-code/search${query}`)
   return response
 }
+
+export async function deletePromoCode(promoCodeId: number): Promise<IResponsePromoCode> {
+  const response = await apiService.delete(`/promo-code/${promoCodeId}`)
+  return response
+}

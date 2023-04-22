@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Card } from '@mui/material'
+import { Card, Grid } from '@mui/material'
 
 import { TablePromoCode } from '~/components/admin/TablePromoCode'
 import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
@@ -10,10 +10,17 @@ type Props = {
 }
 export const PagePromoCode: React.FC<Props> = ({ tournamentId }) => {
   return (
-    <Card>
-      <TableActionsProvider>
-        <TablePromoCode tournamentId={tournamentId} />
-      </TableActionsProvider>
-    </Card>
+    <Grid container sx={{ maxWidth: '100%' }}>
+      <Grid item xl={8} lg={8} xs={12} sx={{ maxWidth: '100%' }}>
+        <Card>
+          <TableActionsProvider>
+            <TablePromoCode tournamentId={tournamentId} />
+          </TableActionsProvider>
+        </Card>
+      </Grid>
+      <Grid item>
+        <br />
+      </Grid>
+    </Grid>
   )
 }
