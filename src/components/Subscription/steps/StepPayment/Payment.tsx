@@ -10,11 +10,9 @@ import { FlexContainer } from '~/components/styled'
 
 import { useSubscription } from '../../SubscriptionProvider'
 
-interface Props {
-  noPartner?: boolean
-}
+interface Props {}
 
-export const Payment: React.FC<Props> = ({ noPartner = false }) => {
+export const Payment: React.FC<Props> = () => {
   const { replace } = useRouter()
   const [loading, setLoading] = useState(false)
   const { payment, subscription, generatePixPayment, clearSubscription } = useSubscription()
@@ -22,13 +20,13 @@ export const Payment: React.FC<Props> = ({ noPartner = false }) => {
   const fetchData = useCallback(async () => {
     if (subscription?.id && !payment?.txid) {
       setLoading(true)
-      const response = await generatePixPayment(subscription.id, noPartner)
+      const response = await generatePixPayment(subscription.id)
       setLoading(false)
       if (!response?.success) {
         toast.error(response?.message || 'Erro ao adquirir PIX')
       }
     }
-  }, [generatePixPayment, subscription, payment, noPartner])
+  }, [generatePixPayment, subscription, payment])
 
   useEffect(() => {
     fetchData()
