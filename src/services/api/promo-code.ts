@@ -1,4 +1,5 @@
 import type { TableFetchParams } from '~/components/CustomTable/types'
+import { SearchPromoCodeDto } from '~/pages/api/promo-code/search.dto'
 import type { IResponsePaginated } from '~/server-side/services/PaginateService'
 import type { IPromoCode, IResponsePromoCode } from '~/server-side/useCases/promo-code/promo-code.dto'
 
@@ -34,6 +35,14 @@ export async function storePromoCode({ id, ...data }: Partial<IPromoCode>): Prom
 
 export async function getPromoCode(promoCodeId: number): Promise<IResponsePromoCode> {
   const response = await apiService.get(`/promo-code/${promoCodeId}`)
+  return response
+}
+
+export async function searchPromoCode(filter: SearchPromoCodeDto): Promise<IResponsePromoCode> {
+  const params = new URLSearchParams(filter as any).toString()
+  const query = params ? `?${params}` : ''
+
+  const response = await apiService.get(`/promo-code/search${query}`)
   return response
 }
 

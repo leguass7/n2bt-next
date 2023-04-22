@@ -1,5 +1,6 @@
-import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from 'next-api-decorators'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Query, Req, ValidationPipe } from 'next-api-decorators'
 
+import { promoCodeSize } from '~/config/constants'
 import { generatePromoCode } from '~/helpers/string'
 import { getRepo } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
@@ -9,6 +10,10 @@ import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { AdminAuth } from '~/server-side/useCases/auth/middleware'
 import type { IPromoCode } from '~/server-side/useCases/promo-code/promo-code.dto'
 import { PromoCode } from '~/server-side/useCases/promo-code/promo-code.entity'
+
+import { SearchPromoCodeDto } from './search.dto'
+
+const Pipe = ValidationPipe({ whitelist: true })
 
 const searchFields = ['id', 'label']
 const orderFields = [
@@ -34,9 +39,7 @@ class PromoCodeHandler {
       .createQueryBuilder('PromoCode')
       .select()
       .addSelect(['Tournament.id', 'Tournament.title'])
-      .addSelect(['Payment.id', 'Payment.actived', 'Payment.paid', 'Payment.createdAt'])
       .innerJoin('PromoCode.tournament', 'Tournament')
-      .leftJoin('PromoCode.payments', 'Payment')
       .where('PromoCode.tournamentId = :tournamentId', { tournamentId })
 
     if (whereText) query.andWhere(`(${whereText.join(' OR ')})`, { search })
@@ -46,6 +49,24 @@ class PromoCodeHandler {
     const promoCodes = await queryDb.getMany()
 
     return { success: true, data: promoCodes }
+  }
+
+  @Get('/search')
+  @HttpCode(200)
+  async search(@Query(Pipe) filter: SearchPromoCodeDto) {
+    const repo = await getRepo(PromoCode)
+
+    const where = !!filter?.OR
+      ? Object.entries(filter).map(([key, value]) => {
+          const obj = {}
+          obj[`${key}`] = value
+          return obj
+        })
+      : filter
+
+    const promoCode = await repo.findOne({ where })
+
+    return { success: true, promoCode }
   }
 
   @Get('/:promoCodeId')
@@ -84,7 +105,7 @@ class PromoCodeHandler {
   async create(@Req() req: AuthorizedApiRequest<IPromoCode>) {
     const { auth, body } = req
 
-    const code = generatePromoCode(8)
+    const code = generatePromoCode(promoCodeSize)
 
     const repo = await getRepo(PromoCode)
     const data: IPromoCode = { ...body, createdAt: new Date(), createdBy: auth.userId, code }

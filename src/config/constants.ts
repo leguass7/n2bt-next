@@ -59,3 +59,5 @@ export const genderColors = {
   M: brighten('#00f', 1.5),
   F: brighten('#f00', 1.5)
 }
+
+export const promoCodeSize = 8

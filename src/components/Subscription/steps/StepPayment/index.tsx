@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import ArrowLeftIcon from '@mui/icons-material/ChevronLeft'
 import Button from '@mui/material/Button'
@@ -23,9 +23,17 @@ interface Props {
 
 export const StepPayment: React.FC<Props> = ({ icon, noPartner }) => {
   const { goTo } = usePassRoll('subscription')
-  const { subscription } = useSubscription()
+  const { subscription, setPaymentPayload } = useSubscription()
 
   const handleBack = () => goTo(noPartner ? 2 : 3)
+
+  const updatePaymentPayload = useCallback(() => {
+    setPaymentPayload({ noPartner })
+  }, [setPaymentPayload, noPartner])
+
+  useEffect(() => {
+    updatePaymentPayload()
+  }, [updatePaymentPayload])
 
   return (
     <BoxCenter style={{ paddingTop: 12, minHeight: '50vh' }}>
@@ -34,7 +42,7 @@ export const StepPayment: React.FC<Props> = ({ icon, noPartner }) => {
         <Divider />
         <CardContent>
           <Grid container direction="column" alignItems="center" sx={{ width: '100%' }}>
-            {subscription?.id ? <Payment noPartner={noPartner} /> : <Summary noPartner={noPartner} />}
+            {subscription?.id ? <Payment /> : <Summary noPartner={noPartner} />}
           </Grid>
         </CardContent>
         <Divider />
