@@ -13,6 +13,8 @@ import { useCustomTableFilter } from '~/components/CustomTable'
 import { FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
 
+import { RemoveAction } from './RemoveAction'
+
 export interface IPromoCodeActions {
   editId?: number
   deleteId?: number
@@ -39,6 +41,12 @@ export const Actions: React.FC<Props> = ({ tournamentId }) => {
 
   const handleSuccess: SuccessHandler = () => {
     toast.success('Código promocional salvo com sucesso')
+    handleClose()
+    emitFetch()
+  }
+
+  const handleDeleteSuccess = () => {
+    toast.success('Código promocional removido')
     handleClose()
     emitFetch()
   }
@@ -74,6 +82,9 @@ export const Actions: React.FC<Props> = ({ tournamentId }) => {
       <Divider />
       <SimpleModal title={`${title} código promocional`} open={!!custom?.editId} onToggle={handleClose}>
         <FormPromoCode tournamentId={tournamentId} promoCodeId={custom?.editId} onSuccess={handleSuccess} onCancel={handleClose} />
+      </SimpleModal>
+      <SimpleModal title={`Remover código promocional`} open={!!custom?.deleteId} onToggle={handleClose}>
+        <RemoveAction onSuccess={handleDeleteSuccess} onClose={handleClose} />
       </SimpleModal>
     </>
   )
