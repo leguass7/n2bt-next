@@ -28,6 +28,7 @@ export const RemoveAction: React.FC<Props> = ({ onClose, onSuccess }) => {
         else if (onClose) onClose()
       } else {
         toast.error(response?.message || 'Erro ao remover código promocional')
+        if (onClose) onClose()
       }
     }
   }

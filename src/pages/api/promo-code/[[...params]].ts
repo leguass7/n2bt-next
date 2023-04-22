@@ -101,6 +101,18 @@ class PromoCodeHandler {
     const promoCodeId = +query?.params[0] || 0
     if (!promoCodeId) throw new BadRequestException(`Recurso não encontrado ${promoCodeId}`)
     const repo = await getRepo(PromoCode)
+
+    // verificar se pode remover
+    const queryAllowed = repo
+      .createQueryBuilder('PromoCode')
+      .select(['PromoCode.id'])
+      .addSelect(['Payment.id', 'Payment.actived', 'Payment.paid'])
+      .leftJoin('PromoCode.payments', 'Payment')
+      .where('PromoCode.id = :promoCodeId', { promoCodeId })
+    const allowed = !!(((await queryAllowed.getOne())?.payments?.length || 0) <= 0)
+    if (!allowed) throw new BadRequestException(`Código promocional está sendo utilizado`)
+
+    // remover código
     const deleted = await repo.delete(promoCodeId)
     if (!deleted) throw new BadRequestException(`Recurso não removido ${promoCodeId}`)
     return { success: true, promoCodeId, affected: deleted?.affected }
