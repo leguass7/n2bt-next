@@ -3,14 +3,16 @@ import React, { memo, useState } from 'react'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import EditIcon from '@mui/icons-material/Edit'
 import LinkIcon from '@mui/icons-material/Link'
-import { IconButton, Toolbar, Tooltip } from '@mui/material'
+import { IconButton, Switch, Toolbar, Tooltip } from '@mui/material'
 
 import type { ICustomCellProps } from '~/components/CustomTable'
 import { Text } from '~/components/styled'
 import { CellContainer } from '~/components/tables/cells/styles'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
+import { appBaseURL } from '~/config'
 import { splitDateTime } from '~/helpers/dates'
 import type { IPromoCode } from '~/server-side/useCases/promo-code/promo-code.dto'
+import { updatePromoCode } from '~/services/api/promo-code'
 
 import { IPromoCodeActions } from './Actions'
 
@@ -36,7 +38,7 @@ export const OptionTools: React.FC<Props> = ({ record }) => {
   const [tipOpen, setTipOpen] = useState(false)
   const { custom, setCustom } = useTableActions<IPromoCodeActions>()
 
-  const strLink = `/subscription?tournamentId=${record.tournamentId}&promo=${record.code}`
+  const strLink = `${appBaseURL}/subscription?tournamentId=${record.tournamentId}&promo=${record.code}`
 
   const handleClickDelete = () => setCustom({ deleteId: record?.id })
   const handleClickEdit = () => setCustom({ editId: record?.id })
@@ -73,7 +75,26 @@ export const LimitCell: React.FC<Props> = ({ record }) => {
   const used = record?.payments?.length || 0
   return (
     <CellContainer>
-      <Text textSize={14}>{`${used}/${record?.usageLimit}`}</Text>
+      <Text textSize={14}>{`${used} de ${record?.usageLimit}`}</Text>
+    </CellContainer>
+  )
+}
+
+export const SwitchCell: React.FC<Props> = ({ record }) => {
+  const [checked, setChecked] = useState(!!record?.actived)
+
+  const save = async (actived: boolean) => {
+    await updatePromoCode(record?.id, { actived })
+  }
+
+  const handleChange = (evt: any, chk?: boolean) => {
+    setChecked(!!chk)
+    save(!!chk)
+  }
+
+  return (
+    <CellContainer>
+      <Switch size="small" checked={checked} onChange={handleChange} />
     </CellContainer>
   )
 }

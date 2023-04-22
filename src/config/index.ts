@@ -11,3 +11,4 @@ export const appName = pkg.name
 export const appVersion = pkg.version
 
 export const isServer = typeof window === 'undefined' ? true : false
+export const appBaseURL = `http${dev ? '' : 's'}://${host}`

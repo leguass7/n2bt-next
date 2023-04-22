@@ -34,7 +34,9 @@ class PromoCodeHandler {
       .createQueryBuilder('PromoCode')
       .select()
       .addSelect(['Tournament.id', 'Tournament.title'])
+      .addSelect(['Payment.id', 'Payment.actived', 'Payment.paid', 'Payment.createdAt'])
       .innerJoin('PromoCode.tournament', 'Tournament')
+      .leftJoin('PromoCode.payments', 'Payment')
       .where('PromoCode.tournamentId = :tournamentId', { tournamentId })
 
     if (whereText) query.andWhere(`(${whereText.join(' OR ')})`, { search })
