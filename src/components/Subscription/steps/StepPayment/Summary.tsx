@@ -68,7 +68,7 @@ export const Summary: React.FC<Props> = () => {
   const { query } = useRouter()
 
   const formRef = useRef<FormHandles>(null)
-  const initialPromoCode = useMemo(() => query?.code, [query?.code])
+  const initialPromoCode = useMemo(() => query?.promo, [query?.promo])
 
   const updateForm = useCallback(() => {
     if (initialPromoCode) {
