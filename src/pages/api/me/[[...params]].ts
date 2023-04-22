@@ -1,7 +1,7 @@
 import { instanceToPlain } from 'class-transformer'
 import { BadRequestException, createHandler, Delete, Get, HttpCode, Req } from 'next-api-decorators'
 
-import { prepareConnection } from '~/server-side/database/conn'
+import { getRepo, prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
 import { Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
@@ -11,15 +11,6 @@ import { checkPaymentService } from '~/server-side/useCases/payment/payment.serv
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
 
-// const searchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
-// const otherSearch = ['Category.title']
-// const orderFields = [
-//   ['User.id', 'id'],
-//   ['User.name', 'name'],
-//   ['User.nick', 'nick']
-// ]
-
-// const searchFields = ['id', 'title']
 const subsOrderFields = [
   ['Subscription.id', 'id'],
   ['Category.title', 'category'],
@@ -70,16 +61,18 @@ class MeHandler {
     const { order } = req?.pagination
 
     const categoryId = +query?.categoryId || 0
-    const ds = await prepareConnection()
-    const repo = ds.getRepository(Subscription)
+
+    const repo = await getRepo(Subscription)
     const queryDb = repo
       .createQueryBuilder('Subscription')
       .select()
       .addSelect(['Partner.id', 'Partner.name', 'Partner.image', 'Partner.email'])
       .addSelect(['Category.id', 'Category.title', 'Category.tournamentId', 'Category.price'])
       .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
+      .addSelect(['Payment.id', 'Payment.value', 'Payment.paid', 'Payment.promoCodeId'])
       .leftJoin('Subscription.partner', 'Partner')
       .innerJoin('Subscription.category', 'Category')
+      .innerJoin('Subscription.payment', 'Payment')
       .innerJoin('Category.tournament', 'Tournament')
       .orderBy('Subscription.createdAt', 'DESC')
       .addOrderBy('Partner.name', 'ASC')

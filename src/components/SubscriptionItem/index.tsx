@@ -27,7 +27,18 @@ type Props = ISubscription & {
   onPixClick?: (id: number) => Promise<any>
 }
 
-export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, disableActions, onDelete, onPixClick, paymentId, paid, value }) => {
+export const SubscriptionItem: React.FC<Props> = ({
+  id,
+  partner = {},
+  category,
+  disableActions,
+  onDelete,
+  onPixClick,
+  paymentId,
+  paid,
+  value,
+  payment
+}) => {
   const [loading, setLoading] = useState(false)
   const { isMobile } = useAppTheme()
 
@@ -43,6 +54,8 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, 
   const handlePix = async () => {
     if (paymentId && onPixClick) onPixClick(paymentId)
   }
+
+  const price = payment?.promoCodeId ? payment?.value : value || category?.price
 
   return (
     <Card sx={{ maxWidth: isMobile ? '100%' : 340, mb: 1 }}>
@@ -61,7 +74,7 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, 
         ) : null}
         {value || category?.price ? (
           <Text bold textSize={18}>
-            {formatPrice(value || category?.price)}
+            {formatPrice(price)}
           </Text>
         ) : null}
       </CardContent>
