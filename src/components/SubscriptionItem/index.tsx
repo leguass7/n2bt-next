@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import PaidIcon from '@mui/icons-material/Paid'
@@ -14,11 +14,14 @@ import Typography from '@mui/material/Typography'
 
 import { getTournamentImage } from '~/config/constants'
 import { formatPrice } from '~/helpers'
+import { useIsMounted } from '~/hooks/useIsMounted'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { searchPromoCode } from '~/services/api/promo-code'
 
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { CircleLoading } from '../CircleLoading'
 import { FlexContainer, Text } from '../styled'
+import { useSubscription } from '../Subscription/SubscriptionProvider'
 import { Partner } from '../User/SelectPartner/Partner'
 
 type Props = ISubscription & {
@@ -29,7 +32,35 @@ type Props = ISubscription & {
 
 export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, disableActions, onDelete, onPixClick, paymentId, paid, value }) => {
   const [loading, setLoading] = useState(false)
+  const { paymentPayload } = useSubscription()
   const { isMobile } = useAppTheme()
+  const isMounted = useIsMounted()
+
+  const [discount, setDiscount] = useState(0)
+
+  const promoCode = useMemo(() => {
+    setDiscount(0)
+    return paymentPayload?.promoCode
+  }, [paymentPayload?.promoCode])
+
+  const fetchPromoCode = useCallback(async () => {
+    setLoading(true)
+    const response = await searchPromoCode({ code: promoCode })
+    if (isMounted()) {
+      setLoading(false)
+      setDiscount(response.promoCode?.discount)
+    }
+  }, [promoCode, isMounted])
+
+  useEffect(() => {
+    fetchPromoCode()
+  }, [fetchPromoCode])
+
+  const priceWithDiscount = useMemo(() => {
+    const discountPercentage = 1 - discount
+    const price = value || category?.price
+    return price * discountPercentage
+  }, [discount, value, category?.price])
 
   const handleDelete = async () => {
     if (onDelete) {
@@ -61,7 +92,20 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, 
         ) : null}
         {value || category?.price ? (
           <Text bold textSize={18}>
-            {formatPrice(value || category?.price)}
+            {!!discount ? (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ textDecoration: 'line-through', color: '#f55' }}>{formatPrice(value || category?.price)}</span>
+                  <Typography color="green" variant="caption">
+                    {discount * 100}% de desconto
+                  </Typography>
+                </div>
+                {formatPrice(priceWithDiscount || category?.price)}
+                <br />
+              </div>
+            ) : (
+              formatPrice(value || category?.price)
+            )}
           </Text>
         ) : null}
       </CardContent>
