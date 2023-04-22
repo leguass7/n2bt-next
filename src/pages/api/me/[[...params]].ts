@@ -7,6 +7,7 @@ import { Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
+import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { checkPaymentService } from '~/server-side/useCases/payment/payment.service'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
@@ -30,8 +31,12 @@ class MeHandler {
 
     const ds = await prepareConnection()
     const repoSub = ds.getRepository(Subscription)
+    const repoPayment = ds.getRepository(Payment)
 
     const deleteSub = async () => repoSub.update(subscriptionId, { actived: false })
+    const removePromoCode = async (paymentId: number) => {
+      await repoPayment.update(paymentId, { promoCode: null })
+    }
 
     const subscription = await repoSub.findOne({ where: { id: subscriptionId, userId }, relations: { payment: true } })
     if (!subscription) throw new BadRequestException('Inscrição não encontrada')
@@ -49,6 +54,7 @@ class MeHandler {
     }
 
     await deleteSub()
+    if (subscription?.paymentId) await removePromoCode(subscription.paymentId)
     return { success: true, subscriptionId }
   }
 
@@ -99,40 +105,6 @@ class MeHandler {
 
     return { success: true, user: instanceToPlain(user) }
   }
-
-  // @Patch()
-  // @JwtAuthGuard()
-  // @HttpCode(201)
-  // async saveMe(@Req() req: AuthorizedApiRequest<IUser>) {
-  //   const { auth } = req
-  //   const ds = await prepareConnection()
-  //   const repo = ds.getRepository(User)
-  //   const userId = auth?.userId
-  //   const { birday, ...data } = req?.body
-
-  //   const u: Partial<IUser> = { ...data }
-  //   if (birday) u.birday = parseISO(`${birday}`)
-
-  //   if (!userId) throw new BadRequestException('Usuário não encontrado')
-  //   const user = await repo.update(userId, u)
-
-  //   return { success: !!user, userId }
-  // }
-
-  // @Get('/me')
-  // @JwtAuthGuard()
-  // @HttpCode(200)
-  // async me(@Req() req: AuthorizedApiRequest) {
-  //   const { auth } = req
-  //   const userId = auth?.userId
-
-  //   const ds = await prepareConnection()
-  //   const repo = ds.getRepository(User)
-  //   const user = await repo.findOne({ where: { id: userId } })
-  //   if (!user) throw new BadRequestException()
-
-  //   return { success: true, user: instanceToPlain(user) }
-  // }
 }
 
 export default createHandler(MeHandler)

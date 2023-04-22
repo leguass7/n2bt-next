@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useResizeDetector } from 'react-resize-detector'
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import PaidIcon from '@mui/icons-material/Paid'
@@ -6,19 +7,21 @@ import QrCode2Icon from '@mui/icons-material/QrCode2'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
-import CardMedia from '@mui/material/CardMedia'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
-import { getTournamentImage } from '~/config/constants'
 import { formatPrice } from '~/helpers'
+import { useIsMounted } from '~/hooks/useIsMounted'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { searchPromoCode } from '~/services/api/promo-code'
 
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { CircleLoading } from '../CircleLoading'
 import { FlexContainer, Text } from '../styled'
+import { useSubscription } from '../Subscription/SubscriptionProvider'
+import { TournamentCardMedia } from '../TournamentCardMedia'
 import { Partner } from '../User/SelectPartner/Partner'
 
 type Props = ISubscription & {
@@ -27,20 +30,39 @@ type Props = ISubscription & {
   onPixClick?: (id: number) => Promise<any>
 }
 
-export const SubscriptionItem: React.FC<Props> = ({
-  id,
-  partner = {},
-  category,
-  disableActions,
-  onDelete,
-  onPixClick,
-  paymentId,
-  paid,
-  value,
-  payment
-}) => {
+export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, disableActions, onDelete, onPixClick, paymentId, paid, value }) => {
   const [loading, setLoading] = useState(false)
+  const { paymentPayload } = useSubscription()
   const { isMobile } = useAppTheme()
+  const { ref, width } = useResizeDetector()
+
+  const isMounted = useIsMounted()
+
+  const [discount, setDiscount] = useState(0)
+
+  const promoCode = useMemo(() => {
+    setDiscount(0)
+    return paymentPayload?.promoCode
+  }, [paymentPayload?.promoCode])
+
+  const fetchPromoCode = useCallback(async () => {
+    setLoading(true)
+    const response = await searchPromoCode({ code: promoCode })
+    if (isMounted()) {
+      setLoading(false)
+      setDiscount(response.promoCode?.discount)
+    }
+  }, [promoCode, isMounted])
+
+  useEffect(() => {
+    fetchPromoCode()
+  }, [fetchPromoCode])
+
+  const priceWithDiscount = useMemo(() => {
+    const discountPercentage = 1 - discount
+    const price = value || category?.price
+    return price * discountPercentage
+  }, [discount, value, category?.price])
 
   const handleDelete = async () => {
     if (onDelete) {
@@ -55,11 +77,9 @@ export const SubscriptionItem: React.FC<Props> = ({
     if (paymentId && onPixClick) onPixClick(paymentId)
   }
 
-  const price = payment?.promoCodeId ? payment?.value : value || category?.price
-
   return (
-    <Card sx={{ maxWidth: isMobile ? '100%' : 340, mb: 1 }}>
-      <CardMedia component="img" image={getTournamentImage(category?.tournamentId)} alt="Live from space album cover" />
+    <Card ref={ref} sx={{ maxWidth: isMobile ? '100%' : 340, mb: 1 }}>
+      <TournamentCardMedia tournamentId={category?.tournamentId} width={width} title={category?.title} />
       <CardContent>
         <Typography component="div" variant="h5">
           {category?.title}
@@ -74,7 +94,20 @@ export const SubscriptionItem: React.FC<Props> = ({
         ) : null}
         {value || category?.price ? (
           <Text bold textSize={18}>
-            {formatPrice(price)}
+            {!!discount ? (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ textDecoration: 'line-through', color: '#f55' }}>{formatPrice(value || category?.price)}</span>
+                  <Typography color="green" variant="caption">
+                    {discount * 100}% de desconto
+                  </Typography>
+                </div>
+                {formatPrice(priceWithDiscount || category?.price)}
+                <br />
+              </div>
+            ) : (
+              formatPrice(value || category?.price)
+            )}
           </Text>
         ) : null}
       </CardContent>

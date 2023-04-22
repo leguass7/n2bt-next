@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useResizeDetector } from 'react-resize-detector'
 
@@ -7,22 +7,17 @@ import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
-import CardMedia from '@mui/material/CardMedia'
 import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
 import { isPast } from 'date-fns'
 import { useRouter } from 'next/router'
 import gfm from 'remark-gfm'
 
-import { getTournamentImage } from '~/config/constants'
-import { round } from '~/helpers'
 import { validDate } from '~/helpers/date'
-import { useIsMounted } from '~/hooks/useIsMounted'
 import type { ITournament } from '~/server-side/useCases/tournament/tournament.dto'
-import { getImageByTournamentId } from '~/services/api/image'
 
-import { CircleLoading } from '../CircleLoading'
 import { MkContainer } from '../styled'
+import { TournamentCardMedia } from '../TournamentCardMedia'
 import { CollapseCharts } from './CollapseCharts'
 import { ExpandMore } from './ExpandMore'
 
@@ -35,10 +30,6 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({ id, title, descr
   const { prefetch } = useRouter()
   const [expanded, setExpanded] = useState(false)
 
-  const [imageSrc, setImageSrc] = useState<string>(null)
-  const [loading, setLoading] = useState(false)
-  const isMounted = useIsMounted()
-
   const expiresDate = validDate(expires)
   const subExpiresDate = validDate(subscriptionEnd)
 
@@ -48,21 +39,6 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({ id, title, descr
     prefetch(`/subscription?tournamentId=${id}`)
     prefetch(`/tournament/about/${id}`)
   }, [prefetch, id])
-
-  const fetchData = useCallback(async () => {
-    if (!id) return null
-    setLoading(true)
-    const { success, image } = await getImageByTournamentId(id)
-
-    if (isMounted()) {
-      setLoading(false)
-      if (success && image) setImageSrc(image?.url)
-    }
-  }, [id, isMounted])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
 
   const handleExpandClick = () => setExpanded(old => !old)
 
@@ -80,16 +56,9 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({ id, title, descr
     )
   }
 
-  const getMediaHeight = () => {
-    const w = round(width, 0)
-    return round(w / 1.777777777777778, 0)
-  }
-
-  const src = imageSrc ? imageSrc : getTournamentImage(id)
-
   return (
     <Card ref={ref}>
-      <CardMedia component="img" height={getMediaHeight()} image={src} alt={title} />
+      <TournamentCardMedia tournamentId={id} width={width} />
       <CardContent>
         <div
           ref={contentRef}
@@ -118,8 +87,6 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({ id, title, descr
         </ExpandMore>
       </CardActions>
       <CollapseCharts tournamentId={id} expanded={!!expanded} limitUsers={limitUsers} />
-
-      {loading ? <CircleLoading /> : null}
     </Card>
   )
 }

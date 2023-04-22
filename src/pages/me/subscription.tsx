@@ -11,8 +11,8 @@ import Link from 'next/link'
 import { Layout } from '~/components/app/Layout'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { ModalPix, ModalPixCloseHandler } from '~/components/ModalPix'
+import { MySubscriptionItem } from '~/components/MySubscriptionItem'
 import { Paragraph } from '~/components/styled'
-import { SubscriptionItem } from '~/components/SubscriptionItem'
 import { siteName } from '~/config/constants'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
@@ -76,7 +76,7 @@ const MeSubscriptionPage: NextPage<PageProps> = ({}) => {
         {data?.map(subscription => {
           return (
             <Grid item xs={isMobile || null} sx={{ mt: 2 }} key={`sub-item-${subscription?.id}`}>
-              <SubscriptionItem {...subscription} onDelete={handleDeleteSubscription} onPixClick={handlePixSubscription} />
+              <MySubscriptionItem {...subscription} onDelete={handleDeleteSubscription} onPixClick={handlePixSubscription} />
             </Grid>
           )
         })}
