@@ -1,7 +1,8 @@
 {
   "name": "n2bt-next",
   "version": "0.1.6",
-  "private": true,
+  "private": false,
+  "license" : "MIT",
   "scripts": {
     "release": "standard-version --no-verify --skip.tag --release-as patch",
     "release:alpha": "standard-version --no-verify --skip.tag --release-as patch --prerelease alpha",
