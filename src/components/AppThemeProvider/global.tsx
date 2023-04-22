@@ -69,6 +69,8 @@ const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.colors.text};
     font-family: Gilroy, Tahoma, Geneva, Verdana, sans-serif;
     border: 0;
+    max-width: 100%;
+    width: 100%;
     ${globBackground}
 
   }
@@ -77,6 +79,8 @@ const GlobalStyle = createGlobalStyle`
     position: relative;
     min-height: 100%;
     height: 100%;
+    max-width: 100%;
+    width: 100%;
     padding: 0;
     margin: 0;
     overflow-x: hidden !important;

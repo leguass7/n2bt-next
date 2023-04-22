@@ -10,13 +10,16 @@ type Props = {
 }
 export const PagePromoCode: React.FC<Props> = ({ tournamentId }) => {
   return (
-    <Grid container>
-      <Grid>
+    <Grid container sx={{ maxWidth: '100%' }}>
+      <Grid item xl={8} lg={8} xs={12} sx={{ maxWidth: '100%' }}>
         <Card>
           <TableActionsProvider>
             <TablePromoCode tournamentId={tournamentId} />
           </TableActionsProvider>
         </Card>
+      </Grid>
+      <Grid item>
+        <br />
       </Grid>
     </Grid>
   )
