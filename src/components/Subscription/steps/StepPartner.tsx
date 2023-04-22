@@ -13,6 +13,7 @@ import Grid from '@mui/material/Grid'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, Paragraph, Text } from '~/components/styled'
 import { DeletePatnerHandler, SelectPatner, SelectPatnerHandler } from '~/components/User/SelectPartner'
+import { appBaseURL } from '~/config'
 import { CardContainer } from '~/styles'
 
 import { useSubscription } from '../SubscriptionProvider'
@@ -41,7 +42,8 @@ export const StepPartner: React.FC<Props> = ({ icon }) => {
   }, [setPartner])
 
   const renderLink = (text: string) => {
-    const site = encodeURI('https://n2bt.avatarsolucoesdigitais.com.br')
+    const link = `${appBaseURL}/subscription?tournamentId=${tournamentId}`
+    const site = encodeURI(link)
     return (
       <Button href={`https://wa.me?text=${site}`} target="__blank" size="small" variant="outlined">
         {text}
