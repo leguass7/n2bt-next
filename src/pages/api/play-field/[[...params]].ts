@@ -10,7 +10,7 @@ import { FilterPlayFieldDTO } from '~/server-side/useCases/play-field/dto/filter
 import { UpdatePlayFieldDTO } from '~/server-side/useCases/play-field/dto/update-play-field.dto'
 import { PlayField } from '~/server-side/useCases/play-field/play-field.entity'
 
-const Pipe = ValidationPipe({ whitelist: true, forbidUnknownValues: true })
+const Pipe = ValidationPipe({ whitelist: true })
 
 class PlayFieldHandler {
   private connection: Promise<DataSource>
