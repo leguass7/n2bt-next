@@ -11,11 +11,11 @@ export class CreateUserDto {
   email: string
 
   @IsNotEmpty()
+  password: string
+
+  @IsOptional()
   @IsDate({ message: 'Data inválida' })
   birday: Date
-
-  @IsNotEmpty()
-  password: string
 
   @IsOptional()
   phone: string
