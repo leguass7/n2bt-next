@@ -3,6 +3,7 @@ import { instanceToPlain } from 'class-transformer'
 import { parseISO } from 'date-fns'
 import {
   BadRequestException,
+  Body,
   createHandler,
   Delete,
   Get,
@@ -11,7 +12,8 @@ import {
   InternalServerErrorException,
   Patch,
   Post,
-  Req
+  Req,
+  ValidationPipe
 } from 'next-api-decorators'
 
 import { siteName } from '~/config/constants'
@@ -23,13 +25,17 @@ import { createEmailService } from '~/server-side/services/EmailService'
 import { PaginateService } from '~/server-side/services/PaginateService'
 import { Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
-import type { AuthorizedApiRequest, PublicApiRequest } from '~/server-side/useCases/auth/auth.dto'
+import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { IUser, IUserFilter } from '~/server-side/useCases/user/user.dto'
 import { User } from '~/server-side/useCases/user/user.entity'
 import { checkCompleteData } from '~/server-side/useCases/user/user.helper'
+
+import { CreateUserDto } from './create-user.dto'
+
+const Pipe = ValidationPipe({ whitelist: true, forbidUnknownValues: true })
 
 const searchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
 const otherSearch = ['Category.title']
@@ -63,9 +69,7 @@ class UserHandler {
 
   @Post('/register')
   @HttpCode(201)
-  async createUser(@Req() req: PublicApiRequest<IUser>) {
-    const { body } = req
-
+  async createUser(@Body(Pipe) body: CreateUserDto) {
     if (body?.email) body.email = body.email.toLowerCase().trim()
 
     const ds = await prepareConnection()
@@ -74,7 +78,6 @@ class UserHandler {
 
     const userExists = await repo.findOne({ where: { email: userData.email } })
     if (userExists) throw new HttpException(401, 'Usuário já existe')
-    if (!userData?.password) throw new BadRequestException('Senha não obrigatória')
 
     const hashPassword = hashSync(userData.password, 14)
 

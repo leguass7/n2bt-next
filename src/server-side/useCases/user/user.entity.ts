@@ -17,10 +17,7 @@ import { Session } from '~/server-side/useCases/session/session.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
-enum UserGender {
-  F = 'F',
-  M = 'M'
-}
+import { UserGender } from './user.dto'
 
 @Entity('users')
 export class User {

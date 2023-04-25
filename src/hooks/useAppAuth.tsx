@@ -34,6 +34,8 @@ export function useAppAuth() {
     return [!!(loadingUser || status === 'loading'), !!(status === 'authenticated')]
   }, [loadingUser, status])
 
+  const isAdmin = useMemo(() => level > 7, [level])
+
   const completedAuth = useMemo(() => {
     return !!(authenticated && !loading && userData)
   }, [authenticated, userData, loading])
@@ -86,7 +88,7 @@ export function useAppAuth() {
     [requestMe, updateAppAuth]
   )
 
-  return { loading, logOut, completedAuth, updateAppAuth, requestMe, authenticated, userData, authorize, allowedContact }
+  return { loading, logOut, completedAuth, updateAppAuth, requestMe, authenticated, userData, authorize, allowedContact, isAdmin }
 }
 
 export function useAppRecoverCode(): [string, (code?: string) => void] {

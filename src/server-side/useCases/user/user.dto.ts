@@ -33,3 +33,8 @@ export interface IResponseUser extends IResponseApi {
 export interface IResponseUsers extends IResponseApi {
   users?: IUser[]
 }
+
+export enum UserGender {
+  F = 'F',
+  M = 'M'
+}

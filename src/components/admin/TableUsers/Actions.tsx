@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { Button, Stack } from '@mui/material'
+import { Add } from '@mui/icons-material'
+import { Button, IconButton, Stack } from '@mui/material'
 
 import { SimpleModal } from '~/components/Common/SimpleModal'
 import { useCustomTableFilter } from '~/components/CustomTable'
@@ -14,6 +15,7 @@ import type { IUser } from '~/server-side/useCases/user/user.dto'
 import { createTranfering } from '~/services/api/transfer'
 import { deleteUser, findUser } from '~/services/api/user'
 
+import { FormRegisterAdmin } from '../FormRegisterAdmin'
 import { ModalDelete } from '../ModalDelete'
 
 type TranferData = {
@@ -33,6 +35,8 @@ export const Actions: React.FC = () => {
   const { emitFetch, setFilter } = useCustomTableFilter()
   const [tranferData, setTransferData] = useState<TranferData>(null)
   const [tranfering, setTransfering] = useState(false)
+
+  const [showAddForm, setShowAddForm] = useState(false)
 
   const handleClose = useCallback(() => {
     setCustom({ editId: null, deleteId: null, transferId: null })
@@ -77,6 +81,12 @@ export const Actions: React.FC = () => {
     [custom]
   )
 
+  const toggleAddForm = () => setShowAddForm(old => !old)
+  const handleAddFormSuccess = () => {
+    toggleAddForm()
+    emitFetch()
+  }
+
   const handleConfirm = useCallback(async () => {
     if (tranferData.toId && tranferData.fromId) {
       setTransfering(true)
@@ -93,11 +103,17 @@ export const Actions: React.FC = () => {
 
   return (
     <>
-      <FlexContainer justify="space-between">
+      <FlexContainer justify="space-between" horizontalPad={20}>
         <div style={{ width: 360, maxWidth: '100%' }}>
           <SearchBar onChangeText={handleSearchText} />
         </div>
+        <IconButton onClick={toggleAddForm}>
+          <Add />
+        </IconButton>
       </FlexContainer>
+      <SimpleModal open={showAddForm} onToggle={handleAddFormSuccess} title="Cadastro de usuário">
+        <FormRegisterAdmin onSuccess={handleSuccess} />
+      </SimpleModal>
       <SimpleModal open={!!custom?.editId} onToggle={handleClose} title="Editar usuário">
         <FormRegister userId={custom?.editId} onSuccess={handleSuccess} />
       </SimpleModal>
