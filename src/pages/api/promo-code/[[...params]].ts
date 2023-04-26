@@ -23,7 +23,7 @@ const orderFields = [
 
 class PromoCodeHandler {
   @Get('/list')
-  @AdminAuth(9)()
+  @AdminAuth(8)()
   @Pagination()
   @HttpCode(200)
   async list(@Req() req: AuthorizedPaginationApiRequest) {
@@ -70,7 +70,7 @@ class PromoCodeHandler {
   }
 
   @Get('/:promoCodeId')
-  @AdminAuth(9)()
+  @AdminAuth(8)()
   @HttpCode(200)
   async one(@Req() req: AuthorizedApiRequest) {
     const { query } = req
@@ -85,7 +85,7 @@ class PromoCodeHandler {
   }
 
   @Patch('/:promoCodeId')
-  @AdminAuth(9)()
+  @AdminAuth(8)()
   @HttpCode(200)
   async update(@Req() req: AuthorizedApiRequest<IPromoCode>) {
     const { auth, query, body } = req
@@ -100,7 +100,7 @@ class PromoCodeHandler {
   }
 
   @Post()
-  @AdminAuth(9)()
+  @AdminAuth(8)()
   @HttpCode(201)
   async create(@Req() req: AuthorizedApiRequest<IPromoCode>) {
     const { auth, body } = req
@@ -117,7 +117,7 @@ class PromoCodeHandler {
   }
 
   @Delete('/:promoCodeId')
-  @AdminAuth(9)()
+  @AdminAuth(8)()
   @HttpCode(200)
   async remove(@Req() req: AuthorizedApiRequest) {
     const { query } = req
