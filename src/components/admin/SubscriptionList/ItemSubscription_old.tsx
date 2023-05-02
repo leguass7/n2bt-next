@@ -45,7 +45,8 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
   value,
   createdBy,
   userId,
-  updateListHandler
+  updateListHandler,
+  payment
 }) => {
   const refId = useRef(1000)
   const [openPaid, setOpenPaid] = useState<number | null>(null)
@@ -117,6 +118,8 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
     return <Text title={email}>{name}</Text>
   }
 
+  const paymentValue = payment?.value || value || 0
+
   return (
     <>
       <List disablePadding>
@@ -133,10 +136,10 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
                   <DeleteForeverIcon />
                 </IconButton>
               ) : null}
-              <PaymentIcon value={value} id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={updateListHandler} />
+              <PaymentIcon value={paymentValue} id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={updateListHandler} />
               {!paid ? (
                 <>
-                  <Tooltip title={`Gerar pagamento${value ? ` ${formatPrice(value)}` : ''}`} arrow>
+                  <Tooltip title={`Gerar pagamento${paymentValue ? ` ${formatPrice(paymentValue)}` : ''}`} arrow>
                     <IconButton onClick={() => fetchPixCode(paymentId)}>
                       <QrCode2Icon />
                     </IconButton>
