@@ -48,6 +48,7 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
   createdBy,
   userId,
   updateListHandler
+  // payment
 }) => {
   const refId = useRef(1000)
   const [openPaid, setOpenPaid] = useState<number | null>(null)
@@ -118,6 +119,8 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
 
     return <Text title={email}>{name}</Text>
   }
+
+  // console.log('payment', payment)
 
   return (
     <>
