@@ -1,5 +1,6 @@
 import { differenceInMinutes } from 'date-fns'
 import { BadRequestException, createHandler, Get, HttpCode, Post, Query, Req, ValidationPipe } from 'next-api-decorators'
+import { FindOptionsWhere } from 'typeorm'
 
 import { mergeDeep } from '~/helpers/object'
 import { prepareConnection } from '~/server-side/database/conn'
@@ -145,7 +146,10 @@ class PaymentHandler {
     const ds = await prepareConnection()
     const repo = ds.getRepository(Payment)
 
-    const where = { ...filter }
+    const tournamentId = filter.tournamentId
+    delete filter.tournamentId
+
+    const where: FindOptionsWhere<Payment> = { ...filter, subscriptions: { category: { tournamentId } } }
     const payments = await repo.find({ where })
 
     return { payments }
