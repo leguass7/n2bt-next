@@ -1,4 +1,4 @@
-import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post, Req } from 'next-api-decorators'
+import { BadRequestException, createHandler, Delete, Get, HttpCode, Param, Patch, Post, Req } from 'next-api-decorators'
 import { FindOptionsWhere } from 'typeorm'
 
 import { prepareConnection } from '~/server-side/database/conn'
@@ -40,6 +40,21 @@ class TournamentHandler {
 
     return { success: true, tournaments }
   }
+
+  // @Get('/report/:tournamentId')
+  // @JwtAuthGuard()
+  // async report(@Param('tournamentId') tournamentId: number) {
+  //   const ds = await prepareConnection()
+  //   const repo = ds.getRepository(Tournament)
+
+  //   const tournament = await repo.findOne({ where: { id: tournamentId }, relations: ['payments'] })
+  //   const payments = tournament.payments
+
+  //   const paid = payments.filter(pay => !!pay?.paid)
+  //   const notPaid = payments.filter(pay => !pay?.paid)
+
+  //   return { paid, notPaid }
+  // }
 
   @Get('/:tournamentId')
   @IfAuth()
