@@ -95,6 +95,8 @@ class SubscriptionHandler {
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
       .leftJoin('Subscription.partner', 'Partner')
+      .addSelect(['Payment.id', 'Payment.value'])
+      .leftJoin('Subscription.payment', 'Payment')
       .where({ categoryId, actived: true })
 
     if (queryText) queryDb.andWhere(`(${queryText.join(' OR ')})`, { search: `%${search}%` })
