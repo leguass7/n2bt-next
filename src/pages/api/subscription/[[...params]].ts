@@ -378,7 +378,7 @@ class SubscriptionHandler {
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
       .orderBy('User.name', 'ASC')
       .addOrderBy('Subscription.paid', 'DESC')
-      .groupBy('Subscription.userId')
+    // .groupBy('Subscription.userId')
 
     if (search)
       repoQuery.andWhere(`( User.name LIKE :search OR User.nick LIKE :search OR User.email LIKE :search OR User.phone LIKE :search )`, {
