@@ -35,6 +35,16 @@ export const ReportPriceCell: React.FC<Props> = ({ record }) => {
   )
 }
 
+export const ReportPromoCodeCell: React.FC<Props> = ({ record }) => {
+  const code = record?.payment?.promoCode?.code || '#'
+
+  return (
+    <div>
+      <Typography variant="body1">{code}</Typography>
+    </div>
+  )
+}
+
 export const ReportGenderCell: React.FC<Props> = ({ record }) => {
   const { gender } = record.user
 
