@@ -368,7 +368,14 @@ class SubscriptionHandler {
 
     const repoQuery = repo
       .createQueryBuilder('Subscription')
-      .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtDelivered'])
+      .select([
+        'Subscription.id',
+        'Subscription.categoryId',
+        'Subscription.userId',
+        'Subscription.paid',
+        'Subscription.shirtDelivered',
+        'Subscription.value'
+      ])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
       .addSelect(['Category.id', 'Category.tournamentId', 'Category.limit', 'Category.title'])

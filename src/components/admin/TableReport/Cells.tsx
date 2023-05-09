@@ -4,6 +4,7 @@ import { DoneRounded, WarningRounded } from '@mui/icons-material'
 import { Box, Checkbox, Typography } from '@mui/material'
 
 import { ICustomCellProps } from '~/components/CustomTable'
+import { formatPrice } from '~/helpers'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { updateSubscription } from '~/services/api/subscriptions'
@@ -21,6 +22,15 @@ export const ReportNameCell: React.FC<Props> = ({ record }) => {
         {email}
       </Typography>
       <Typography variant="caption">{phone}</Typography>
+    </div>
+  )
+}
+
+export const ReportPriceCell: React.FC<Props> = ({ record }) => {
+  const { value } = record
+  return (
+    <div>
+      <Typography variant="body1">{formatPrice(value)}</Typography>
     </div>
   )
 }
