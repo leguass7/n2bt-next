@@ -1,5 +1,19 @@
+import { isDefined } from 'class-validator'
 import type { NextApiResponse } from 'next'
-import { BadRequestException, createHandler, ForbiddenException, Get, HttpCode, HttpException, Patch, Post, Req, Res } from 'next-api-decorators'
+import {
+  BadRequestException,
+  createHandler,
+  ForbiddenException,
+  Get,
+  HttpCode,
+  HttpException,
+  Patch,
+  Post,
+  Query,
+  Req,
+  Res,
+  ValidationPipe
+} from 'next-api-decorators'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
@@ -11,6 +25,10 @@ import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
 import { IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
+
+import { SubscriptionReportFilterDto } from './subscription-report-filter.dto'
+
+const Pipe = ValidationPipe({ whitelist: true })
 
 const userSearchFields = ['id', 'name', 'email', 'cpf', 'phone', 'nick']
 const searchFields = ['Subscription.id', 'User.name', 'Partner.name']
@@ -352,26 +370,36 @@ class SubscriptionHandler {
 
   @Get('/report')
   @JwtAuthGuard()
-  async report(@Req() req: AuthorizedPaginationApiRequest) {
-    const { auth, query } = req
+  async report(@Req() req: AuthorizedPaginationApiRequest, @Query(Pipe) filter: SubscriptionReportFilterDto) {
+    const { auth } = req
 
     const isAdmin = !!(auth?.level >= 8)
     if (!isAdmin) throw new ForbiddenException()
 
-    const tournamentId = +query?.tournamentId
+    const tournamentId = +filter?.tournamentId
     if (!tournamentId) throw new BadRequestException('Torneio não encontrado')
 
-    const search = query?.search
+    const search = filter?.search
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
 
     const repoQuery = repo
       .createQueryBuilder('Subscription')
-      .select(['Subscription.id', 'Subscription.categoryId', 'Subscription.userId', 'Subscription.paid', 'Subscription.shirtDelivered'])
+      .select([
+        'Subscription.id',
+        'Subscription.categoryId',
+        'Subscription.userId',
+        'Subscription.paid',
+        'Subscription.shirtDelivered',
+        'Subscription.value'
+      ])
       .innerJoin('Subscription.category', 'Category')
       .innerJoin('Subscription.user', 'User')
+      .leftJoin('Subscription.payment', 'Payment')
+      .leftJoin('Payment.promoCode', 'PromoCode')
       .addSelect(['Category.id', 'Category.tournamentId', 'Category.limit', 'Category.title'])
+      .addSelect(['Payment.id', 'PromoCode.code'])
       .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize', 'User.email', 'User.phone'])
       .where({ actived: true })
       .distinct()
@@ -381,9 +409,17 @@ class SubscriptionHandler {
     // .groupBy('Subscription.userId')
 
     if (search)
-      repoQuery.andWhere(`( User.name LIKE :search OR User.nick LIKE :search OR User.email LIKE :search OR User.phone LIKE :search )`, {
-        search: `%${search}%`
-      })
+      repoQuery.andWhere(
+        `( User.name LIKE :search OR User.nick LIKE :search OR User.email LIKE :search OR User.phone LIKE :search
+          OR PromoCode.code LIKE :search )`,
+        {
+          search: `%${search}%`
+        }
+      )
+
+    if (isDefined(filter.paid) && filter?.paid !== 'null') {
+      repoQuery.andWhere(`Subscription.paid = :paid`, { paid: filter?.paid === 'true' })
+    }
 
     const subscriptions = await repoQuery.getMany()
 
