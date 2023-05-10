@@ -84,3 +84,8 @@ export async function getDownloadSubscriptions(tournamentId: number, params: Tab
 //   const response = await apiService.delete('/subscription', { params: { id } })
 //   return response
 // }
+
+export async function adminReportSubscriptions(tournamentId: number): Promise<IResponseSubscriptions> {
+  const response = await apiService.get(`/subscription/report`, { params: { tournamentId } })
+  return response
+}

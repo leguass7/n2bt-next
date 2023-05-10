@@ -19,27 +19,43 @@ import 'react-circular-progressbar/dist/styles.css'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 
 const MyApp: React.FC<AppProps<any>> = ({ Component, pageProps }) => {
+  const isStatic = !!pageProps?.isStatic
+
+  if (isStatic)
+    return (
+      <ReduxProvider store={store}>
+        <PersistGate loading={<StorageLoading />} persistor={persistor}>
+          <SessionProvider session={pageProps?.session}>
+            <Component {...pageProps} />
+          </SessionProvider>
+        </PersistGate>
+      </ReduxProvider>
+    )
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={<StorageLoading />} persistor={persistor}>
         <SessionProvider session={pageProps?.session}>
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBr}>
             <UserProvider>
-              <AppThemeProvider themeName="common">
-                <PassRollProvider>
-                  <Component {...pageProps} />
-                  <ToastContainer
-                    theme="colored"
-                    position="top-right"
-                    autoClose={3000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    draggable
-                    pauseOnHover
-                  />
-                </PassRollProvider>
-              </AppThemeProvider>
+              {isStatic ? (
+                <Component {...pageProps} />
+              ) : (
+                <AppThemeProvider themeName="common">
+                  <PassRollProvider>
+                    <Component {...pageProps} />
+                    <ToastContainer
+                      theme="colored"
+                      position="top-right"
+                      autoClose={3000}
+                      hideProgressBar={false}
+                      newestOnTop={false}
+                      closeOnClick
+                      draggable
+                      pauseOnHover
+                    />
+                  </PassRollProvider>
+                </AppThemeProvider>
+              )}
             </UserProvider>
           </LocalizationProvider>
         </SessionProvider>

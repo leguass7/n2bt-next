@@ -1,4 +1,6 @@
-import { VariantColorsTypes } from '~/components/AppThemeProvider/types'
+import type { CSSProperties } from 'react'
+
+import type { VariantColorsTypes } from '~/components/AppThemeProvider/types'
 
 export type FlexJustify = 'space-between' | 'flex-start' | 'flex-end' | 'space-around' | 'center' | 'space-evenly'
 export type FlexAlign = 'center' | 'stretch' | 'baseline' | 'flex-start' | 'flex-end'
@@ -46,4 +48,6 @@ export type FlexProps = {
   horizontalPad?: number
   verticalPad?: number
   width?: string
+  wrap?: CSSProperties['flexWrap']
+  direction?: CSSProperties['flexDirection']
 }

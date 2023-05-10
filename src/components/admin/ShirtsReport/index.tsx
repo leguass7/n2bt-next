@@ -3,8 +3,9 @@ import { Chart, GoogleChartOptions } from 'react-google-charts'
 import { toast } from 'react-toastify'
 
 import { ArrowBack, ContentCopy } from '@mui/icons-material'
-import { Card, CardActions, CardContent, CardHeader, Divider, Grid, IconButton, Typography } from '@mui/material'
+import { Button, Card, CardActions, CardContent, CardHeader, Divider, Grid, IconButton, Typography } from '@mui/material'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { TableReport } from '~/components/admin/TableReport'
 import { themes } from '~/components/AppThemeProvider/themes'
@@ -34,6 +35,7 @@ export const ShirtsReport: React.FC<Props> = ({ tournamentId }) => {
   const [data, setData] = useState<ISubscription[]>([])
   const [payments, setPayments] = useState<Payment[]>([])
   const [statistics, setStatistics] = useState<Partial<ISubscriptionStatistics>>({})
+  const { push } = useRouter()
 
   const [loading, setLoading] = useState(false)
   const isMounted = useIsMounted()
@@ -122,6 +124,10 @@ export const ShirtsReport: React.FC<Props> = ({ tournamentId }) => {
     }
   }
 
+  const handleClickPrint = () => {
+    push(`/admin/tournaments/print-report?tournamentId=${tournamentId}`)
+  }
+
   return (
     <>
       <Grid container py={2} justifyContent="space-between">
@@ -152,10 +158,13 @@ export const ShirtsReport: React.FC<Props> = ({ tournamentId }) => {
             <Divider />
 
             <CardContent id="shirts-quantity">{renderShirtStatistics()}</CardContent>
-            <CardActions>
+            <CardActions sx={{ gap: 1, justifyContent: 'space-between' }}>
               <Typography variant="body1" fontWeight={700} align="right">
                 Total: {statistics?.total}
               </Typography>
+              <Button variant="contained" onClick={handleClickPrint}>
+                IMPRIMIR
+              </Button>
             </CardActions>
           </Card>
         </Grid>

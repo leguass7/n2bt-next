@@ -111,3 +111,12 @@ export function generatePromoCode(size = 6) {
     .slice(size * -1)
     .toUpperCase()
 }
+
+export function limitString(string = '', limit = 0): string {
+  if (!limit) return string
+  const result = string.substring(0, limit)
+  if (result.length >= limit) {
+    return `${result.slice(0, result.length - 3)}...`
+  }
+  return result
+}

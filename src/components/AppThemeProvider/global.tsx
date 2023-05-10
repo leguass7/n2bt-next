@@ -63,6 +63,7 @@ const GlobalStyle = createGlobalStyle`
     background-attachment: scroll;
     min-height: 100vh;
     height: 100%;
+    max-height: auto;
     box-sizing: border-box;
     /* background-color: ${({ theme }) => brighten(theme.colors.background, 1.1)}; */
     background-color: ${({ theme }) => theme.colors.background};
@@ -78,6 +79,7 @@ const GlobalStyle = createGlobalStyle`
   #__next{
     position: relative;
     min-height: 100%;
+    max-height: auto;
     height: 100%;
     max-width: 100%;
     width: 100%;
@@ -88,6 +90,10 @@ const GlobalStyle = createGlobalStyle`
     border: 0;
     ${globCss}
 
+  }
+
+  @page {
+    size: A4;
   }
 `
 
