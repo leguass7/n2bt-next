@@ -44,7 +44,7 @@ export const splitDateTime = (date: string | Date) => {
 // }
 
 type Func = typeof parseJSON
-export function tryDate(str: Date | string, formats: string | string[] = []): Date {
+export function tryDate(str: Date | string | null, formats: string | string[] = []): Date {
   const supportedList = [
     parseJSON,
     ...makeArray(formats).filter(f => !!f),

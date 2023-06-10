@@ -8,7 +8,7 @@ import { makeArray } from '~/helpers/array'
 import { secret } from '~/server-side/config'
 
 import type { AuthorizedApiRequest } from './auth.dto'
-import { authorizedDto } from './auth.helper'
+import { authorizedDto, JwtOrSession } from './auth.helper'
 
 export const JwtAuthGuard = createMiddlewareDecorator(async (req: AuthorizedApiRequest, res: NextApiResponse, next: NextFunction) => {
   const unauthorize = (msg = 'unauthorized') => {
@@ -17,7 +17,7 @@ export const JwtAuthGuard = createMiddlewareDecorator(async (req: AuthorizedApiR
 
   try {
     // // console.log('secret', secret, process.env.NEXTAUTH_URL, process.env.VERCEL_URL)
-    let session = await getToken({ req, secret })
+    let session: JwtOrSession = await getToken({ req, secret })
     // console.log('session token', session)
     if (!session) {
       session = await getSession({ req })
@@ -39,7 +39,7 @@ export const JwtAuthGuard = createMiddlewareDecorator(async (req: AuthorizedApiR
 
 export const IfAuth = createMiddlewareDecorator(async (req: AuthorizedApiRequest, res: NextApiResponse, next: NextFunction) => {
   try {
-    let session = await getToken({ req, secret })
+    let session: JwtOrSession = await getToken({ req, secret })
     if (!session) {
       session = await getSession({ req })
     }
@@ -57,7 +57,7 @@ export const AdminAuth = (levels: number[] | number) =>
   createMiddlewareDecorator(async (req: AuthorizedApiRequest, res: NextApiResponse, next: NextFunction) => {
     const unauthorize = (msg = 'unauthorized') => next(new UnauthorizedException(msg))
     try {
-      let session = await getToken({ req, secret })
+      let session: JwtOrSession = await getToken({ req, secret })
       if (!session) {
         session = await getSession({ req })
       }

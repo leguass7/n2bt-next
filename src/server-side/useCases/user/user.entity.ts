@@ -34,7 +34,7 @@ export class User {
   email: string
 
   @Column({ type: 'datetime', precision: null, nullable: true, default: null })
-  emailVerified?: Date
+  emailVerified?: Date | null
 
   @Column({ type: 'varchar', nullable: true })
   image?: string | null

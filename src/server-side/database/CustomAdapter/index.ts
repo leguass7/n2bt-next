@@ -1,8 +1,8 @@
-import { Account as AuthAccount } from 'next-auth'
-import { Adapter, AdapterSession, AdapterUser } from 'next-auth/adapters'
+import { Adapter, AdapterAccount, AdapterSession, AdapterUser } from 'next-auth/adapters'
 import { ProviderType } from 'next-auth/providers'
 import { DataSource, DeepPartial } from 'typeorm'
 
+import { tryDate } from '~/helpers/dates'
 import { Account } from '~/server-side/useCases/account/account.entity'
 import { Session } from '~/server-side/useCases/session/session.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
@@ -23,23 +23,24 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
   }
 
   //
-  const userDto = (data: Partial<User>): AdapterUser => {
+  const userDto = (data: DeepPartial<User> | User | Partial<User>): AdapterUser => {
     if (data) {
       const { id, emailVerified, email, image, name, level } = data
-      return {
+      const result: AdapterUser = {
         id,
-        emailVerified,
+        emailVerified: emailVerified ? tryDate(emailVerified as Date) : null,
         email,
         image,
         name,
+        // @ts-ignore
         level
-        //email_verified: emailVerified
       }
+      return result
     }
     return null
   }
 
-  const accDto = (data: Partial<Account>): AuthAccount => {
+  const accDto = (data: Partial<Account>): AdapterAccount => {
     if (data) {
       const {
         access_token,
@@ -82,7 +83,7 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
       const ds = await getDS()
       const repo = ds.getRepository(User)
 
-      const userData = { ...user } as DeepPartial<User>
+      const userData = { ...user } as AdapterUser
 
       const email = user?.email as string
       if (email) {
@@ -134,7 +135,7 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
       await repo.delete(userId)
       // ds.destroy()
     },
-    async linkAccount(account) {
+    async linkAccount(account): Promise<AdapterAccount> {
       const ds = await getDS()
       const repo = ds.getRepository(Account)
       const saveData = repo.create(account)
@@ -144,12 +145,14 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
       // ds.destroy()
       return accDto(result)
     },
+
     async unlinkAccount({ providerAccountId, provider }) {
       const ds = await getDS()
       const repo = ds.getRepository(Account)
       await repo.delete({ provider, providerAccountId })
       // ds.destroy()
     },
+
     async createSession({ sessionToken, userId, expires }) {
       const ds = await getDS()
       const repo = ds.getRepository(Session)
