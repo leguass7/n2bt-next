@@ -5,7 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import type { DataSource } from 'typeorm'
 
-import { googleSecrets, isDevMode, secret, azureSecrets, nextAuthUrl } from '~/server-side/config'
+import { googleSecrets, isDevMode, secret, azureSecrets } from '~/server-side/config'
 import { prepareConnection } from '~/server-side/database/conn'
 import { CustomAdapter } from '~/server-side/database/CustomAdapter'
 import { checkCredentials, getUserCredentials } from '~/server-side/useCases/user/user-auth.service'
