@@ -1,13 +1,17 @@
-import type { OAuthUserConfig } from 'next-auth/providers'
-
 import type { ISmtpConfig } from '../services/EmailService/smtp.provider'
 
 export const isDevMode = process.env.NODE_ENV !== 'production'
 export const secret = process.env.SECRET
 
-export const googleSecrets: OAuthUserConfig<any> = {
+export const googleSecrets = {
   clientId: process.env.GOOGLE_CLIENT_ID || '',
   clientSecret: process.env.GOOGLE_CLIENT_SECRET || ''
+}
+
+export const azureSecrets = {
+  clientId: process.env.AZURE_AD_CLIENT_ID,
+  clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+  tenantId: process.env.AZURE_AD_TENANT_ID
 }
 
 export const expiracao = 2592000

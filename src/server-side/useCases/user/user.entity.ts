@@ -36,7 +36,7 @@ export class User {
   @Column({ type: 'datetime', precision: null, nullable: true, default: null })
   emailVerified?: Date | null
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'text', nullable: true })
   image?: string | null
 
   @Exclude()
