@@ -13,7 +13,9 @@ import { LayoutAdmin } from '~/components/app/LayoutAdmin'
 import { useAppArena } from '~/hooks/useAppArena'
 import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
 
-const AdminTournamentsPage: NextPage = () => {
+type Props = {}
+
+const AdminTournamentsPage: NextPage<Props> = () => {
   const { arenaId } = useAppArena()
 
   return (
@@ -39,25 +41,15 @@ const AdminTournamentsPage: NextPage = () => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<any> = async context => {
-  const { query } = context
-  const tournamentId = +query?.tournamentId || 0
-
+export const getServerSideProps: GetServerSideProps<Props> = async context => {
   const [authOptions] = await createOAuthOptions()
   const session = await getServerSession(context.req, context.res, authOptions)
 
-  if (!tournamentId) {
-    return {
-      redirect: { destination: `/admin/tournaments?error=${tournamentId}` },
-      props: { tournamentId }
-    }
-  }
-
   if (!session) {
-    return { redirect: { destination: `/login?tournamentId=${tournamentId}` }, props: { tournamentId } }
+    return { redirect: { destination: `/login` }, props: {} }
   }
 
-  return { props: { session, tournamentId } }
+  return { props: { session } }
 }
 
 export default AdminTournamentsPage
