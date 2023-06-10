@@ -13,7 +13,7 @@ import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useAppRecoverCode } from '~/hooks/useAppAuth'
 
 import type { CustomContextSigin } from './custom.types'
-import { GoogleLogin } from './GoogleLogin'
+import { ExternalLogin } from './ExternalLogin'
 
 interface Props {
   allowRegister?: boolean
@@ -44,7 +44,7 @@ export const StepSignin: React.FC<Props> = ({ allowRegister = false }) => {
         <Divider />
         <CardContent>
           <FormSignin onRegister={allowRegister ? () => goTo(4) : null} onForgot={handleForgot} />
-          <GoogleLogin />
+          <ExternalLogin />
         </CardContent>
         <Divider />
         <CardActions>
