@@ -1,7 +1,7 @@
 import { Account as AuthAccount } from 'next-auth'
 import { Adapter, AdapterSession, AdapterUser } from 'next-auth/adapters'
 import { ProviderType } from 'next-auth/providers'
-import { DataSource } from 'typeorm'
+import { DataSource, DeepPartial } from 'typeorm'
 
 import { Account } from '~/server-side/useCases/account/account.entity'
 import { Session } from '~/server-side/useCases/session/session.entity'
@@ -26,7 +26,15 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
   const userDto = (data: Partial<User>): AdapterUser => {
     if (data) {
       const { id, emailVerified, email, image, name, level } = data
-      return { id, emailVerified, email, image, name, level }
+      return {
+        id,
+        emailVerified,
+        email,
+        image,
+        name,
+        level
+        //email_verified: emailVerified
+      }
     }
     return null
   }
@@ -73,11 +81,20 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
     async createUser(user) {
       const ds = await getDS()
       const repo = ds.getRepository(User)
-      const saveData = repo.create(user)
-      const data = await repo.save(saveData)
 
+      const userData = { ...user } as DeepPartial<User>
+
+      const email = user?.email as string
+      if (email) {
+        // deve atualizar usuário caso já exista
+        const userExists = await repo.findOne({ where: { email } })
+        if (userExists) userData.id = userExists.id
+      } else delete userData?.id
+
+      const data = await repo.save(repo.create(userData))
       return userDto(data)
     },
+
     async getUser(id) {
       const ds = await getDS()
       const repo = ds.getRepository(User)
@@ -88,10 +105,11 @@ export const CustomAdapter: CreateAdapter = (datasource, factoryDS) => {
     async getUserByEmail(email) {
       const ds = await getDS()
       const repo = ds.getRepository(User)
-      const result = await repo.findOne({ where: { email } })
+      const result = await repo.findOne({ where: { email }, relations: { accounts: true } })
+
+      if (!result?.accounts?.length) return null // para enganar o next-auth e forçar criar novo usuário
       const u = result ? userDto(result) : null
       // console.log('\n getUserByEmail \n', u)
-
       return u
     },
     async getUserByAccount({ providerAccountId, provider }) {

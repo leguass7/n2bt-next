@@ -15,34 +15,18 @@ const maxAge = 30 * 24 * 60 * 60 // 30 days
 const options: NextAuthOptions = {
   secret,
   session: { strategy: 'jwt', maxAge },
-  jwt: {
-    secret,
-    maxAge
-  },
-  // adapter: CustomAdapter(, prepareDataSource),
-  pages: {
-    signIn: '/login',
-    newUser: '/register'
-  },
+  jwt: { secret, maxAge },
+  pages: { signIn: '/login' },
   providers: [
     GoogleProvider({
       clientId: googleSecrets.clientId,
       clientSecret: googleSecrets.clientSecret,
-      authorization: {
-        params: {
-          prompt: 'consent',
-          access_type: 'offline',
-          response_type: 'code'
-        }
-      }
+      authorization: { params: { prompt: 'consent', access_type: 'offline', response_type: 'code' } }
     }),
     CredentialsProvider({
       id: 'custom',
       name: 'custom',
-      credentials: {
-        email: { type: 'email', label: 'e-mail' },
-        password: { type: 'password', label: 'senha' }
-      },
+      credentials: { email: { type: 'email', label: 'e-mail' }, password: { type: 'password', label: 'senha' } },
       async authorize(credentials, _req) {
         const { email, password } = credentials
         const user = await checkCredentials(email, password)
@@ -55,6 +39,13 @@ const options: NextAuthOptions = {
       const u = await getUserCredentials(user?.id || token?.sub)
       token.level = u?.level
       return token
+    },
+    async signIn({ account }) {
+      if (account.provider === 'google') {
+        // return profile.email_verified && profile.email.endsWith('@example.com')
+        return true
+      }
+      return true // Do different verification for other providers that don't have `email_verified`
     }
   },
   debug: !!isDevMode

@@ -36,16 +36,13 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta property="og:type" content="website" />
           <meta property="og:locale" content="pt_BR" />
-          {/* <meta property="og:title" content="N2BT - Beach Tennis" /> */}
           <meta property="og:title" content="CEA - Circuito Esportivo de Areia" />
           <meta property="og:description" content="Torneio de várias modalidades de esporte de areia" />
           <meta name="description" content="Torneio de várias modalidades de esporte de areia" />
           <meta property="og:image:type" content="image/png" />
           <meta property="og:image:width" content="512" />
           <meta property="og:image:height" content="512" />
-          {/* <meta property="og:image" content="https://n2bt.avatarsolucoesdigitais.com.br/face.png" /> */}
-          <meta property="og:image" content="https://cea.avatarsolucoesdigitais.com.br/face.png" />
-          {/* <meta property="og:site_name" content="N2BT - Beach Tennis" /> */}
+          <meta property="og:image" content="https://cea.avatarsolucoesdigitais.com.br/face-t-katavento.png" />
           <meta property="og:site_name" content="CEA - Circuito Esportivo de Areia" />
         </Head>
         <body id="body">
