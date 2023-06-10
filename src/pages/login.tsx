@@ -1,13 +1,18 @@
 import { useCallback, useEffect } from 'react'
 
 import { GetServerSideProps, NextPage } from 'next'
+import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 import { LayoutSigin } from '~/components/app/LayoutSigin'
-import { SigninSlider } from '~/components/Login'
 import { siteName } from '~/config/constants'
 import { useAppAuth } from '~/hooks/useAppAuth'
+
+export const SigninSliderDynamic = dynamic(
+  import('~/components/Login').then(ctx => ctx.SigninSlider),
+  { ssr: false }
+)
 
 interface LoginPageProps {
   csrfToken?: string
@@ -41,7 +46,7 @@ const Login: NextPage<LoginPageProps> = ({ uaString, tournamentId }) => {
         <title>{siteName} - Login</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
-      <SigninSlider uaString={uaString} />
+      <SigninSliderDynamic uaString={uaString} />
     </LayoutSigin>
   )
 }

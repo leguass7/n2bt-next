@@ -5,7 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import type { DataSource } from 'typeorm'
 
-import { googleSecrets, isDevMode, secret, azureSecrets } from '~/server-side/config'
+import { googleSecrets, isDevMode, secret, azureSecrets, nextAuthUrl } from '~/server-side/config'
 import { prepareConnection } from '~/server-side/database/conn'
 import { CustomAdapter } from '~/server-side/database/CustomAdapter'
 import { checkCredentials, getUserCredentials } from '~/server-side/useCases/user/user-auth.service'
@@ -45,14 +45,21 @@ const options: AuthOptions = {
       const u = await getUserCredentials(user?.id || token?.sub)
       token.level = u?.level
       return token
-    },
-    async signIn({ account }) {
-      if (account.provider === 'google') {
-        // return profile.email_verified && profile.email.endsWith('@example.com')
-        return true
-      }
-      return true // Do different verification for other providers that don't have `email_verified`
     }
+    // async session({ session, token, user }) {
+    //   // Send properties to the client, like an access_token and user id from a provider.
+    //   session.accessToken = token.accessToken
+    //   session.user.id = token.id
+
+    //   return session
+    // }
+    // async signIn({ account }) {
+    //   if (account.provider === 'google') {
+    //     // return profile.email_verified && profile.email.endsWith('@example.com')
+    //     return true
+    //   }
+    //   return true // Do different verification for other providers that don't have `email_verified`
+    // }
   },
   debug: !!isDevMode
 }
@@ -66,7 +73,6 @@ export default authHandler
 
 export async function createOAuthOptions(): Promise<[AuthOptions, DataSource]> {
   const opt = { ...options } as AuthOptions
-
   const ds = await prepareConnection()
   opt.adapter = CustomAdapter(ds, prepareConnection)
   return [opt, ds]

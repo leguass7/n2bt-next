@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import type { NextPage, GetServerSideProps } from 'next'
-import { unstable_getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import dynamic from 'next/dynamic'
 
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
@@ -46,7 +46,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async context =
   const tournamentId = +query?.tournamentId || 0
 
   const [authOptions] = await createOAuthOptions()
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+  const session = await getServerSession(context.req, context.res, authOptions)
 
   if (!tournamentId) {
     return {

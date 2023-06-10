@@ -2,9 +2,12 @@ import React from 'react'
 
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
+import { getServerSession } from 'next-auth'
 
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
+
+import { createOAuthOptions } from '../api/auth/[...nextauth]'
 
 const AdminIndexPage: NextPage = () => {
   return (
@@ -16,6 +19,17 @@ const AdminIndexPage: NextPage = () => {
       </Grid>
     </LayoutAdmin>
   )
+}
+
+export const getServerSideProps: GetServerSideProps<Record<string, any>> = async context => {
+  const [authOptions] = await createOAuthOptions()
+  const session = await getServerSession(context.req, context.res, authOptions)
+
+  if (!session) {
+    return { redirect: { destination: `/login` }, props: {} }
+  }
+
+  return { props: { session } }
 }
 
 export default AdminIndexPage
