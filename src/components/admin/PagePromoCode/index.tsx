@@ -20,6 +20,7 @@ export const PagePromoCode: React.FC<Props> = ({ tournamentId }) => {
       </Grid>
       <Grid item>
         <br />
+        <br />
       </Grid>
     </Grid>
   )
