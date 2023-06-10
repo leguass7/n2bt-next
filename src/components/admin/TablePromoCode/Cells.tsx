@@ -73,9 +73,11 @@ export const OptionTools: React.FC<Props> = ({ record }) => {
 
 export const LimitCell: React.FC<Props> = ({ record }) => {
   const used = record?.payments?.length || 0
+  const discount = record?.discount || 0
   return (
     <CellContainer>
       <Text textSize={14}>{`${used} de ${record?.usageLimit}`}</Text>
+      {discount ? <Text textSize={10}>desconto: {discount * 100}%</Text> : null}
     </CellContainer>
   )
 }
