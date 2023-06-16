@@ -44,7 +44,7 @@ export const LoadContainer = styled.div<{
       display: block;
       border-radius: 50%;
       border: ${({ stroke }) => stroke}px solid #f1f1f1;
-      border-top-color: ${({ bColor, theme }) => bColor || theme.colors.primary};
+      border-top-color: ${({ bColor }) => bColor || '#000'};
       animation: ${rotate} 200ms linear infinite;
       animation-duration: ${({ speed }) => `${speed}ms`};
       width: ${({ size }) => `${size}px`};

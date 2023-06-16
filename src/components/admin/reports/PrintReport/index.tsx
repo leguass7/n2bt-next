@@ -15,7 +15,7 @@ import { limitString } from '~/helpers/string'
 import { IResponseSubscriptions } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { adminReportSubscriptions } from '~/services/api/subscriptions'
 
-import { FlexBox, Span } from './styles'
+import { FlexBox, Span } from '../styles'
 
 const theme = createTheme({
   typography: {
@@ -24,11 +24,6 @@ const theme = createTheme({
       fontWeight: 700,
       borderBottom: '2px solid black',
       padding: '4px 10px'
-      // '@media print': {
-      //   fontSize: '8rem',
-      //   borderBottom: '1px solid red',
-      //   color: 'black'
-      // }
     }
   },
   components: {
@@ -111,7 +106,7 @@ export const PrintReport: React.FC<Props> = ({ tournamentId }) => {
             </TableHead>
             <TableBody>
               {data.map(({ id, user, payment, category }, i) => {
-                const paiday = tryDate(payment.payday as Date)
+                const paiday = tryDate(payment?.payday as Date)
                 return (
                   <TableRow key={`sub-${id}`}>
                     <TableCell>
@@ -137,7 +132,9 @@ export const PrintReport: React.FC<Props> = ({ tournamentId }) => {
                         </>
                       ) : null}
                     </TableCell>
-                    <TableCell align="center">{payment?.paid ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}</TableCell>
+                    <TableCell align="center">
+                      <>{payment?.paid ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}</>
+                    </TableCell>
                     <TableCell>
                       <Span textSize={10}>{payment?.promoCode?.code}</Span>
                       <br />

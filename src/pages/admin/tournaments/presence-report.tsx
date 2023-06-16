@@ -5,24 +5,25 @@ import dynamic from 'next/dynamic'
 import { LayoutPrint } from '~/components/app/LayoutPrint'
 import { CircleLoading } from '~/components/CircleLoading'
 import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
-import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
-const DynamicPrintReport = dynamic(() => import('~/components/admin/PrintReport').then(({ PrintReport }) => PrintReport), {
-  loading: () => <CircleLoading />,
-  ssr: false
-})
+const DynamicPrintPresenceReport = dynamic(
+  () => import('~/components/admin/reports/PrintPresenceReport').then(({ PrintPresenceReport }) => PrintPresenceReport),
+  {
+    loading: () => <CircleLoading size={24} color="#f00" />,
+    ssr: false
+  }
+)
 
 interface Props {
   isStatic?: boolean
   tournamentId?: number
-  subscriptions?: ISubscription[]
 }
 
 const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
   return (
     <>
       <LayoutPrint>
-        <DynamicPrintReport tournamentId={tournamentId} />
+        <DynamicPrintPresenceReport tournamentId={tournamentId} />
       </LayoutPrint>
     </>
   )

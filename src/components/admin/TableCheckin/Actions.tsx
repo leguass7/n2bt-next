@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import ArrowBack from '@mui/icons-material/ArrowBack'
+import PrintIcon from '@mui/icons-material/Print'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Badge from '@mui/material/Badge'
@@ -38,9 +39,7 @@ export const Actions: React.FC<Props> = ({ tournamentId, users = [] }) => {
   const [loading] = useState(false)
   const { custom, setCustom } = useTableActions<ICheckinActions>()
   const { setFilter } = useCustomTableFilter()
-
   const [disable, setDisable] = useState(false)
-
   const [winner, setWinner] = useState([])
 
   const handleBack = () => push('/admin/tournaments')
@@ -59,6 +58,10 @@ export const Actions: React.FC<Props> = ({ tournamentId, users = [] }) => {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handlePrint = () => {
+    push(`/admin/tournaments/presence-report/?tournamentId=${tournamentId}`)
   }
 
   const handleStart = () => {
@@ -80,7 +83,6 @@ export const Actions: React.FC<Props> = ({ tournamentId, users = [] }) => {
     setCustom({ userSelectedList: users.map(u => u.id) })
   }, [setCustom, users])
 
-  // console.log('lista', custom?.userSelectedList)
   return (
     <>
       <FlexContainer justify="space-around">
@@ -93,6 +95,11 @@ export const Actions: React.FC<Props> = ({ tournamentId, users = [] }) => {
               SORTEIO
             </Button>
           </Badge>
+          <IconButton onClick={handlePrint}>
+            <Tooltip arrow title="Imprimir">
+              <PrintIcon />
+            </Tooltip>
+          </IconButton>
           <IconButton onClick={handleBack}>
             <Tooltip arrow title="Voltar para torneios">
               <ArrowBack />
