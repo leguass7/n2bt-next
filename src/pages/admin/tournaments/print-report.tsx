@@ -7,7 +7,7 @@ import { CircleLoading } from '~/components/CircleLoading'
 import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
-const DynamicPrintReport = dynamic(() => import('~/components/admin/PrintReport').then(({ PrintReport }) => PrintReport), {
+const DynamicPrintReport = dynamic(() => import('~/components/admin/reports/PrintReport').then(({ PrintReport }) => PrintReport), {
   loading: () => <CircleLoading />,
   ssr: false
 })
