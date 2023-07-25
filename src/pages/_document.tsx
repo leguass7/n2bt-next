@@ -42,7 +42,7 @@ export default class MyDocument extends Document {
           <meta property="og:image:type" content="image/png" />
           <meta property="og:image:width" content="512" />
           <meta property="og:image:height" content="512" />
-          <meta property="og:image" content="https://cea.avatarsolucoesdigitais.com.br/face-t-katavento.png" />
+          <meta property="og:image" content="https://cea.avatarsolucoesdigitais.com.br/face-rafinha.png" />
           <meta property="og:site_name" content="CEA - Circuito Esportivo de Areia" />
         </Head>
         <body id="body">

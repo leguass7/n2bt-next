@@ -4,6 +4,7 @@ import imgDunas from '~/assets/dunas-out-large.jpg'
 import imgFute from '~/assets/fute.jpg'
 import imgOriginal from '~/assets/original-1ano.jpg'
 import imgSpeed from '~/assets/primeira-speed.jpg'
+import imgRafinha from '~/assets/rafinha-10.jpg'
 import imgSummer from '~/assets/summer-50-large.jpg'
 import imgVolei from '~/assets/volei.jpg'
 import type { CategoryOption } from '~/components/forms/InputSelects'
@@ -39,7 +40,8 @@ export const tournamentImages = [
   { id: 4, image: imgDunas },
   { id: 5, image: imgBt },
   { id: 6, image: imgVolei },
-  { id: 7, image: imgFute }
+  { id: 7, image: imgFute },
+  { id: 10, image: imgRafinha }
   //
 ]
 
