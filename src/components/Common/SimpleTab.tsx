@@ -1,5 +1,5 @@
 import Tab from '@mui/material/Tab'
-import Tabs, { TabsProps } from '@mui/material/Tabs'
+import Tabs, { type TabsProps } from '@mui/material/Tabs'
 
 import { Text } from '../styled'
 
@@ -31,7 +31,7 @@ export const SimpleTab: React.FC<Props> = ({ onChange, tabs, value }) => {
   return (
     <Tabs value={value} onChange={(e, v) => onChange?.(v)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
       {tabs.map(({ label, value }, index) => {
-        return <Tab label={renderLabel(label)} value={value} key={`tab-${index}`} wrapped />
+        return <Tab label={renderLabel(label)} value={value} key={`tab-${index}`} wrapped sx={{ color: '#ccc' }} />
       })}
     </Tabs>
   )

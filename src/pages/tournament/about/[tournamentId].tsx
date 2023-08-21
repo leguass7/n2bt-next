@@ -1,14 +1,20 @@
 import { useCallback, useMemo, useState } from 'react'
 
 import type { GetServerSideProps, NextPage } from 'next'
+import dynamic from 'next/dynamic'
 import Head from 'next/head'
 
 import { Layout } from '~/components/app/Layout'
-import { RankingPanel } from '~/components/Rankings/RankingPanel'
+import { CircleLoading } from '~/components/CircleLoading'
 import { siteName } from '~/config/constants'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import { ITournament, TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
+import { type ITournament, TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
 import { getTournament } from '~/services/api/tournament'
+
+const DynamicRankingPanel = dynamic(() => import('~/components/Rankings/RankingPanel').then(({ RankingPanel }) => RankingPanel), {
+  loading: () => <CircleLoading size={24} color="#f00" />,
+  ssr: false
+})
 
 interface PageProps {
   tournamentId?: number
@@ -40,7 +46,7 @@ const TournamentAboutPage: NextPage<PageProps> = ({ tournamentId }) => {
         </title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
-      <RankingPanel hasPairs={hasPairs} tournament={data} tournamentId={tournamentId} />
+      <DynamicRankingPanel hasPairs={hasPairs} tournament={data} tournamentId={tournamentId} />
     </Layout>
   )
 }
