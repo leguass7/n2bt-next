@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
-import MuiSwitch, { SwitchProps } from '@mui/material/Switch'
+import MuiSwitch, { type SwitchProps } from '@mui/material/Switch'
 import { useField } from '@unform/core'
 
 interface Props extends SwitchProps {

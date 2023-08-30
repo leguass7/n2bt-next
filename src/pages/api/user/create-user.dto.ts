@@ -1,6 +1,6 @@
 import { IsDate, IsEmail, IsNotEmpty, IsOptional } from 'class-validator'
 
-import { UserGender } from '~/server-side/useCases/user/user.dto'
+import { type UserGender } from '~/server-side/useCases/user/user.dto'
 
 export class CreateUserDto {
   @IsNotEmpty()

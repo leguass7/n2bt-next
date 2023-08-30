@@ -1,6 +1,6 @@
-import { CreateAppointmentDTO } from '~/server-side/useCases/appointment/dto/create-appointment.dto'
-import { FilterAppointmentDTO } from '~/server-side/useCases/appointment/dto/filter-appointment.dto'
-import { UpdateAppointmentDTO } from '~/server-side/useCases/appointment/dto/update-appointment.dto'
+import { type CreateAppointmentDTO } from '~/server-side/useCases/appointment/dto/create-appointment.dto'
+import { type FilterAppointmentDTO } from '~/server-side/useCases/appointment/dto/filter-appointment.dto'
+import { type UpdateAppointmentDTO } from '~/server-side/useCases/appointment/dto/update-appointment.dto'
 
 import { apiService } from './api.service'
 

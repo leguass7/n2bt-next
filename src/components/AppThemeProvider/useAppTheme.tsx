@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { ThemeContext } from './ThemeContext'
-import { IUseAppTheme, MatchingRules, TextColor, VariantColorsTypes } from './types'
+import { type IUseAppTheme, type MatchingRules, type TextColor, type VariantColorsTypes } from './types'
 
 export function useAppTheme(): IUseAppTheme {
   const { theme, isDark, matchRules, setIsDark, setThemeName, themeName } = useContext(ThemeContext)

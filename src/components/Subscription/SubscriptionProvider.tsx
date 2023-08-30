@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useState } from 'react'
+import { type Dispatch, type SetStateAction, useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { createContext, useContextSelector } from 'use-context-selector'
@@ -7,7 +7,7 @@ import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import type { IResponseGeneratePix } from '~/server-side/useCases/payment/payment.dto'
 import type { IResponseSubscription, ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import type { IUser } from '~/server-side/useCases/user/user.dto'
-import { PaymentPayload, generatePayment } from '~/services/api/payment'
+import { type PaymentPayload, generatePayment } from '~/services/api/payment'
 import { createPublicSubscription } from '~/services/api/subscriber'
 
 export interface ISubscriptionProviderContext {

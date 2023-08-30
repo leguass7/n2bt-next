@@ -1,4 +1,4 @@
-import { DataSource, DataSourceOptions } from 'typeorm'
+import { DataSource, type DataSourceOptions } from 'typeorm'
 import type { MysqlConnectionCredentialsOptions } from 'typeorm/driver/mysql/MysqlConnectionCredentialsOptions'
 
 function parsedbUrl(url = ''): MysqlConnectionCredentialsOptions | null {

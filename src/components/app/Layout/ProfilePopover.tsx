@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useState } from 'react'
+import React, { type MouseEvent, useEffect, useState } from 'react'
 
 import HomeIcon from '@mui/icons-material/Home'
 import HowToRegIcon from '@mui/icons-material/HowToReg'

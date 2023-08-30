@@ -4,7 +4,7 @@ import { useResizeDetector } from 'react-resize-detector'
 import styled from 'styled-components'
 import { v4 as uuidV4 } from 'uuid'
 
-import { ISliderDimensions, usePassRoll, usePassRollRegister } from './PassRollProvider'
+import { type ISliderDimensions, usePassRoll, usePassRollRegister } from './PassRollProvider'
 import { filterChildrenElements } from './reactUtils'
 import { SliderList, SliderItem } from './SliderList'
 import { WrapperItem } from './WrapperItem'

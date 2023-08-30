@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 
-import { FormRecoverCode, FormRecoverCodeProps } from '~/components/forms/UnForm/FormRecoverCode'
+import { FormRecoverCode, type FormRecoverCodeProps } from '~/components/forms/UnForm/FormRecoverCode'
 import { FromPass } from '~/components/forms/UnForm/FromPass'
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { useIsMounted } from '~/hooks/useIsMounted'
-import { IUser } from '~/server-side/useCases/user/user.dto'
+import { type IUser } from '~/server-side/useCases/user/user.dto'
 import { listCategorySubscriptions } from '~/services/api/subscriptions'
 
 interface Props {

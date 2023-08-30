@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack'
 import { styled as MuiStyled } from '@mui/material/styles'
 import styled, { css } from 'styled-components'
 
-import { FlexProps, MarginProps, TextProps } from '~/styles/types'
+import { type FlexProps, type MarginProps, type TextProps } from '~/styles/types'
 
 export const Text = styled.span<TextProps & { verticalPad?: number; horizontalPad?: number }>`
   font-weight: ${({ bold }) => (bold ? 'bold' : 'normal')};

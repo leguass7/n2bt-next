@@ -6,7 +6,7 @@ import { ThemeProvider as SCThemeProvider } from 'styled-components'
 
 import GlobalStyle from './global'
 import { ThemeContext } from './ThemeContext'
-import { themes, ThemeName } from './themes'
+import { themes, type ThemeName } from './themes'
 import type { IAppTheme, MatchingRules, ThemeProviderProps } from './types'
 
 const createMuiTheme = (theme: IAppTheme) => {

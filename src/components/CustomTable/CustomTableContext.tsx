@@ -1,6 +1,7 @@
-import React, { createContext } from 'react'
+import type React from 'react'
+import { createContext } from 'react'
 
-import { GenericObject, IColumnTable, Order, Rows } from './types'
+import { type GenericObject, type IColumnTable, type Order, type Rows } from './types'
 
 interface Pagination {
   page?: number

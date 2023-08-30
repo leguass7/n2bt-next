@@ -4,12 +4,12 @@ import type { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
 
 import { prepareConnection } from '~/server-side/database/conn'
 import { Appointment } from '~/server-side/useCases/appointment/appointment.entity'
-import { CreateAppointmentDTO } from '~/server-side/useCases/appointment/dto/create-appointment.dto'
-import { FilterAppointmentDTO } from '~/server-side/useCases/appointment/dto/filter-appointment.dto'
-import { UpdateAppointmentDTO } from '~/server-side/useCases/appointment/dto/update-appointment.dto'
+import { type CreateAppointmentDTO } from '~/server-side/useCases/appointment/dto/create-appointment.dto'
+import { type FilterAppointmentDTO } from '~/server-side/useCases/appointment/dto/filter-appointment.dto'
+import { type UpdateAppointmentDTO } from '~/server-side/useCases/appointment/dto/update-appointment.dto'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
-import { PlayField } from '~/server-side/useCases/play-field/play-field.entity'
+import { type PlayField } from '~/server-side/useCases/play-field/play-field.entity'
 
 const Pipe = ValidationPipe({ whitelist: true, forbidUnknownValues: true })
 

@@ -2,7 +2,7 @@ import type { DeepPartial } from 'typeorm'
 
 import type { IResponseApi } from '~/server-side/api.interface'
 
-import { Category } from './category.entity'
+import { type Category } from './category.entity'
 
 export type ICategory = DeepPartial<Category>
 

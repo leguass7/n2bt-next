@@ -1,4 +1,4 @@
-import { CheckinRawDto } from './checkin.dto'
+import { type CheckinRawDto } from './checkin.dto'
 
 export const searchFields = ['User.name', 'User.nick', 'User.email', 'Category.title', 'User.phone']
 

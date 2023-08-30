@@ -1,7 +1,7 @@
 import type { NextApiResponse } from 'next'
-import { createMiddlewareDecorator, NextFunction } from 'next-api-decorators'
+import { createMiddlewareDecorator, type NextFunction } from 'next-api-decorators'
 
-import { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
+import { type AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 
 type Order = 'ASC' | 'DESC'
 export type ArrayOrder = [

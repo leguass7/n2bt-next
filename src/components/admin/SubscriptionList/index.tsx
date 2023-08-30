@@ -20,12 +20,12 @@ import { BoxCenter } from '~/components/styled'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { listAdminSubscriptions } from '~/services/api/subscriptions'
 
-import { FormPairRanking, SuccessHandler } from '../FormPairRanking'
+import { FormPairRanking, type SuccessHandler } from '../FormPairRanking'
 import { ActionVerified } from './ActionVerified'
 import { AddItem } from './AddItem'
 import { ItemSubscription } from './ItemSubscription_old'
 import { PairTools } from './PairTools'
-import { prepareDto, Pair } from './utils'
+import { prepareDto, type Pair } from './utils'
 
 export type OnLoadParams = {
   pairs?: number

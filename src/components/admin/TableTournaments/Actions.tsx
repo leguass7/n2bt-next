@@ -24,7 +24,7 @@ import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
 import { deletetTournament } from '~/services/api/tournament'
 
-import { FormTournament, SuccessHandler } from '../FormTournament'
+import { FormTournament, type SuccessHandler } from '../FormTournament'
 import { UploadImage } from '../FormTournament/UploadImage'
 
 export interface ITournamentActions {

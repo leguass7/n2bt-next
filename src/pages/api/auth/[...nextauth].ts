@@ -1,5 +1,5 @@
-import { NextApiHandler } from 'next'
-import NextAuth, { AuthOptions } from 'next-auth'
+import { type NextApiHandler } from 'next'
+import NextAuth, { type AuthOptions } from 'next-auth'
 import AzureAd from 'next-auth/providers/azure-ad'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'

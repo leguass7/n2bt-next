@@ -2,7 +2,7 @@ import 'styled-components'
 // import React from 'react'
 // import { SweetAlertProps as S } from 'react-bootstrap-sweetalert/dist/types'
 
-import { IAppTheme } from '~/components/AppThemeProvider/themes'
+import { type IAppTheme } from '~/components/AppThemeProvider/themes'
 
 declare module 'styled-components' {
   export interface DefaultTheme extends IAppTheme {}

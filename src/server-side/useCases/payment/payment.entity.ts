@@ -5,7 +5,7 @@ import type { PromoCode } from '~/server-side/useCases/promo-code/promo-code.ent
 import type { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import type { User } from '~/server-side/useCases/user/user.entity'
 
-import { PaymentMethod } from './payment.dto'
+import { type PaymentMethod } from './payment.dto'
 import type { PaymentMeta } from './payment.dto'
 
 @Entity('payments')

@@ -14,7 +14,7 @@ import { splitDateTime } from '~/helpers/dates'
 import type { IPromoCode } from '~/server-side/useCases/promo-code/promo-code.dto'
 import { updatePromoCode } from '~/services/api/promo-code'
 
-import { IPromoCodeActions } from './Actions'
+import { type IPromoCodeActions } from './Actions'
 
 type Props = ICustomCellProps<IPromoCode>
 

@@ -5,7 +5,7 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 // import Badge from '@mui/material/Badge'
 // import Button from '@mui/material/Button'
-import { SxProps, darken } from '@mui/material/styles'
+import { type SxProps, darken } from '@mui/material/styles'
 
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { FlexContainer, Paragraph, Text } from '~/components/styled'

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { brighten } from '~/helpers/colors'
 
-import { VariantColorsTypes } from '../AppThemeProvider/types'
+import { type VariantColorsTypes } from '../AppThemeProvider/types'
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { Button } from './styles'
 

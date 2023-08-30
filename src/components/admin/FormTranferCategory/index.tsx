@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack'
 import { Form } from '@unform/web'
 
 import { CircleLoading } from '~/components/CircleLoading'
-import Select, { SelectItem } from '~/components/forms/UnForm/Select'
+import Select, { type SelectItem } from '~/components/forms/UnForm/Select'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import { listCategories } from '~/services/api/category'
 

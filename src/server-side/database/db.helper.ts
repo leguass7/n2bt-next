@@ -3,7 +3,7 @@ import type { SelectQueryBuilder } from 'typeorm'
 
 import { formatInTimeZone } from '~/helpers/dates'
 import { tryJson } from '~/helpers/object'
-import { ArrayOrder } from '~/server-side/services/PaginateService'
+import { type ArrayOrder } from '~/server-side/services/PaginateService'
 
 type DateTostringBetweenDto = {
   startDate?: string

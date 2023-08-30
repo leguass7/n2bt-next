@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 
-import { TabsCategories, TabsCategoriesChange } from '../TabsCategories'
+import { TabsCategories, type TabsCategoriesChange } from '../TabsCategories'
 import { TabPanel } from './TabPanel'
 import { TabPanelCards } from './TabPanelCards'
 

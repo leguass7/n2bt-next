@@ -1,13 +1,13 @@
 import { useCallback, useRef, useState } from 'react'
 
 import { Button, Divider, Grid } from '@mui/material'
-import { FormHandles } from '@unform/core'
+import { type FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 
 import { useAppAuth } from '~/hooks/useAppAuth'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import { IUser } from '~/server-side/useCases/user/user.dto'
+import { type IUser } from '~/server-side/useCases/user/user.dto'
 import { getMe } from '~/services/api/me'
 import { updateUser } from '~/services/api/user'
 

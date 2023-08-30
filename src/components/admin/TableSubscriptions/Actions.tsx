@@ -26,8 +26,8 @@ import type { TransferCategoryType } from '~/server-side/useCases/subscriptions/
 import { deletetCategory } from '~/services/api/category'
 import { transferSubscriptions } from '~/services/api/subscriptions'
 
-import { FormCategory, SuccessHandler } from '../FormCategory'
-import { FormTranferCategory, FormData } from '../FormTranferCategory'
+import { FormCategory, type SuccessHandler } from '../FormCategory'
+import { FormTranferCategory, type FormData } from '../FormTranferCategory'
 
 export interface ISubscriptionActions {
   editId?: number

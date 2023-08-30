@@ -7,7 +7,7 @@ import { wait } from '~/helpers'
 import { useAppAuth } from '~/hooks/useAppAuth'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import { IUser } from '~/server-side/useCases/user/user.dto'
+import { type IUser } from '~/server-side/useCases/user/user.dto'
 import { updateUser } from '~/services/api/user'
 
 interface Props {

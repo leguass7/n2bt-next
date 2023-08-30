@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 
-import { TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
+import { type TournamentModality } from '~/server-side/useCases/tournament/tournament.dto'
 
 import { Main, SliderItem } from '../PassRollLayout'
 import { icons } from './stepperUtils'

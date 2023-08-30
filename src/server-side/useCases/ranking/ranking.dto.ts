@@ -2,7 +2,7 @@ import type { DeepPartial } from 'typeorm'
 
 import type { IResponseApi } from '~/server-side/api.interface'
 
-import { Ranking } from './ranking.entity'
+import { type Ranking } from './ranking.entity'
 
 export type IRanking = DeepPartial<Ranking>
 

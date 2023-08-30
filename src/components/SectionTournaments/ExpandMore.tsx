@@ -1,6 +1,6 @@
 import React from 'react'
 
-import IconButton, { IconButtonProps } from '@mui/material/IconButton'
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
 
 interface ExpandMoreProps extends IconButtonProps {

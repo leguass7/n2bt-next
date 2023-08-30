@@ -1,5 +1,5 @@
-import { IColumnTable } from '~/components/CustomTable'
-import { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { type IColumnTable } from '~/components/CustomTable'
+import { type ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
 import {
   ReportGenderCell,

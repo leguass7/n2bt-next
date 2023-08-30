@@ -1,6 +1,6 @@
-import { Adapter, AdapterAccount, AdapterSession, AdapterUser } from 'next-auth/adapters'
-import { ProviderType } from 'next-auth/providers'
-import { DataSource, DeepPartial } from 'typeorm'
+import { type Adapter, type AdapterAccount, type AdapterSession, type AdapterUser } from 'next-auth/adapters'
+import { type ProviderType } from 'next-auth/providers'
+import { type DataSource, type DeepPartial } from 'typeorm'
 
 import { tryDate } from '~/helpers/dates'
 import { Account } from '~/server-side/useCases/account/account.entity'

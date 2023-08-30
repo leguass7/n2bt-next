@@ -7,7 +7,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import styled from 'styled-components'
 
 import CustomTableContext from './CustomTableContext'
-import { GenericObject, IColumnTable, Order } from './types'
+import { type GenericObject, type IColumnTable, type Order } from './types'
 
 const CurrencyLabel = styled.span`
   word-break: keep-all;

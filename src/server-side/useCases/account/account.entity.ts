@@ -2,7 +2,7 @@ import type { ProviderType } from 'next-auth/providers'
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm'
 
 import { transformer } from '~/server-side/database/transformer'
-import { User } from '~/server-side/useCases/user/user.entity'
+import { type User } from '~/server-side/useCases/user/user.entity'
 
 @Unique('accounts_provider_providerAccountId_key', ['provider', 'providerAccountId'])
 @Entity('accounts')

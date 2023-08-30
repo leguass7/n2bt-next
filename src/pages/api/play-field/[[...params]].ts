@@ -5,9 +5,9 @@ import type { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere'
 import { prepareConnection } from '~/server-side/database/conn'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
-import { CreatePlayFieldDTO } from '~/server-side/useCases/play-field/dto/create-play-field.dto'
-import { FilterPlayFieldDTO } from '~/server-side/useCases/play-field/dto/filter-play-field.dto'
-import { UpdatePlayFieldDTO } from '~/server-side/useCases/play-field/dto/update-play-field.dto'
+import { type CreatePlayFieldDTO } from '~/server-side/useCases/play-field/dto/create-play-field.dto'
+import { type FilterPlayFieldDTO } from '~/server-side/useCases/play-field/dto/filter-play-field.dto'
+import { type UpdatePlayFieldDTO } from '~/server-side/useCases/play-field/dto/update-play-field.dto'
 import { PlayField } from '~/server-side/useCases/play-field/play-field.entity'
 
 const Pipe = ValidationPipe({ whitelist: true })

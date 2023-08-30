@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import TextField from '@mui/material/TextField'
-import { TimePicker, TimePickerProps } from '@mui/x-date-pickers/TimePicker'
+import { TimePicker, type TimePickerProps } from '@mui/x-date-pickers/TimePicker'
 import { useField } from '@unform/core'
 import { parseISO } from 'date-fns'
 

@@ -2,7 +2,7 @@ import type { DeepPartial } from 'typeorm'
 
 import type { IResponseApi } from '~/server-side/api.interface'
 
-import { Arena } from './arena.entity'
+import { type Arena } from './arena.entity'
 
 export type IArena = DeepPartial<Arena>
 

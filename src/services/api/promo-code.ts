@@ -1,5 +1,5 @@
 import type { TableFetchParams } from '~/components/CustomTable/types'
-import { SearchPromoCodeDto } from '~/pages/api/promo-code/search.dto'
+import { type SearchPromoCodeDto } from '~/pages/api/promo-code/search.dto'
 import type { IResponsePaginated } from '~/server-side/services/PaginateService'
 import type { IPromoCode, IResponsePromoCode } from '~/server-side/useCases/promo-code/promo-code.dto'
 

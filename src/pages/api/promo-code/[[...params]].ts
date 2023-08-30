@@ -11,7 +11,7 @@ import { AdminAuth } from '~/server-side/useCases/auth/middleware'
 import type { IPromoCode } from '~/server-side/useCases/promo-code/promo-code.dto'
 import { PromoCode } from '~/server-side/useCases/promo-code/promo-code.entity'
 
-import { SearchPromoCodeDto } from './search.dto'
+import { type SearchPromoCodeDto } from './search.dto'
 
 const Pipe = ValidationPipe({ whitelist: true })
 

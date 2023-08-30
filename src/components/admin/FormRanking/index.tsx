@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-import { FormHandles } from '@unform/core'
+import { type FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import { number, object } from 'yup'
 

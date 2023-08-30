@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 
 import { getArena, listArenas } from '~/services/api/arena'
 import type { AppStoreState } from '~/store'
-import { clearArena, IArenaAppState, setArena } from '~/store/reducers/arena'
+import { clearArena, type IArenaAppState, setArena } from '~/store/reducers/arena'
 
 export function useAppArena() {
   const dispatch = useDispatch()

@@ -4,7 +4,7 @@ import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import type { CategoryGender } from '~/server-side/useCases/category/category.entity'
 
 import { TabPanelCards } from './TabPanelCards'
-import { TabsCategories, TabsCategoriesChange } from './TabsCategories'
+import { TabsCategories, type TabsCategoriesChange } from './TabsCategories'
 
 type Props = {
   categories?: Partial<ICategory>[]

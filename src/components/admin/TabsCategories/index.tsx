@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { SxProps } from '@mui/material'
+import { type SxProps } from '@mui/material'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 

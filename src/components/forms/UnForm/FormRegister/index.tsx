@@ -16,7 +16,7 @@ import { genders, shirtSizes } from '~/config/constants'
 import { validateFormData } from '~/helpers/validation'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import { IUser } from '~/server-side/useCases/user/user.dto'
+import { type IUser } from '~/server-side/useCases/user/user.dto'
 import { findOneUser, saveMe, updateUser } from '~/services/api/user'
 
 import { InputSelects } from '../../InputSelects'

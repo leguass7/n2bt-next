@@ -5,7 +5,7 @@ import { useField } from '@unform/core'
 
 import { formatDate } from '~/helpers/date'
 
-import { VariantColorsTypes } from '../AppThemeProvider/types'
+import { type VariantColorsTypes } from '../AppThemeProvider/types'
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'
 import { Container, Input, Label } from './InputText/styles'
 

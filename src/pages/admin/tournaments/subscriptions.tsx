@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
-import { GetServerSideProps, NextPage } from 'next'
+import { type GetServerSideProps, type NextPage } from 'next'
 import { unstable_getServerSession } from 'next-auth'
 import dynamic from 'next/dynamic'
 

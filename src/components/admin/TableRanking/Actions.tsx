@@ -19,14 +19,14 @@ import Toolbar from '@mui/material/Toolbar'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { useCustomTable } from '~/components/CustomTable'
-import { SearchFetchHandler, SearchUserDrawer, SelectHandler } from '~/components/SearchUserDrawer'
+import { type SearchFetchHandler, SearchUserDrawer, type SelectHandler } from '~/components/SearchUserDrawer'
 import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
 import { autoGenerateRanking, storeRanking } from '~/services/api/ranking'
 import { deleteRanking } from '~/services/api/ranking'
 import { findUser } from '~/services/api/user'
 
-import { FormRanking, SuccessHandler } from '../FormRanking'
+import { FormRanking, type SuccessHandler } from '../FormRanking'
 
 export interface IRankingActions {
   editId?: number

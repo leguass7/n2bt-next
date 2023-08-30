@@ -1,11 +1,11 @@
-import React, { InputHTMLAttributes, useEffect, useRef, useState } from 'react'
-import { ReactInputMask, Props as InputMaskProps } from 'react-input-mask'
+import React, { type InputHTMLAttributes, useEffect, useRef, useState } from 'react'
+import { type ReactInputMask, type Props as InputMaskProps } from 'react-input-mask'
 
 import Fade from '@mui/material/Fade'
 import Tooltip from '@mui/material/Tooltip'
 import { useField } from '@unform/core'
 
-import { VariantColorsTypes } from '~/components/AppThemeProvider/types'
+import { type VariantColorsTypes } from '~/components/AppThemeProvider/types'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 
 import { Container, Input, Label, Field, InputFeedback } from './styles'

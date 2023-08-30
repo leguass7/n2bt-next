@@ -2,7 +2,7 @@ import MenuItem from '@mui/material/MenuItem'
 import styled, { css } from 'styled-components'
 
 import { alpha } from '~/helpers/colors'
-import { TextProps } from '~/styles/types'
+import { type TextProps } from '~/styles/types'
 
 export const CellContainer = styled.div`
   display: flex;

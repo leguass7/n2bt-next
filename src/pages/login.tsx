@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
 
-import { GetServerSideProps, NextPage } from 'next'
+import { type GetServerSideProps, type NextPage } from 'next'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'

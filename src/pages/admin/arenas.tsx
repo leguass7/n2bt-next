@@ -2,7 +2,7 @@ import React from 'react'
 
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import { NextPage } from 'next'
+import { type NextPage } from 'next'
 
 import { TableArenas } from '~/components/admin/TableArenas'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'

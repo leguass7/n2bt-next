@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-import { IThemeContext } from './types'
+import { type IThemeContext } from './types'
 
 const ThemeContext = createContext<IThemeContext>({} as IThemeContext)
 

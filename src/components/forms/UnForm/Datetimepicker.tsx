@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import TextField from '@mui/material/TextField'
-import { DateTimePickerProps, DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { type DateTimePickerProps, DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { useField } from '@unform/core'
 
 import { ErrorMessage } from './styles'

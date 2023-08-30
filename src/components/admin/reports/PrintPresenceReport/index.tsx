@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer'
 import Typography from '@mui/material/Typography'
 
 import { limitString } from '~/helpers/string'
-import { IResponseSubscriptions } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { type IResponseSubscriptions } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { adminReportSubscriptions } from '~/services/api/subscriptions'
 
 import { Span } from '../styles'

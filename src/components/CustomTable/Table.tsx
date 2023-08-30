@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 
 import Pagination from '@mui/material/Pagination'
 import Stack from '@mui/material/Stack'
-import Table, { TableProps } from '@mui/material/Table'
+import Table, { type TableProps } from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableContainer from '@mui/material/TableContainer'
 import styled from 'styled-components'
@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import CustomTableContext from './CustomTableContext'
 import Header from './Header'
 import Row from './Row'
-import { GenericObject, IColumnTable, Order, Rows, TableFetcher } from './types'
+import { type GenericObject, type IColumnTable, type Order, type Rows, type TableFetcher } from './types'
 import { withCheckedRow } from './withCheckedRow'
 
 const RowList = withCheckedRow(Row)

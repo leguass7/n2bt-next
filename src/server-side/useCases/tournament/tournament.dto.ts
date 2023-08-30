@@ -2,7 +2,7 @@
 
 import type { IResponseApi } from '~/server-side/api.interface'
 
-import { Tournament } from './tournament.entity'
+import { type Tournament } from './tournament.entity'
 
 export type ITournament = Partial<Tournament>
 

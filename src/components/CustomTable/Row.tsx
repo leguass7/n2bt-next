@@ -6,8 +6,8 @@ import { isDefined } from 'class-validator'
 import cx from 'classnames'
 
 import CustomTableContext from './CustomTableContext'
-import { GenericObject, ICustomCellProps } from './types'
-import { CheckItemProps } from './withCheckedRow'
+import { type GenericObject, type ICustomCellProps } from './types'
+import { type CheckItemProps } from './withCheckedRow'
 
 function hashValues(record = {}) {
   return Object.entries(record)

@@ -1,5 +1,5 @@
-import { FormHandles } from '@unform/core'
-import { ObjectSchema, ValidationError } from 'yup'
+import { type FormHandles } from '@unform/core'
+import { type ObjectSchema, ValidationError } from 'yup'
 
 export async function validateFormData<T = any>(
   schema: ObjectSchema<any>,

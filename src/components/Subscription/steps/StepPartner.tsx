@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid'
 
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter, Paragraph, Text } from '~/components/styled'
-import { DeletePatnerHandler, SelectPatner, SelectPatnerHandler } from '~/components/User/SelectPartner'
+import { type DeletePatnerHandler, SelectPatner, type SelectPatnerHandler } from '~/components/User/SelectPartner'
 import { appBaseURL } from '~/config'
 import { CardContainer } from '~/styles'
 

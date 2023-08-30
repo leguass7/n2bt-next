@@ -29,11 +29,11 @@ import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
-import { IUser, IUserFilter } from '~/server-side/useCases/user/user.dto'
+import { type IUser, type IUserFilter } from '~/server-side/useCases/user/user.dto'
 import { User } from '~/server-side/useCases/user/user.entity'
 import { checkCompleteData } from '~/server-side/useCases/user/user.helper'
 
-import { CreateUserDto } from './create-user.dto'
+import { type CreateUserDto } from './create-user.dto'
 
 const Pipe = ValidationPipe({ whitelist: true, forbidUnknownValues: true })
 

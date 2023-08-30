@@ -7,7 +7,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Divider, IconButton, Toolbar, Tooltip } from '@mui/material'
 import { useRouter } from 'next/router'
 
-import { FormPromoCode, SuccessHandler } from '~/components/admin/FormPromoCode'
+import { FormPromoCode, type SuccessHandler } from '~/components/admin/FormPromoCode'
 import { SimpleModal } from '~/components/Common/SimpleModal'
 import { useCustomTableFilter } from '~/components/CustomTable'
 import { FlexContainer, Text } from '~/components/styled'

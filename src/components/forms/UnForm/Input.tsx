@@ -1,6 +1,6 @@
-import React, { InputHTMLAttributes, useCallback, useEffect, useRef, useState } from 'react'
+import React, { type InputHTMLAttributes, useCallback, useEffect, useRef, useState } from 'react'
 
-import { InputProps } from '@mui/material/Input'
+import { type InputProps } from '@mui/material/Input'
 import TextField from '@mui/material/TextField'
 import { useField } from '@unform/core'
 

@@ -1,5 +1,5 @@
 import type { NextApiResponse } from 'next'
-import { createMiddlewareDecorator, NextFunction, UnauthorizedException } from 'next-api-decorators'
+import { createMiddlewareDecorator, type NextFunction, UnauthorizedException } from 'next-api-decorators'
 import { getToken } from 'next-auth/jwt'
 import { getSession } from 'next-auth/react'
 import { parse } from 'next-useragent'
@@ -8,7 +8,7 @@ import { makeArray } from '~/helpers/array'
 import { secret } from '~/server-side/config'
 
 import type { AuthorizedApiRequest } from './auth.dto'
-import { authorizedDto, JwtOrSession } from './auth.helper'
+import { authorizedDto, type JwtOrSession } from './auth.helper'
 
 export const JwtAuthGuard = createMiddlewareDecorator(async (req: AuthorizedApiRequest, res: NextApiResponse, next: NextFunction) => {
   const unauthorize = (msg = 'unauthorized') => {

@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 
 import { ListItem, ListItemButton, ListItemText } from '@mui/material'
 
-import { PlayField } from '~/server-side/useCases/play-field/play-field.entity'
+import { type PlayField } from '~/server-side/useCases/play-field/play-field.entity'
 
 interface Props extends PlayField {
   onSelect?: (id: number) => void

@@ -9,7 +9,7 @@ import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { CircleLoading } from '~/components/CircleLoading'
 import { getName, stringAvatar } from '~/helpers/string'
 import { useIsMounted } from '~/hooks/useIsMounted'
-import { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { type ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { listCategorySubscriptions } from '~/services/api/subscriptions'
 
 interface Props {

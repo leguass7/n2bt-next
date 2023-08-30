@@ -1,6 +1,6 @@
 import type { IResponseApi } from '~/server-side/api.interface'
 
-import { Image } from './image.entity'
+import { type Image } from './image.entity'
 
 export interface IImageMetadata {
   anyData: any

@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { CustomTable } from '~/components/CustomTable'
-import { TableFetchParams } from '~/components/CustomTable/types'
+import { type TableFetchParams } from '~/components/CustomTable/types'
 import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
 import { paginateArenas } from '~/services/api/arena'
 

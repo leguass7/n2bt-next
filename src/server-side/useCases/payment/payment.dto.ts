@@ -3,7 +3,7 @@ import type { IRequestCreateImmediateCharge } from 'brpix-api-node'
 import type { IResponseApi } from '~/server-side/api.interface'
 import type { IUser } from '~/server-side/useCases/user/user.dto'
 
-import { Payment } from './payment.entity'
+import { type Payment } from './payment.entity'
 
 export enum PaymentMethod {
   PIX = 'PIX',

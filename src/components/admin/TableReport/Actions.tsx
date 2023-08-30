@@ -5,7 +5,7 @@ import { FormControl, Grid, IconButton, InputLabel, MenuItem, Select, Typography
 
 import { useCustomTableFilter } from '~/components/CustomTable'
 import InputSearch from '~/components/CustomTable/InputSearch'
-import { SubscriptionReportFilterDto } from '~/pages/api/subscription/subscription-report-filter.dto'
+import { type SubscriptionReportFilterDto } from '~/pages/api/subscription/subscription-report-filter.dto'
 
 interface Props {}
 

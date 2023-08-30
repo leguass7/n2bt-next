@@ -17,7 +17,7 @@ import { genders, shirtSizes } from '~/config/constants'
 import { validateFormData } from '~/helpers/validation'
 import { useAppAuth } from '~/hooks/useAppAuth'
 import { useIsMounted } from '~/hooks/useIsMounted'
-import { UserGender } from '~/server-side/useCases/user/user.dto'
+import { type UserGender } from '~/server-side/useCases/user/user.dto'
 import { createUser } from '~/services/api/user'
 
 const schema = Yup.object().shape({

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 
-import { SearchUserDrawer, SearchFetchHandler, SelectHandler } from '~/components/SearchUserDrawer'
+import { SearchUserDrawer, type SearchFetchHandler, type SelectHandler } from '~/components/SearchUserDrawer'
 import { searchAdminSubscriptionUsers, updateSubscription } from '~/services/api/subscriptions'
 
 type Props = {

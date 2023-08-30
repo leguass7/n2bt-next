@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm'
+import { DataSource, type EntityTarget, type ObjectLiteral, type Repository } from 'typeorm'
 import type { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions'
 
 import { databaseUrl } from '../config'

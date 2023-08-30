@@ -12,7 +12,7 @@ import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import { listCategoriesSub } from '~/services/api/category'
 
-import { Item, ItemClickHandler } from './Item'
+import { Item, type ItemClickHandler } from './Item'
 
 export type CategoryChangeHandler = (categoryId?: number, category?: ICategory) => any
 type Props = {

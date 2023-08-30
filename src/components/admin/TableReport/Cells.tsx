@@ -3,10 +3,10 @@ import { useCallback, useState } from 'react'
 import { DoneRounded, WarningRounded } from '@mui/icons-material'
 import { Box, Checkbox, Typography } from '@mui/material'
 
-import { ICustomCellProps } from '~/components/CustomTable'
+import { type ICustomCellProps } from '~/components/CustomTable'
 import { formatPrice } from '~/helpers'
 import { useIsMounted } from '~/hooks/useIsMounted'
-import { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { type ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { updateSubscription } from '~/services/api/subscriptions'
 
 type Props = ICustomCellProps<ISubscription>

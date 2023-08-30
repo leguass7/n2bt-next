@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import { useField } from '@unform/core'
 
-import { VariantColorsTypes } from '~/components/AppThemeProvider/types'
+import { type VariantColorsTypes } from '~/components/AppThemeProvider/types'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 
 import { Label, Container } from '../InputText/styles'

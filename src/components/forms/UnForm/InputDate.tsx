@@ -5,7 +5,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers'
 import { useField } from '@unform/core'
 import { parseISO, parse, isValid } from 'date-fns'
 
-import { VariantColorsTypes } from '~/components/AppThemeProvider/types'
+import { type VariantColorsTypes } from '~/components/AppThemeProvider/types'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { validDate } from '~/helpers/date'
 

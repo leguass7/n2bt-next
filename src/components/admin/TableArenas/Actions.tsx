@@ -21,7 +21,7 @@ import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
 import { deletetArena } from '~/services/api/arena'
 
-import { FormArena, SuccessHandler } from '../FormArena'
+import { FormArena, type SuccessHandler } from '../FormArena'
 
 export interface IArenaActions {
   editId?: number

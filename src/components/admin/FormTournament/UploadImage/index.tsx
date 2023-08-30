@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { FileRejection, useDropzone } from 'react-dropzone'
+import { type FileRejection, useDropzone } from 'react-dropzone'
 import Resizer from 'react-image-file-resizer'
 import { toast } from 'react-toastify'
 

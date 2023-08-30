@@ -1,9 +1,9 @@
-import { ChangeEventHandler, useCallback, useEffect, useRef, useState } from 'react'
+import { type ChangeEventHandler, useCallback, useEffect, useRef, useState } from 'react'
 
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
-import MenuItem, { MenuItemProps } from '@mui/material/MenuItem'
-import MuiSelect, { SelectProps } from '@mui/material/Select'
+import MenuItem, { type MenuItemProps } from '@mui/material/MenuItem'
+import MuiSelect, { type SelectProps } from '@mui/material/Select'
 import { useField } from '@unform/core'
 
 import { ErrorMessage } from './styles'

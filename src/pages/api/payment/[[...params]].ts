@@ -1,13 +1,13 @@
 import { differenceInMinutes } from 'date-fns'
 import { BadRequestException, createHandler, Get, HttpCode, Post, Query, Req, ValidationPipe } from 'next-api-decorators'
-import { FindOptionsWhere } from 'typeorm'
+import { type FindOptionsWhere } from 'typeorm'
 
 import { mergeDeep } from '~/helpers/object'
 import { prepareConnection } from '~/server-side/database/conn'
 import { createApiPix } from '~/server-side/services/pix'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
-import { PaymentMethod, ResponseApiPixEndToEnd } from '~/server-side/useCases/payment/payment.dto'
+import { PaymentMethod, type ResponseApiPixEndToEnd } from '~/server-side/useCases/payment/payment.dto'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
 import { checkPaymentService, generatePaymentService } from '~/server-side/useCases/payment/payment.service'
 import { PromoCode } from '~/server-side/useCases/promo-code/promo-code.entity'
@@ -15,7 +15,7 @@ import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions
 import { User } from '~/server-side/useCases/user/user.entity'
 
 import { valueWithDiscount } from './payment.helper'
-import { SearchPaymentDto } from './search-payment.dto'
+import { type SearchPaymentDto } from './search-payment.dto'
 
 const Pipe = ValidationPipe({ whitelist: true })
 

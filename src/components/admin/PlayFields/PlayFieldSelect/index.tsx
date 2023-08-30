@@ -4,7 +4,7 @@ import { List } from '@mui/material'
 
 import { CircleLoading } from '~/components/CircleLoading'
 import { useIsMounted } from '~/hooks/useIsMounted'
-import { PlayField } from '~/server-side/useCases/play-field/play-field.entity'
+import { type PlayField } from '~/server-side/useCases/play-field/play-field.entity'
 import { listPlayFieldInArena } from '~/services/api/play-field'
 
 import { PlayFieldSelectItem } from './PlayFieldSelectItem'

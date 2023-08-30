@@ -1,6 +1,6 @@
-import { SearchPaymentDto } from '~/pages/api/payment/search-payment.dto'
+import { type SearchPaymentDto } from '~/pages/api/payment/search-payment.dto'
 import type { IResponseGeneratePix, IResponsePayments } from '~/server-side/useCases/payment/payment.dto'
-import { Payment } from '~/server-side/useCases/payment/payment.entity'
+import { type Payment } from '~/server-side/useCases/payment/payment.entity'
 
 import { apiService } from './api.service'
 

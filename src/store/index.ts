@@ -1,4 +1,4 @@
-import { configureStore, ThunkAction, Action, Middleware } from '@reduxjs/toolkit'
+import { configureStore, type ThunkAction, type Action, type Middleware } from '@reduxjs/toolkit'
 import { createWrapper } from 'next-redux-wrapper'
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 

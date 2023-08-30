@@ -9,7 +9,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { differenceInYears } from 'date-fns'
 
 import { SimpleModal } from '~/components/Common/SimpleModal'
-import { ICustomCellProps, useCustomTableFilter } from '~/components/CustomTable'
+import { type ICustomCellProps, useCustomTableFilter } from '~/components/CustomTable'
 import { FormRegister } from '~/components/forms/UnForm/FormRegister'
 import { Text } from '~/components/styled'
 import { FlexContainer } from '~/components/styled'

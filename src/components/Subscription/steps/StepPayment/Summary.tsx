@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import Button from '@mui/material/Button'
-import { FormHandles } from '@unform/core'
+import { type FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import { getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'

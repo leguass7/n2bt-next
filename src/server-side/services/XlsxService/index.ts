@@ -1,6 +1,6 @@
 // import { celebrate, Joi, Segments } from 'celebrate'
 import { Parser } from 'json2csv'
-import xlsxNode, { WorkSheet } from 'node-xlsx'
+import xlsxNode, { type WorkSheet } from 'node-xlsx'
 
 import { makeArray } from '~/helpers/array'
 

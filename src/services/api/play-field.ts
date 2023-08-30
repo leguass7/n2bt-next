@@ -1,8 +1,8 @@
-import { PlayFieldFormData } from '~/components/admin/PlayFields/PlayFieldForm'
-import { NewResponseApi } from '~/server-side/api.interface'
-import { FilterPlayFieldDTO } from '~/server-side/useCases/play-field/dto/filter-play-field.dto'
-import { UpdatePlayFieldDTO } from '~/server-side/useCases/play-field/dto/update-play-field.dto'
-import { PlayField } from '~/server-side/useCases/play-field/play-field.entity'
+import { type PlayFieldFormData } from '~/components/admin/PlayFields/PlayFieldForm'
+import { type NewResponseApi } from '~/server-side/api.interface'
+import { type FilterPlayFieldDTO } from '~/server-side/useCases/play-field/dto/filter-play-field.dto'
+import { type UpdatePlayFieldDTO } from '~/server-side/useCases/play-field/dto/update-play-field.dto'
+import { type PlayField } from '~/server-side/useCases/play-field/play-field.entity'
 
 import { apiService } from './api.service'
 

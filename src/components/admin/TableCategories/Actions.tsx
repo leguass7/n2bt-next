@@ -23,7 +23,7 @@ import { BoxCenter, FlexContainer, Text } from '~/components/styled'
 import { useTableActions } from '~/components/tables/TableActionsProvider'
 import { deletetCategory } from '~/services/api/category'
 
-import { FormCategory, SuccessHandler } from '../FormCategory'
+import { FormCategory, type SuccessHandler } from '../FormCategory'
 
 export interface ICategoryActions {
   editId?: number

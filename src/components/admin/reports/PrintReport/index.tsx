@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography'
 import { formatPrice } from '~/helpers'
 import { splitDateTime, tryDate } from '~/helpers/dates'
 import { limitString } from '~/helpers/string'
-import { IResponseSubscriptions } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { type IResponseSubscriptions } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { adminReportSubscriptions } from '~/services/api/subscriptions'
 
 import { FlexBox, Span } from '../styles'

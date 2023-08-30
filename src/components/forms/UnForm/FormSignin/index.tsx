@@ -8,7 +8,7 @@ import { object, string } from 'yup'
 import { CircleLoading } from '~/components/CircleLoading'
 import { H4 } from '~/components/styled'
 import { validateFormData } from '~/helpers/validation'
-import { useAppAuth, PayloadSignin, SignInResponse } from '~/hooks/useAppAuth'
+import { useAppAuth, type PayloadSignin, type SignInResponse } from '~/hooks/useAppAuth'
 
 import { Input } from '../Input'
 

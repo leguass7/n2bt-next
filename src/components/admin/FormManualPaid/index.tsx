@@ -3,13 +3,13 @@ import { toast } from 'react-toastify'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-import { FormHandles } from '@unform/core'
+import { type FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import { string, object } from 'yup'
 
 import { InputText } from '~/components/forms/InputText'
 import { validateFormData } from '~/helpers/validation'
-import { adminManualPayment, IRequestManualPayment } from '~/services/api/payment'
+import { adminManualPayment, type IRequestManualPayment } from '~/services/api/payment'
 
 type Props = {
   paymentId?: number

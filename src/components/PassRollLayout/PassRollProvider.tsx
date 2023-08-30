@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useState } from 'react'
+import React, { type Dispatch, type SetStateAction, useCallback, useState } from 'react'
 
 import { createContext, useContextSelector } from 'use-context-selector'
 

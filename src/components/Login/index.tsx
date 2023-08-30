@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ThemeName } from '~/components/AppThemeProvider/themes'
+import { type ThemeName } from '~/components/AppThemeProvider/themes'
 
 import { Main, SliderItem } from '../PassRollLayout'
 import { FlexContainer, Text } from '../styled'

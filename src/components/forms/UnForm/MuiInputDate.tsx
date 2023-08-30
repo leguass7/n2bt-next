@@ -5,7 +5,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers'
 import { useField } from '@unform/core'
 import { parseISO, isValid, parseJSON } from 'date-fns'
 
-import { VariantColorsTypes } from '~/components/AppThemeProvider/types'
+import { type VariantColorsTypes } from '~/components/AppThemeProvider/types'
 
 function convertDefaultValue(d: Date | string) {
   const date = d instanceof Date ? d : parseJSON(d)

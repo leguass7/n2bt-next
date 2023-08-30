@@ -1,10 +1,10 @@
-import { ApiPix, IApiPixConfig } from 'brpix-api-node'
-import { FindOptionsWhere } from 'typeorm'
+import { ApiPix, type IApiPixConfig } from 'brpix-api-node'
+import { type FindOptionsWhere } from 'typeorm'
 
 // import { dev } from '~/config'
 const dev = false
 import { prepareConnection } from '~/server-side/database/conn'
-import { ConfigValue } from '~/server-side/useCases/config/config.dto'
+import { type ConfigValue } from '~/server-side/useCases/config/config.dto'
 import { Config } from '~/server-side/useCases/config/config.entity'
 
 export async function createApiPix(arenaId?: number): Promise<ApiPix> {

@@ -12,7 +12,7 @@ import styled from 'styled-components'
 
 import { stringAvatar } from '~/helpers/string'
 import { useIsMounted } from '~/hooks/useIsMounted'
-import { IRanking } from '~/server-side/useCases/ranking/ranking.dto'
+import { type IRanking } from '~/server-side/useCases/ranking/ranking.dto'
 import { listRankings } from '~/services/api/ranking'
 
 import { useAppTheme } from '../AppThemeProvider/useAppTheme'

@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { stringAvatar } from '~/helpers/string'
 import { useIsMounted } from '~/hooks/useIsMounted'
-import { IUser } from '~/server-side/useCases/user/user.dto'
+import { type IUser } from '~/server-side/useCases/user/user.dto'
 
 type Data = IUser & { passing?: boolean }
 

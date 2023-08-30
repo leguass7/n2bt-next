@@ -1,4 +1,4 @@
-import { NextPage } from 'next'
+import { type NextPage } from 'next'
 
 import { PlayFieldList } from '~/components/admin/PlayFields/PlayFieldList'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'

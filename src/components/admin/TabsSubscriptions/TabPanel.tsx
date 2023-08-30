@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 import { useRouter } from 'next/router'
 
-import { FetchHandler, TableSubscriptions } from '~/components/admin/TableSubscriptions'
+import { type FetchHandler, TableSubscriptions } from '~/components/admin/TableSubscriptions'
 import { BoxCenter, Paragraph, Text } from '~/components/styled'
 import { formatPrice } from '~/helpers'
 

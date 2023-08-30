@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import DatePicker, { DatePickerProps } from '@mui/lab/DatePicker'
+import DatePicker, { type DatePickerProps } from '@mui/lab/DatePicker'
 import TextField from '@mui/material/TextField'
 import { useField } from '@unform/core'
 

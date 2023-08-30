@@ -2,7 +2,7 @@ import React from 'react'
 
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import { GetServerSideProps, NextPage } from 'next'
+import { type GetServerSideProps, type NextPage } from 'next'
 import { getServerSession } from 'next-auth'
 
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'

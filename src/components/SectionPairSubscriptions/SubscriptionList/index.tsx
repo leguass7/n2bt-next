@@ -19,7 +19,7 @@ import type { CategoryGender } from '~/server-side/useCases/category/category.en
 import { paginateSubscription } from '~/services/api/subscriptions'
 
 import { ItemSubscription } from './ItemSubscription'
-import { prepareDto, PreparedSubscription } from './utils'
+import { prepareDto, type PreparedSubscription } from './utils'
 
 type Props = {
   categoryId: number

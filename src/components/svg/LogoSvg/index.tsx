@@ -3,7 +3,7 @@ import React from 'react'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
 import { round } from '~/helpers'
 
-import { Props } from '../commonProps'
+import { type Props } from '../commonProps'
 
 function getSizes(width?: number, height?: number) {
   const radix = 1.88929889298893

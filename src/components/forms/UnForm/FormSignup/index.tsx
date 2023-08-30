@@ -11,7 +11,7 @@ import { CircleLoading } from '~/components/CircleLoading'
 import { BoxCenter, H4 } from '~/components/styled'
 import { useUserAuth } from '~/components/UserProvider'
 import { validateFormData } from '~/helpers/validation'
-import { IUser } from '~/server-side/useCases/user/user.dto'
+import { type IUser } from '~/server-side/useCases/user/user.dto'
 import { createUser, saveMe } from '~/services/api/user'
 
 import { InputText } from '../../InputText'

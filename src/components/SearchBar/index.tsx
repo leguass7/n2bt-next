@@ -4,7 +4,7 @@ import { Search, Close } from '@mui/icons-material'
 
 import { debounceEvent } from '~/helpers/debounce'
 
-import { SearchContainer, SearchWrapper, SearchInput, SearchIcon, TextError, VariantType } from './styles'
+import { SearchContainer, SearchWrapper, SearchInput, SearchIcon, TextError, type VariantType } from './styles'
 export type SearchVarProps = {
   defaultValue?: string
   onClear?: () => void

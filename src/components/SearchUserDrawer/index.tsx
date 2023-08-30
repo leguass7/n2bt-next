@@ -13,7 +13,7 @@ import type { IUser } from '~/server-side/useCases/user/user.dto'
 
 import { FoundList } from './FoundList'
 import { ButtonClose, Container, ContentLimit } from './styles'
-import { Filter, useValidateFilter } from './useValidateFilter'
+import { type Filter, useValidateFilter } from './useValidateFilter'
 
 export type { Filter }
 function hasValues(filter: Filter) {

@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid'
 
 import { usePassRoll } from '~/components/PassRollLayout'
 import { BoxCenter } from '~/components/styled'
-import { SelectCategory, CategoryChangeHandler } from '~/components/Subscription/steps/StepCategory/SelectCategory'
+import { SelectCategory, type CategoryChangeHandler } from '~/components/Subscription/steps/StepCategory/SelectCategory'
 import { useSubscription } from '~/components/Subscription/SubscriptionProvider'
 import { CardContainer } from '~/styles'
 

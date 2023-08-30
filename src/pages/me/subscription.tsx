@@ -10,7 +10,7 @@ import Link from 'next/link'
 
 import { Layout } from '~/components/app/Layout'
 import { useAppTheme } from '~/components/AppThemeProvider/useAppTheme'
-import { ModalPix, ModalPixCloseHandler } from '~/components/ModalPix'
+import { ModalPix, type ModalPixCloseHandler } from '~/components/ModalPix'
 import { MySubscriptionItem } from '~/components/MySubscriptionItem'
 import { Paragraph } from '~/components/styled'
 import { siteName } from '~/config/constants'

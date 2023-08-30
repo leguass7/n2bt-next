@@ -9,7 +9,7 @@ import { object, string } from 'yup'
 import { CircleLoading } from '~/components/CircleLoading'
 import { H4, Text } from '~/components/styled'
 import { validateFormData } from '~/helpers/validation'
-import { Authorization, sendRecover } from '~/services/api/user/recover'
+import { type Authorization, sendRecover } from '~/services/api/user/recover'
 
 import { Input } from '../Input'
 

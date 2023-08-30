@@ -1,6 +1,6 @@
 import { smtpConfig } from '~/server-side/config'
 
-import { EmailServiceSender, SendPayloadDto } from './send.dto'
+import { type EmailServiceSender, type SendPayloadDto } from './send.dto'
 import { createTransporterSMTP } from './smtp.provider'
 
 export type { SendPayloadDto }

@@ -1,4 +1,4 @@
-import { NextPage } from 'next'
+import { type NextPage } from 'next'
 
 import { AppointmentPanel } from '~/components/admin/Appointment/AppointmentPanel'
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'

@@ -1,11 +1,11 @@
-import React, { CSSProperties, useEffect, useMemo, useRef } from 'react'
+import React, { type CSSProperties, useEffect, useMemo, useRef } from 'react'
 import { useResizeDetector } from 'react-resize-detector'
 
 import styled from 'styled-components'
 
 import { round } from '~/helpers'
 
-import { ISliderDimensions } from './PassRollProvider'
+import { type ISliderDimensions } from './PassRollProvider'
 
 const SliderItemContainer = styled.div`
   display: block;
