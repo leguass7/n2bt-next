@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { Card } from '@mui/material'
 import CardHeader from '@mui/material/CardHeader'
 import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
@@ -87,7 +88,7 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {}, h
 
   if (loading) return <CircleLoading />
 
-  const title = expired ? 'Rankings do torneio' : hasPairs ? 'Duplas do torneio' : 'Participantes do torneio'
+  const title = expired ? 'Rankings do torneio' : hasPairs ? 'Duplas inscritas' : 'Participantes do torneio'
 
   return (
     <Content>
@@ -111,12 +112,14 @@ export const RankingPanel: React.FC<Props> = ({ tournamentId, tournament = {}, h
 
       <Divider />
 
-      <CardHeader title={title} />
-      <SimpleTab value={categoryId} sx={{ boxShadow: '1px 2px 1px #0003' }} onChange={handleTabChange} tabs={categoryTabs} />
+      <Card>
+        <CardHeader title={title} />
+        <SimpleTab value={categoryId} onChange={handleTabChange} tabs={categoryTabs} />
 
-      {!!categoryId && expired ? <RankingList tournamentId={tournamentId} categoryId={categoryId} /> : null}
-      {!!categoryId && !expired && hasPairs ? <ListPartners categoryId={categoryId} /> : null}
-      {!!categoryId && !expired && !hasPairs ? <ListUsers categoryId={categoryId} /> : null}
+        {!!categoryId && expired ? <RankingList tournamentId={tournamentId} categoryId={categoryId} /> : null}
+        {!!categoryId && !expired && hasPairs ? <ListPartners categoryId={categoryId} /> : null}
+        {!!categoryId && !expired && !hasPairs ? <ListUsers categoryId={categoryId} /> : null}
+      </Card>
     </Content>
   )
 }

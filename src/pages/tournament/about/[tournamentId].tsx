@@ -57,7 +57,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async ({ req, p
   return {
     props: {
       tournamentId,
-      uaString: req.headers['user-agent']
+      uaString: req?.headers?.['user-agent']
     }
   }
 }

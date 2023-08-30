@@ -49,11 +49,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({ id, title, descr
           Regulamento
         </Button>
       )
-    return (
-      <Button size="small" href={`/tournament/about/${id}`}>
-        Saiba mais
-      </Button>
-    )
+    return null
   }
 
   return (
@@ -82,6 +78,9 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({ id, title, descr
           </Button>
         ) : null}
         {renderMore()}
+        <Button size="small" href={`/tournament/about/${id}`}>
+          Saiba mais
+        </Button>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
           <ExpandMoreIcon />
         </ExpandMore>

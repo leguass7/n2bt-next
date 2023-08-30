@@ -89,7 +89,7 @@ class SubscriptionHandler {
   }
 
   @Get('/list')
-  @JwtAuthGuard()
+  // @JwtAuthGuard()
   @Pagination()
   @HttpCode(200)
   async list(@Req() req: AuthorizedPaginationApiRequest) {

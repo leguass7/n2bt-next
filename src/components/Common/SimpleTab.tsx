@@ -31,7 +31,7 @@ export const SimpleTab: React.FC<Props> = ({ onChange, tabs, value }) => {
   return (
     <Tabs value={value} onChange={(e, v) => onChange?.(v)} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
       {tabs.map(({ label, value }, index) => {
-        return <Tab label={renderLabel(label)} value={value} key={`tab-${index}`} wrapped sx={{ color: '#ccc' }} />
+        return <Tab label={renderLabel(label)} value={value} key={`tab-${index}`} wrapped />
       })}
     </Tabs>
   )
