@@ -42,8 +42,8 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, 
 
   const promoCode = useMemo(() => {
     setDiscount(0)
-    return paymentPayload?.promoCode
-  }, [paymentPayload?.promoCode])
+    return paymentPayload?.code
+  }, [paymentPayload?.code])
 
   const fetchPromoCode = useCallback(async () => {
     if (promoCode) {
