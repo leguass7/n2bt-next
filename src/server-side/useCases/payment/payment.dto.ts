@@ -7,7 +7,8 @@ import { type Payment } from './payment.entity'
 
 export enum PaymentMethod {
   PIX = 'PIX',
-  CASH = 'CASH'
+  CASH = 'CASH',
+  LINK = 'LINK'
 }
 
 export type CobStatus = 'ATIVA' | 'CONCLUIDA' | 'REMOVIDA_PELO_USUARIO_RECEBEDOR' | 'REMOVIDA_PELO_PSP'

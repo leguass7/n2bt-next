@@ -17,6 +17,12 @@ import { User } from '~/server-side/useCases/user/user.entity'
 import { valueWithDiscount } from './payment.helper'
 import { type SearchPaymentDto } from './search-payment.dto'
 
+type RequestGenaratePayment = {
+  code?: string
+  noPartner?: boolean
+  type: PaymentMethod
+}
+
 const Pipe = ValidationPipe({ whitelist: true })
 
 class PaymentHandler {
@@ -44,16 +50,18 @@ class PaymentHandler {
     }
   }
 
-  @Get('/generate/:subscriptionId')
+  @Post('/generate/:subscriptionId')
   @JwtAuthGuard()
   @HttpCode(201)
-  async generateBySubscription(@Req() req: AuthorizedApiRequest<Partial<Payment>>) {
-    const { auth, query } = req
+  async generateBySubscription(@Req() req: AuthorizedApiRequest<RequestGenaratePayment>) {
+    const { auth, query, body } = req
     const subscriptionId = +query?.params[1] || 0
     if (!subscriptionId) throw new BadRequestException('Número de incrição inválido')
 
     const userId = auth?.userId
     if (!userId) throw new BadRequestException('Usuário não encontrado')
+
+    const { type = PaymentMethod.PIX, code } = body
 
     const ds = await prepareConnection()
     const repo = ds.getRepository(Subscription)
@@ -76,7 +84,6 @@ class PaymentHandler {
 
     const promoRepo = ds.getRepository(PromoCode)
     const repoPay = ds.getRepository(Payment)
-    const code = req.query?.promoCode
 
     const promo = code ? await promoRepo.findOne({ where: { actived: true, code } }) : null
     const paymentsWithPromo = promo?.id ? await repoPay.find({ where: { promoCodeId: promo?.id } }) : []
@@ -107,36 +114,43 @@ class PaymentHandler {
       overdue,
       value: priceWithDiscount,
       promoCodeId: promo?.id,
-      method: PaymentMethod.PIX
+      method: type
     })
     if (!payment) throw new BadRequestException('Erro ao criar pagamento')
     await repo.update(subscription?.id, { paymentId: payment.id })
 
-    // PIX
-    const user = await ds.getRepository(User).findOneBy({ id: userId })
-    if (!user) throw new BadRequestException('Erro recuperar usuário')
-    // const apiPix = await createApiPix(subscription?.category?.tournament?.arenaId)
-    const apiPix = await createApiPix()
-    const expiracao = differenceInMinutes(overdue, new Date())
+    if (type === PaymentMethod.PIX) {
+      // PIX
+      const user = await ds.getRepository(User).findOneBy({ id: userId })
+      if (!user) throw new BadRequestException('Erro recuperar usuário')
 
-    const cob = await generatePaymentService(apiPix, { expiracao, paymentId: payment?.id, user, value: priceWithDiscount })
-    if (!cob || !cob?.success) {
-      // eslint-disable-next-line no-console
-      console.error(cob?.message, cob?.messageError)
-      throw new BadRequestException('Erro ao criar PIX')
+      const apiPix = await createApiPix()
+      const expiracao = differenceInMinutes(overdue, new Date())
+
+      const cob = await generatePaymentService(apiPix, { expiracao, paymentId: payment?.id, user, value: priceWithDiscount })
+      if (!cob || !cob?.success) {
+        // eslint-disable-next-line no-console
+        console.error(cob?.message, cob?.messageError)
+        throw new BadRequestException('Erro ao criar PIX')
+      }
+
+      // atualiza pagamento
+      const meta = mergeDeep({ ...payment?.meta }, { loc: cob?.loc })
+      repoPay.update(payment.id, { meta, txid: cob.txid, updatedBy: userId })
+
+      return {
+        success: true,
+        imageQrcode: cob?.imagemQrcode,
+        qrcode: cob?.qrcode,
+        paymentId: payment?.id,
+        txid: cob?.txid,
+        expires: expiracao
+      }
     }
 
-    // atualiza pagamento
-    const meta = mergeDeep({ ...payment?.meta }, { loc: cob?.loc })
-    repoPay.update(payment.id, { meta, txid: cob.txid, updatedBy: userId })
-
     return {
-      success: true,
-      imageQrcode: cob?.imagemQrcode,
-      qrcode: cob?.qrcode,
-      paymentId: payment?.id,
-      txid: cob?.txid,
-      expires: expiracao
+      success: false,
+      message: 'Método de pagamento não implementado'
     }
   }
 

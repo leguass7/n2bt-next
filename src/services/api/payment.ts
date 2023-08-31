@@ -1,23 +1,24 @@
 import { type SearchPaymentDto } from '~/pages/api/payment/search-payment.dto'
 import type { IResponseGeneratePix, IResponsePayments } from '~/server-side/useCases/payment/payment.dto'
-import { type Payment } from '~/server-side/useCases/payment/payment.entity'
+// import { type Payment } from '~/server-side/useCases/payment/payment.entity'
 
 import { apiService } from './api.service'
 
+export type PaymentType = 'PIX' | 'LINK'
 export interface PaymentPayload {
+  type?: PaymentType
   noPartner?: boolean
-  promoCode?: string
+  code?: string
 }
 
-export async function createPayment(subscriptionId: number, data: Partial<Payment>): Promise<IResponseGeneratePix> {
-  const response = await apiService.post(`/payment/pix/generate?subscriptionId=${subscriptionId}`, { ...data })
-  return response
-}
+// export async function createPayment(subscriptionId: number, data: Partial<Payment>): Promise<IResponseGeneratePix> {
+//   const response = await apiService.post(`/payment/pix/generate?subscriptionId=${subscriptionId}`, { ...data })
+//   return response
+// }
 
 export async function generatePayment(subscriptionId: number, payload?: PaymentPayload): Promise<IResponseGeneratePix> {
-  const params = new URLSearchParams(payload as any)
-  const query = params ? `?${params}` : ''
-  const response = await apiService.get(`/payment/generate/${subscriptionId}${query}`)
+  if (!subscriptionId) return null
+  const response = await apiService.post(`/payment/generate/${subscriptionId}`, payload)
   return response
 }
 

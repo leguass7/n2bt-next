@@ -37,7 +37,7 @@ class CategoryHandler {
     const queryDb = repo
       .createQueryBuilder('Category')
       .select()
-      .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription'])
+      .addSelect(['Tournament.id', 'Tournament.title', 'Tournament.maxSubscription', 'Tournament.creditCardEnd'])
       .innerJoin('Category.tournament', 'Tournament')
       .where({ published: true, tournamentId })
       .andWhere(`(Category.gender = :gender OR Category.gender = 'MF')`, { gender: user.gender })

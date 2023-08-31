@@ -16,7 +16,7 @@ import { Tournament } from '~/server-side/useCases/tournament/tournament.entity'
 
 import { createOAuthOptions } from '../api/auth/[...nextauth]'
 
-const DynamicSubscription = dynamic(() => import('../../components/Subscription').then(({ Subscription }) => Subscription), {
+const DynamicSubscription = dynamic(() => import('~/components/Subscription').then(({ Subscription }) => Subscription), {
   loading: () => <CircleLoading />,
   ssr: false
 })

@@ -46,11 +46,13 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, 
   }, [paymentPayload?.promoCode])
 
   const fetchPromoCode = useCallback(async () => {
-    setLoading(true)
-    const response = await searchPromoCode({ code: promoCode })
-    if (isMounted()) {
-      setLoading(false)
-      setDiscount(response.promoCode?.discount)
+    if (promoCode) {
+      setLoading(true)
+      const response = await searchPromoCode({ code: promoCode })
+      if (isMounted()) {
+        setLoading(false)
+        setDiscount(response.promoCode?.discount)
+      }
     }
   }, [promoCode, isMounted])
 

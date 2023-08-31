@@ -21,7 +21,7 @@ export class Payment {
   userId: string
 
   @Index('method')
-  @Column({ nullable: false, type: 'enum', enum: ['PIX', 'CASH'] })
+  @Column({ nullable: false, type: 'enum', enum: ['PIX', 'CASH', 'LINK'] })
   method: PaymentMethod
 
   @Column({ type: 'decimal', scale: 2, precision: 10, nullable: true, transformer: transformer.decimal })

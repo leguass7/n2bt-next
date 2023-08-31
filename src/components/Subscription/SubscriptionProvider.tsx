@@ -7,9 +7,10 @@ import type { ICategory } from '~/server-side/useCases/category/category.dto'
 import type { IResponseGeneratePix } from '~/server-side/useCases/payment/payment.dto'
 import type { IResponseSubscription, ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import type { IUser } from '~/server-side/useCases/user/user.dto'
-import { type PaymentPayload, generatePayment } from '~/services/api/payment'
+import { type PaymentPayload, type PaymentType, generatePayment } from '~/services/api/payment'
 import { createPublicSubscription } from '~/services/api/subscriber'
 
+export type CreatePayment = (subId: number, type?: PaymentType) => Promise<IResponseGeneratePix>
 export interface ISubscriptionProviderContext {
   subscription: ISubscription
   maxSubscription: number
@@ -20,7 +21,7 @@ export interface ISubscriptionProviderContext {
   partner?: IUser | null
   setPartner?: Dispatch<SetStateAction<IUser>>
   saveSubscription: (noPartner?: boolean) => Promise<IResponseSubscription>
-  generatePixPayment: (subId: number) => Promise<IResponseGeneratePix>
+  createPayment: CreatePayment
   payment?: IResponseGeneratePix
   setPayment?: Dispatch<SetStateAction<IResponseGeneratePix>>
   clearSubscription: () => void
@@ -36,6 +37,7 @@ type Props = {
 }
 
 export const SubscriptionProvider: React.FC<Props> = ({ children, tournamentId, maxSubscription }) => {
+  // const [paymentType, setPaymentType] = useState<PaymentType>('pix')
   const [category, setCategory] = useState<ICategory>(null)
   const [partner, setPartner] = useState<IUser>(null)
   const [subscription, setSubscription] = useState<ISubscription>(null)
@@ -64,9 +66,9 @@ export const SubscriptionProvider: React.FC<Props> = ({ children, tournamentId, 
     [category, partner]
   )
 
-  const generatePixPayment = useCallback(
-    async (subId: number) => {
-      const response = await generatePayment(subId, { ...paymentPayload })
+  const createPayment = useCallback<CreatePayment>(
+    async (subId, type = 'PIX') => {
+      const response = await generatePayment(subId, { ...paymentPayload, type })
       if (response.success) setPayment(response)
       return response
     },
@@ -83,7 +85,7 @@ export const SubscriptionProvider: React.FC<Props> = ({ children, tournamentId, 
         partner,
         setPartner,
         saveSubscription,
-        generatePixPayment,
+        createPayment,
         subscription,
         setSubscription,
         payment,
@@ -113,7 +115,7 @@ export function useSubscription() {
   ])
 
   const saveSubscription = useContextSelector(SubscriptionProviderContext, ({ saveSubscription }) => saveSubscription)
-  const generatePixPayment = useContextSelector(SubscriptionProviderContext, ({ generatePixPayment }) => generatePixPayment)
+  const createPayment = useContextSelector(SubscriptionProviderContext, ({ createPayment }) => createPayment)
   const clearSubscription = useContextSelector(SubscriptionProviderContext, ({ clearSubscription }) => clearSubscription)
   const maxSubscription = useContextSelector(SubscriptionProviderContext, ({ maxSubscription }) => maxSubscription)
 
@@ -125,7 +127,7 @@ export function useSubscription() {
     partner,
     setPartner,
     saveSubscription,
-    generatePixPayment,
+    createPayment,
     subscription,
     setSubscription,
     payment,

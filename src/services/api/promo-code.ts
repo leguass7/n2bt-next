@@ -39,7 +39,7 @@ export async function getPromoCode(promoCodeId: number): Promise<IResponsePromoC
 }
 
 export async function searchPromoCode(filter: SearchPromoCodeDto): Promise<IResponsePromoCode> {
-  const params = new URLSearchParams(filter as any).toString()
+  const params = new URLSearchParams(filter as any)?.toString?.()
   const query = params ? `?${params}` : ''
 
   const response = await apiService.get(`/promo-code/search${query}`)

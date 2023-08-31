@@ -32,15 +32,15 @@ const schema = yup.object({
   code: yup
     .string()
     .length(8, 'Código inválido')
-    .test('code', 'Código inexistente', async value => {
-      if (value.length !== 8) return true
+    .test('code', 'Código inexistente', async (value = '') => {
+      if (value?.length !== 8) return true
 
       const response = await searchPromoCode({ code: value })
       const promo = response?.promoCode
 
       return !!promo
     })
-    .test('code', 'Código expirado ou já usado', async value => {
+    .test('code', 'Código expirado ou já usado', async (value = '') => {
       if (value.length !== 8) return true
 
       const response = await searchPromoCode({ code: value })
@@ -74,7 +74,6 @@ export const Summary: React.FC<Props> = () => {
     if (initialPromoCode) {
       formRef.current?.setData?.({ code: initialPromoCode })
       formRef.current?.submitForm()
-      // setPaymentPayload(old => ({ ...old, promoCode: initialPromoCode as string }))
     }
   }, [initialPromoCode])
 

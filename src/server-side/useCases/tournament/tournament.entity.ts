@@ -61,6 +61,9 @@ export class Tournament {
   @Column({ type: 'datetime', nullable: true, precision: null })
   subscriptionEnd: Date
 
+  @Column({ type: 'datetime', nullable: true, precision: null })
+  creditCardEnd?: Date
+
   // relations
   @OneToMany('Category', (category: Category) => category.tournament)
   categories?: Category[]
