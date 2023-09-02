@@ -2,7 +2,9 @@ import React, { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import AddIcon from '@mui/icons-material/Add'
+import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
+import { CircularProgress } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
@@ -18,7 +20,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { CircleLoading } from '~/components/CircleLoading'
 import { BoxCenter } from '~/components/styled'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import { listAdminSubscriptions } from '~/services/api/subscriptions'
+import { listAdminSubscriptions, resendPaymentSubscription } from '~/services/api/subscriptions'
 
 import { FormPairRanking, type SuccessHandler } from '../FormPairRanking'
 import { ActionVerified } from './ActionVerified'
@@ -49,7 +51,25 @@ export const SubscriptionList: React.FC<Props> = ({ categoryName, categoryId, to
   const [open, setOpen] = useState<string[]>([])
   const [edited, setEdited] = useState<Edited[]>([])
   const [loading, setLoading] = useState(false)
+  const [resendLoading, setResendLoading] = useState<number[]>([])
   const [data, setData] = useState<Pair[]>([])
+
+  const fetchResend = useCallback(
+    (subscriptionIds: number[]) => async () => {
+      if (subscriptionIds?.length) {
+        setResendLoading(subscriptionIds)
+        const response = await resendPaymentSubscription(subscriptionIds)
+        setResendLoading([])
+        const { success, message } = response
+        if (success) {
+          toast.success(message || 'E-mail enviado com sucesso')
+        } else {
+          toast.error(message || 'Erro ao verificar pagamento')
+        }
+      }
+    },
+    []
+  )
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -104,6 +124,14 @@ export const SubscriptionList: React.FC<Props> = ({ categoryName, categoryId, to
       {data?.map(subscription => {
         const verified = !!(subscription?.userSubscription?.verified && subscription?.partnerSubscription?.verified)
         const hasEdit = edited.find(f => f.userIds.includes(subscription?.userId) || f.userIds.includes(subscription?.partnerId))
+
+        const userSub = subscription?.userSubscription
+        const partnerSub = subscription?.partnerSubscription
+
+        const subscriptionIds: number[] = [!!userSub?.paid ? null : userSub?.id, !!partnerSub?.paid ? null : partnerSub?.id].filter(f => !!f)
+
+        const load = !!subscriptionIds.find(f => resendLoading.includes(f))
+
         return (
           <React.Fragment key={subscription?.id}>
             <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
@@ -130,6 +158,15 @@ export const SubscriptionList: React.FC<Props> = ({ categoryName, categoryId, to
                       userSubscriptionId={subscription?.userSubscription?.id}
                     />
                     <div style={{ flex: 1 }} />
+                    <IconButton onClick={fetchResend(subscriptionIds)} size="small" disabled={!subscriptionIds?.length || load}>
+                      {load ? (
+                        <CircularProgress size={18} />
+                      ) : (
+                        <Tooltip title={`Reenviar cobrança inscrição: ${subscriptionIds.join(', ')}`} arrow>
+                          <ForwardToInboxIcon fontSize="small" />
+                        </Tooltip>
+                      )}
+                    </IconButton>
                     <IconButton size="small" onClick={handleEditRanking([subscription?.userId, subscription?.partnerId])}>
                       <Tooltip title={`Editar ranking ${hasEdit?.points || ''}`}>
                         <MilitaryTechIcon fontSize="small" color={hasEdit ? 'primary' : 'inherit'} />

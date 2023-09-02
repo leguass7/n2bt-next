@@ -2,14 +2,17 @@ import { differenceInMinutes } from 'date-fns'
 import { BadRequestException, createHandler, Get, HttpCode, Post, Query, Req, ValidationPipe } from 'next-api-decorators'
 import { type FindOptionsWhere } from 'typeorm'
 
+import { siteName } from '~/config/constants'
+import { compareValues } from '~/helpers/array'
 import { mergeDeep } from '~/helpers/object'
 import { prepareConnection } from '~/server-side/database/conn'
+import { createEmailService } from '~/server-side/services/EmailService'
 import { createApiPix } from '~/server-side/services/pix'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard } from '~/server-side/useCases/auth/middleware'
 import { PaymentMethod, type ResponseApiPixEndToEnd } from '~/server-side/useCases/payment/payment.dto'
 import { Payment } from '~/server-side/useCases/payment/payment.entity'
-import { checkPaymentService, generatePaymentService } from '~/server-side/useCases/payment/payment.service'
+import { checkPaymentService, generatePaymentService, PaymentService } from '~/server-side/useCases/payment/payment.service'
 import { PromoCode } from '~/server-side/useCases/promo-code/promo-code.entity'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 import { User } from '~/server-side/useCases/user/user.entity'
@@ -21,6 +24,10 @@ type RequestGenaratePayment = {
   code?: string
   noPartner?: boolean
   type: PaymentMethod
+}
+
+type RequestResendPayment = {
+  paymentIds: number[]
 }
 
 const Pipe = ValidationPipe({ whitelist: true })
@@ -42,12 +49,42 @@ class PaymentHandler {
 
     const check = await checkPaymentService(ds, { userId, paymentId, disableqrcode })
     if (!check?.success) throw new BadRequestException(`${check?.message || 'Erro ao verificar pagamento'}`)
-    if (!!check?.paid) throw new BadRequestException('Pagamento já foi realizado')
+    if (!!check?.paid) {
+      if (!check?.sent) {
+        const paymentService = new PaymentService(ds)
+        const payment = await paymentService.getOne(paymentId, true)
+        if (!payment?.user?.email) throw new BadRequestException('Usuário sem e-mail cadastrado')
 
-    return {
-      success: true,
-      ...check
+        const subscription = payment?.subscriptions?.sort(compareValues('createdAt', 'desc'))?.[0]
+        if (!subscription) throw new BadRequestException('Inscrição não encontrada')
+
+        const categories = payment?.subscriptions?.map(sub => sub?.category?.title)
+        const mailService = createEmailService()
+        const sent = await mailService.send({
+          from: `"${siteName} <lesbr3@gmail.com>"`,
+          subject: `${siteName} - Pagamento recebido`,
+          to: payment.user.email,
+          html: `<p>Ol&aacute; ${payment?.user?.name} seu pagamento foi confirmado: <br />
+          Torneio: <strong>${subscription?.category?.tournament?.title}</strong><br />
+          ${categories?.join('<br />')}
+          <br />
+          <p/>`
+        })
+        if (sent?.accepted?.length) await paymentService.store({ id: paymentId, sent: true })
+      }
+      throw new BadRequestException('Pagamento já foi realizado')
     }
+
+    return { success: true, ...check }
+  }
+
+  @Post('/resend')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async resendPayment(@Req() req: AuthorizedApiRequest<RequestResendPayment>) {
+    const { body } = req
+    const { paymentIds = [] } = body
+    return { success: true, paymentIds }
   }
 
   @Post('/generate/:subscriptionId')

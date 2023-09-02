@@ -49,23 +49,23 @@ export const PaymentIcon: React.FC<Props> = ({ id, paid, paymentId, value, updat
       {paid ? (
         <>
           {value ? <MiniPrice>{formatPrice(value)}</MiniPrice> : null}
-          <Tooltip title={`Inscrição '${id}' paga, pagamanto '${paymentId}'${value ? ` - ${formatPrice(value)}` : ''}`} arrow>
-            <IconButton size="small">
+          <IconButton size="small">
+            <Tooltip title={`Inscrição '${id}' paga, pagamanto '${paymentId}'${value ? ` - ${formatPrice(value)}` : ''}`} arrow>
               <PaidIcon color="success" />
-            </IconButton>
-          </Tooltip>
+            </Tooltip>
+          </IconButton>
         </>
       ) : (
         <>
           {id && paymentId && !loading ? (
             <Tooltip title={`Verificar pagamento '${paymentId}' inscrição '${id}'${value ? ` - ${formatPrice(value)}` : ''}`} arrow>
-              <IconButton aria-label="verificar pagamento" onClick={handleCheckPayment}>
+              <IconButton aria-label="verificar pagamento" onClick={handleCheckPayment} size="small">
                 <AttachMoneyIcon />
               </IconButton>
             </Tooltip>
           ) : (
             <IconButton aria-label="verificar pagamento" disabled={!paymentId || !!loading}>
-              {loading ? <CircularProgress size={24} /> : <AttachMoneyIcon />}
+              {loading ? <CircularProgress size={18} /> : <AttachMoneyIcon />}
             </IconButton>
           )}
         </>

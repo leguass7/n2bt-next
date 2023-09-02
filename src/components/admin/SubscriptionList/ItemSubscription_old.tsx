@@ -62,21 +62,24 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
     [updateListHandler]
   )
 
-  const fetchPixCode = useCallback(async (paymentId: number) => {
-    setLoading(true)
-    setModalOpen(true)
-    const response = await checkPayment(paymentId, { fetchId: 1 })
-    refId.current += 1
-    const { success, message, paid, imageQrcode, qrcode } = response
-    if (success) {
-      if (!paid && (imageQrcode || qrcode)) {
-        setQrcode({ imageQrcode, paymentId, qrcode, txid: '' })
+  const fetchPixCode = useCallback(
+    (paymentId: number) => async () => {
+      setLoading(true)
+      setModalOpen(true)
+      const response = await checkPayment(paymentId, { fetchId: 1 })
+      refId.current += 1
+      const { success, message, paid, imageQrcode, qrcode } = response
+      if (success) {
+        if (!paid && (imageQrcode || qrcode)) {
+          setQrcode({ imageQrcode, paymentId, qrcode, txid: '' })
+        }
+      } else {
+        toast.error(message || 'Erro ao verificar pagamento')
       }
-    } else {
-      toast.error(message || 'Erro ao verificar pagamento')
-    }
-    setLoading(false)
-  }, [])
+      setLoading(false)
+    },
+    []
+  )
 
   const handleModalClose = () => {
     setQrcode(null)
@@ -89,9 +92,12 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
     handleModalClose()
   }
 
-  const manualPaidHandler = useCallback((paymentId: number) => {
-    setOpenPaid(paymentId)
-  }, [])
+  const manualPaidHandler = useCallback(
+    (paymentId: number) => () => {
+      setOpenPaid(paymentId)
+    },
+    []
+  )
 
   const renderAvatar = () => {
     return [
@@ -128,27 +134,29 @@ export const ItemSubscription: React.FC<ItemSubscriptionProps> = ({
           secondaryAction={
             <>
               {createdBy !== userId && !paid ? (
-                <IconButton
-                  //onClick={fetchDelete}
-                  title={`Deletar inscrição '${id}'`}
-                  disabled={!!loading}
-                >
-                  <DeleteForeverIcon />
+                <IconButton title={`Deletar inscrição '${id}'`} disabled={!!loading} size="small">
+                  <DeleteForeverIcon fontSize="small" />
                 </IconButton>
               ) : null}
               <PaymentIcon value={paymentValue} id={id} paid={!!paid} paymentId={paymentId} updateSubscriptionHandler={updateListHandler} />
               {!paid ? (
                 <>
-                  <Tooltip title={`Gerar pagamento${paymentValue ? ` ${formatPrice(paymentValue)}` : ''}`} arrow>
-                    <IconButton onClick={() => fetchPixCode(paymentId)}>
-                      <QrCode2Icon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={`Inserir pagamento manualmente`} arrow>
-                    <IconButton onClick={() => manualPaidHandler(paymentId)} sx={{ color: theme.colors.primary }}>
-                      <CreditScoreIcon />
-                    </IconButton>
-                  </Tooltip>
+                  <IconButton onClick={fetchPixCode(paymentId)} size="small">
+                    <Tooltip title={`Gerar pagamento${paymentValue ? ` ${formatPrice(paymentValue)}` : ''}`} arrow>
+                      <QrCode2Icon fontSize="small" />
+                    </Tooltip>
+                  </IconButton>
+
+                  <IconButton onClick={manualPaidHandler(paymentId)} sx={{ color: theme.colors.primary }} size="small">
+                    <Tooltip title={`Inserir pagamento manualmente`} arrow>
+                      <CreditScoreIcon fontSize="small" />
+                    </Tooltip>
+                  </IconButton>
+                  {/* <IconButton onClick={fetchResend(paymentId)} size="small">
+                    <Tooltip title={`Reenviar cobrança pagamento${paymentValue ? ` ${formatPrice(paymentValue)}` : ''}`} arrow>
+                      <ForwardToInboxIcon fontSize="small" />
+                    </Tooltip>
+                  </IconButton> */}
                 </>
               ) : null}
             </>

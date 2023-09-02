@@ -1,4 +1,5 @@
 import { createTransport } from 'nodemailer'
+import { type Attachment } from 'nodemailer/lib/mailer'
 
 import type { EmailServiceResponse, EmailServiceSender } from './send.dto'
 
@@ -16,10 +17,10 @@ export function createTransporterSMTP(config: ISmtpConfig): EmailServiceSender {
   if (!config?.auth?.user || !config?.auth?.pass || !config?.host) {
     throw new Error('invalid_smtp_config')
   }
-  const sender: EmailServiceSender = async ({ from, html, subject, to }) => {
+  const sender: EmailServiceSender = async ({ from, html, subject, to }, attachments?: Attachment[]) => {
     try {
       let transporter = createTransport(config)
-      const response = await transporter.sendMail({ from, to, subject, html })
+      const response = await transporter.sendMail({ from, to, subject, html, attachments })
       transporter = null
       return { ...response, method: 'smtp' } as EmailServiceResponse
     } catch (error) {

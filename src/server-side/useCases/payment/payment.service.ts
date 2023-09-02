@@ -1,5 +1,5 @@
 import type { ApiPix, IResponseCob, IResponseQrcode } from 'brpix-api-node'
-import type { DataSource } from 'typeorm'
+import type { DataSource, FindOptionsWhere, DeepPartial } from 'typeorm'
 
 import { mergeDeep } from '~/helpers/object'
 import { removeAll } from '~/helpers/string'
@@ -45,6 +45,7 @@ export async function checkPaymentService(ds: DataSource, { paymentId, disableqr
   return {
     success: true,
     paid: !!payment?.paid,
+    sent: !!payment?.sent,
     ...result
   }
 }
@@ -69,4 +70,50 @@ export async function generatePaymentService(
 
   const qrcode = await apiPix.qrcodeByLocation(cob.loc.id)
   return { success: true, ...cob, ...qrcode }
+}
+
+export class PaymentService {
+  constructor(private readonly ds: DataSource) {}
+
+  async findOne(where: FindOptionsWhere<Payment>) {
+    const repo = this.ds.getRepository(Payment)
+    const query = repo.createQueryBuilder('Payment').innerJoin('Payment.user', 'User').addSelect(['User.name', 'User.email']).where(where)
+    const payment = await query.getOne()
+    return payment
+  }
+
+  async getOne(paymentId: number, relations?: boolean) {
+    const repo = this.ds.getRepository(Payment)
+    const query = repo
+      .createQueryBuilder('Payment')
+      .innerJoin('Payment.user', 'User')
+      .addSelect(['User.name', 'User.email'])
+      .where('Payment.id = :paymentId', { paymentId })
+
+    if (relations) {
+      query
+        .leftJoin('Payment.subscriptions', 'Subscription')
+        .addSelect(['Subscription.id', 'Subscription.userId', 'Subscription.categoryId'])
+        .innerJoin('Subscription.category', 'Category')
+        .addSelect(['Category.id', 'Category.title'])
+        .innerJoin('Category.tournament', 'Tournament')
+        .addSelect(['Tournament.id', 'Tournament.title'])
+    }
+
+    const payment = await query.getOne()
+    return payment
+  }
+
+  async store(data: DeepPartial<Payment>) {
+    const repo = this.ds.getRepository(Payment)
+    const toSave = repo.create(data)
+    const payment = await repo.save(toSave)
+    return payment
+  }
+
+  async update(subscriptionId: number, data: DeepPartial<Payment>) {
+    const repo = this.ds.getRepository(Payment)
+    const result = await repo.update(subscriptionId, { ...data, updatedAt: new Date() })
+    return result
+  }
 }

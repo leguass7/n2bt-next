@@ -29,9 +29,14 @@ export async function searchPayments(filter: SearchPaymentDto): Promise<IRespons
   return response
 }
 
-type Payload = { disableqrcode?: boolean; fetchId: number }
+type Payload = { disableqrcode?: boolean; fetchId?: number }
 export async function checkPayment(paymentId: number, { fetchId, disableqrcode }: Payload): Promise<IResponseGeneratePix> {
   const response = await apiService.post(`/payment/check/${paymentId}`, { fetchId, disableqrcode }, { params: { fetchId } })
+  return response
+}
+
+export async function resendPayment(paymentIds: number[], { fetchId = 0 }: Payload = {}): Promise<IResponseGeneratePix> {
+  const response = await apiService.post(`/payment/resend`, { paymentIds }, { params: { fetchId } })
   return response
 }
 

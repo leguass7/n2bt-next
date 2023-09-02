@@ -6,6 +6,10 @@ import type { Subscription } from './subscriptions.entity'
 
 export type ISubscription = DeepPartial<Subscription>
 
+export type RequestResendSubscription = {
+  subscriptionIds?: number[]
+}
+
 export interface IResponseSubscription extends IResponseApi {
   subscriptionId?: number
   subscription?: ISubscription

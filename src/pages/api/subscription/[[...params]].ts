@@ -1,4 +1,5 @@
 import { isDefined } from 'class-validator'
+import { add, differenceInMinutes } from 'date-fns'
 import type { NextApiResponse } from 'next'
 import {
   BadRequestException,
@@ -15,15 +16,23 @@ import {
   ValidationPipe
 } from 'next-api-decorators'
 
+import { siteName } from '~/config/constants'
+import { formatPrice } from '~/helpers'
+import { tryDate } from '~/helpers/dates'
+import { mergeDeep } from '~/helpers/object'
 import { prepareConnection } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
+import { createEmailService } from '~/server-side/services/EmailService'
 import { PaginateService, Pagination } from '~/server-side/services/PaginateService'
 import type { AuthorizedPaginationApiRequest } from '~/server-side/services/PaginateService/paginate.middleware'
+import { createApiPix } from '~/server-side/services/pix'
 import { factoryXlsxService } from '~/server-side/services/XlsxService'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
+import { generatePaymentService, PaymentService } from '~/server-side/useCases/payment/payment.service'
 import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
-import { type IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { SubscriptionService } from '~/server-side/useCases/subscriptions/subscription.service'
+import type { RequestResendSubscription, IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
 
 import { type SubscriptionReportFilterDto } from './subscription-report-filter.dto'
@@ -39,6 +48,99 @@ const orderFields = [
 ]
 
 class SubscriptionHandler {
+  @Post('/resend')
+  @JwtAuthGuard()
+  @HttpCode(200)
+  async resendPaymentSubscription(@Req() req: AuthorizedApiRequest<RequestResendSubscription>) {
+    const { body, auth } = req
+    const { subscriptionIds = [] } = body
+
+    const ds = await prepareConnection()
+
+    const all = subscriptionIds.map(async subscriptionId => {
+      const subscriptionService = new SubscriptionService(ds)
+      const subscription = await subscriptionService.getOne(subscriptionId, true)
+      if (subscription?.paid || subscription?.payment?.paid) return false
+
+      const apiPix = await createApiPix()
+
+      // verifica se pagamento está vencido
+      let payment = subscription?.payment
+      let overdue = tryDate(payment?.overdue)
+      const subscriptionEnd = tryDate(subscription?.category?.tournament?.subscriptionEnd)
+      let imgQrCode = ''
+      let qrcode = ''
+      if (!payment || !overdue || (overdue && differenceInMinutes(new Date(), overdue) > 0)) {
+        // verifica se torneio acabou e atualiza vencimento
+        if (!overdue || differenceInMinutes(new Date(), subscriptionEnd) > 0) {
+          overdue = add(new Date(), { days: 1 })
+        }
+
+        // gerar pagamento
+        const paymentService = new PaymentService(ds)
+        const value = payment?.value || subscription?.value
+        payment = await paymentService.store({
+          ...payment,
+          userId: subscription?.userId,
+          actived: true,
+          createdBy: auth?.userId,
+          createdAt: new Date(),
+          value,
+          overdue
+        })
+        if (!payment) throw new BadRequestException('Erro ao criar pagamento')
+
+        const subscriptionService = new SubscriptionService(ds)
+        await subscriptionService.update(subscription.id, { paymentId: payment.id })
+
+        const expiracao = differenceInMinutes(overdue, new Date())
+        const cob = await generatePaymentService(apiPix, { expiracao, paymentId: payment?.id, user: subscription.user, value })
+        if (!cob || !cob?.success) {
+          // eslint-disable-next-line no-console
+          console.error(cob?.message, cob?.messageError)
+          throw new BadRequestException('Erro ao criar PIX')
+        }
+
+        imgQrCode = cob?.imagemQrcode
+
+        // atualiza pagamento
+        const meta = mergeDeep({ ...payment?.meta }, { loc: cob?.loc })
+        await paymentService.update(payment.id, { meta, txid: cob.txid, updatedBy: auth?.userId })
+      }
+
+      if (!imgQrCode && payment?.meta?.loc?.id) {
+        const pay = await apiPix.qrcodeByLocation(payment.meta.loc.id)
+        imgQrCode = pay?.imagemQrcode
+        qrcode = pay?.qrcode
+      }
+
+      // envia email com pagamento
+      const mailService = createEmailService()
+      const sent = await mailService.send(
+        {
+          from: `"${siteName} <lesbr3@gmail.com>"`,
+          subject: `${siteName} - Confirme sua inscrição`,
+          to: subscription.user.email,
+          html: `<p>Ol&aacute; ${subscription?.user?.name} sua inscrição ainda não foi confirmada:<br />
+          Torneio: <strong>${subscription?.category?.tournament?.title}</strong><br />
+          Categoria: <strong>${subscription?.category?.title}</strong><br />
+          Clique no link para completar sua inscrição: <br />
+          <a href="https://cea.avatarsolucoesdigitais.com.br/" target"__blank">https://cea.avatarsolucoesdigitais.com.br/</a>
+          <br /><br />
+          <strong>${payment?.value ? formatPrice(payment?.value) : '--'}</strong><br />
+          <p/>
+          <p>${qrcode ? `Código "copia e cola" para pagamento do PIX <br /><br /><a style="padding:16px"><code>${qrcode}</code></a>` : ''}</p>
+          `
+        },
+        imgQrCode ? [{ filename: 'qrcode.png', content: imgQrCode?.split('base64,')?.[1], encoding: 'base64' }] : undefined
+      )
+
+      return sent
+    })
+    const result = await Promise.all(all)
+    return { success: true, subscriptionIds, result }
+  }
+
   @Get('/download')
   @JwtAuthGuard()
   @Pagination()

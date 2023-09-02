@@ -18,6 +18,11 @@ export type AdminSubscriptionsParams = {
   categoryId?: number
 }
 
+export async function resendPaymentSubscription(subscriptionIds: number[]): Promise<IResponseSubscription> {
+  const response = await apiService.post(`/subscription/resend`, { subscriptionIds })
+  return response
+}
+
 export async function createSubscription(data: Partial<ISubscription>): Promise<IResponseSubscription> {
   const response = await apiService.post('/subscription', data)
   return response

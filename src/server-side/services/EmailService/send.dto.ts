@@ -1,3 +1,5 @@
+import type { Attachment } from 'nodemailer/lib/mailer'
+
 export interface SenderPayload {
   from: string
   to: string
@@ -13,4 +15,4 @@ export interface EmailServiceResponse extends Record<any, any> {
   method: 'smtp'
   accepted: string[]
 }
-export type EmailServiceSender = (payload: SenderPayload) => Promise<EmailServiceResponse>
+export type EmailServiceSender = (payload: SenderPayload, attachments?: Attachment[]) => Promise<EmailServiceResponse>

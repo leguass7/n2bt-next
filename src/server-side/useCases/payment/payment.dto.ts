@@ -46,6 +46,7 @@ export interface IResponseCob {
 
 export interface IResponseGeneratePix extends IResponseApi {
   paid?: boolean
+  sent?: boolean
   imageQrcode?: string
   qrcode?: string
   paymentId?: number

@@ -43,6 +43,9 @@ export class Payment {
   @Column({ nullable: true, default: true })
   actived?: boolean
 
+  @Column({ nullable: true, default: true })
+  sent?: boolean
+
   @Column({ type: 'uuid', nullable: true, default: null, length: 36 })
   createdBy?: string
 
