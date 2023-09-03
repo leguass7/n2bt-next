@@ -29,6 +29,7 @@ import { createApiPix } from '~/server-side/services/pix'
 import { factoryXlsxService } from '~/server-side/services/XlsxService'
 import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
+import { type GeneratePayment } from '~/server-side/useCases/payment/payment.dto'
 import { generatePaymentService, PaymentService } from '~/server-side/useCases/payment/payment.service'
 import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
 import { SubscriptionService } from '~/server-side/useCases/subscriptions/subscription.service'
@@ -72,8 +73,13 @@ class SubscriptionHandler {
       let qrcode = ''
       if (!payment || !overdue || (overdue && differenceInMinutes(new Date(), overdue) > 0)) {
         // verifica se torneio acabou e atualiza vencimento
-        if (!overdue || differenceInMinutes(new Date(), subscriptionEnd) > 0) {
+        const diff = differenceInMinutes(new Date(), subscriptionEnd)
+        if (!overdue || diff > 0) {
           overdue = add(new Date(), { days: 1 })
+        }
+
+        if (overdue && diff <= 0) {
+          overdue = add(subscriptionEnd, { days: 1 })
         }
 
         // gerar pagamento
@@ -94,10 +100,12 @@ class SubscriptionHandler {
         await subscriptionService.update(subscription.id, { paymentId: payment.id })
 
         const expiracao = differenceInMinutes(overdue, new Date())
-        const cob = await generatePaymentService(apiPix, { expiracao, paymentId: payment?.id, user: subscription.user, value })
+
+        const p: GeneratePayment = { expiracao, paymentId: payment?.id, user: subscription.user, value }
+        const cob = await generatePaymentService(apiPix, p)
         if (!cob || !cob?.success) {
           // eslint-disable-next-line no-console
-          console.error(cob?.message, cob?.messageError)
+          console.error('overdue', overdue, 'fim inscricao', subscriptionEnd, cob?.message, cob?.messageError)
           throw new BadRequestException('Erro ao criar PIX')
         }
 
