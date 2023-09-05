@@ -65,7 +65,7 @@ export const AdminAuth = (levels: number[] | number) =>
       req.auth = session ? authorizedDto(session) : null
       req.ua = req?.headers['user-agent'] ? parse(req.headers['user-agent']) : null
 
-      if (!req?.auth?.level || !makeArray(levels).includes(req.auth.level)) return unauthorize()
+      if (!req?.auth?.level || !makeArray(levels).includes(req?.auth?.level)) return unauthorize()
 
       next()
     } catch (error) {

@@ -197,10 +197,15 @@ class PaymentHandler {
     const ds = await prepareConnection()
     const repo = ds.getRepository(Payment)
 
-    const tournamentId = filter.tournamentId
+    const promoCodeId = filter?.promoCodeId
+    if (!promoCodeId) return { success: false, message: 'Código não encontrado' }
+
+    const tournamentId = filter?.tournamentId
     delete filter.tournamentId
 
-    const where: FindOptionsWhere<Payment> = { ...filter, subscriptions: { category: { tournamentId } } }
+    const where: FindOptionsWhere<Payment> = { promoCodeId }
+    if (tournamentId) where.subscriptions = { category: { tournamentId } }
+    console.log('where', where)
     const payments = await repo.find({ where })
 
     return { payments }

@@ -2,6 +2,7 @@ import { BadRequestException, createHandler, Delete, Get, HttpCode, Patch, Post,
 
 import { promoCodeSize } from '~/config/constants'
 import { generatePromoCode } from '~/helpers/string'
+import { prepareConnection } from '~/server-side/database/conn'
 import { getRepo } from '~/server-side/database/conn'
 import { parseOrderDto } from '~/server-side/database/db.helper'
 import { Pagination } from '~/server-side/services/PaginateService'
@@ -11,7 +12,7 @@ import { AdminAuth } from '~/server-side/useCases/auth/middleware'
 import type { IPromoCode } from '~/server-side/useCases/promo-code/promo-code.dto'
 import { PromoCode } from '~/server-side/useCases/promo-code/promo-code.entity'
 
-import { type SearchPromoCodeDto } from './search.dto'
+import type { SearchPromoCodeDto } from './search.dto'
 
 const Pipe = ValidationPipe({ whitelist: true })
 
@@ -56,16 +57,12 @@ class PromoCodeHandler {
   @Get('/search')
   @HttpCode(200)
   async search(@Query(Pipe) filter: SearchPromoCodeDto) {
-    const repo = await getRepo(PromoCode)
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(PromoCode)
 
-    const where = !!filter?.OR
-      ? Object.entries(filter).map(([key, value]) => {
-          const obj = {}
-          obj[`${key}`] = value
-          return obj
-        })
-      : filter
-
+    const code = filter?.code
+    if (!code) return { success: false, message: 'Código não encontrado' }
+    const where = { code }
     const promoCode = await repo.findOne({ where })
 
     return { success: true, promoCode }

@@ -85,8 +85,7 @@ export const Summary: React.FC<Props> = () => {
     const isInvalid = await validateFormData(schema, formData, formRef.current)
     if (isInvalid) return setPaymentPayload(old => ({ ...old, promoCode: null }))
 
-    const promoCode = formData.code
-    setPaymentPayload(old => ({ ...old, promoCode }))
+    setPaymentPayload(old => ({ ...old, code: formData.code }))
   }
 
   const handleGenerateClick = async () => {

@@ -35,9 +35,6 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, 
   const { paymentPayload } = useSubscription()
   const { isMobile } = useAppTheme()
   const { ref, width } = useResizeDetector()
-
-  const isMounted = useIsMounted()
-
   const [discount, setDiscount] = useState(0)
 
   const promoCode = useMemo(() => {
@@ -49,12 +46,10 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, 
     if (promoCode) {
       setLoading(true)
       const response = await searchPromoCode({ code: promoCode })
-      if (isMounted()) {
-        setLoading(false)
-        setDiscount(response.promoCode?.discount)
-      }
+      setLoading(false)
+      setDiscount(response?.promoCode?.discount)
     }
-  }, [promoCode, isMounted])
+  }, [promoCode])
 
   useEffect(() => {
     fetchPromoCode()
@@ -78,6 +73,8 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, 
   const handlePix = async () => {
     if (paymentId && onPixClick) onPixClick(paymentId)
   }
+
+  console.log('discount', discount, priceWithDiscount)
 
   return (
     <Card ref={ref} sx={{ maxWidth: isMobile ? '100%' : 340, mb: 1 }}>
