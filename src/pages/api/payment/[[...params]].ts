@@ -205,7 +205,6 @@ class PaymentHandler {
 
     const where: FindOptionsWhere<Payment> = { promoCodeId }
     if (tournamentId) where.subscriptions = { category: { tournamentId } }
-    console.log('where', where)
     const payments = await repo.find({ where })
 
     return { payments }
