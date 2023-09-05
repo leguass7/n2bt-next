@@ -13,7 +13,6 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
 import { formatPrice } from '~/helpers'
-import { useIsMounted } from '~/hooks/useIsMounted'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { searchPromoCode } from '~/services/api/promo-code'
 
@@ -73,8 +72,6 @@ export const SubscriptionItem: React.FC<Props> = ({ id, partner = {}, category, 
   const handlePix = async () => {
     if (paymentId && onPixClick) onPixClick(paymentId)
   }
-
-  console.log('discount', discount, priceWithDiscount)
 
   return (
     <Card ref={ref} sx={{ maxWidth: isMobile ? '100%' : 340, mb: 1 }}>
