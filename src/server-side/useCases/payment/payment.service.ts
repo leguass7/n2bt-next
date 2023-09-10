@@ -116,4 +116,21 @@ export class PaymentService {
     const result = await repo.update(subscriptionId, { ...data, updatedAt: new Date() })
     return result
   }
+  //
+
+  async paymentReport(tournamentId: number) {
+    const repo = this.ds.getRepository(Payment)
+    const query = repo.createQueryBuilder('Payment')
+
+    query
+      .select(['Payment.id', 'Payment.paid', 'Payment.payday', 'Payment.value', 'Payment.userId', 'Payment.actived'])
+      .addSelect(['Subscription.id', 'Subscription.categoryId', 'Subscription.value'])
+      .addSelect(['Category.id', 'Category.title', 'Category.price'])
+      .innerJoin('Payment.subscriptions', 'Subscription')
+      .innerJoin('Subscription.category', 'Category')
+      .where('Category.tournamentId = :tournamentId', { tournamentId })
+      .andWhere('Payment.actived = :actived', { actived: true })
+    const result = await query.getMany()
+    return result
+  }
 }

@@ -214,13 +214,12 @@ class PaymentHandler {
   @JwtAuthGuard()
   async report(@Req() req: AuthorizedApiRequest) {
     const ds = await prepareConnection()
-    const repo = ds.getRepository(Payment)
 
     const tournamentId = +req?.query?.params?.[1] || 0
-    if (!tournamentId) return { success: false, message: 'Código não encontrado' }
+    if (!tournamentId) return { success: false, message: 'Torneio não encontrado' }
 
-    const where: FindOptionsWhere<Payment> = { subscriptions: { category: { tournamentId } } }
-    const payments = await repo.find({ where })
+    const paymentService = new PaymentService(ds)
+    const payments = await paymentService.paymentReport(tournamentId)
 
     return { success: true, payments }
   }
