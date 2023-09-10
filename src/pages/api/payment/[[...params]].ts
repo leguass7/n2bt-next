@@ -210,6 +210,21 @@ class PaymentHandler {
     return { payments }
   }
 
+  @Get('/report/:tournamentId')
+  @JwtAuthGuard()
+  async report(@Req() req: AuthorizedApiRequest) {
+    const ds = await prepareConnection()
+    const repo = ds.getRepository(Payment)
+
+    const tournamentId = +req?.query?.params?.[1] || 0
+    if (!tournamentId) return { success: false, message: 'Código não encontrado' }
+
+    const where: FindOptionsWhere<Payment> = { subscriptions: { category: { tournamentId } } }
+    const payments = await repo.find({ where })
+
+    return { success: true, payments }
+  }
+
   @Post('/:paymentId')
   @JwtAuthGuard()
   @HttpCode(200)

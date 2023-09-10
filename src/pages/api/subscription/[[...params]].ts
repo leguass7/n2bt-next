@@ -537,18 +537,14 @@ class SubscriptionHandler {
     const statistics: any = { total: subscriptions.length }
 
     statistics.sizes = subscriptions.reduce((ac, at) => {
-      const size = at.user.shirtSize
-
+      const size = at?.user?.shirtSize || 'M'
       ac[size] = Object.hasOwn(ac, size) ? ac[size] + 1 : 1
-
       return ac
     }, {})
 
     statistics.categories = subscriptions.reduce((ac, at) => {
       const { title } = at.category
-
       ac[title] = Object.hasOwn(ac, title) ? ac[title] + 1 : 1
-
       return ac
     }, {})
 

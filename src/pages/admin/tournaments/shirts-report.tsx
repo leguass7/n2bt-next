@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next'
-import { unstable_getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import dynamic from 'next/dynamic'
 
 import { LayoutAdmin } from '~/components/app/LayoutAdmin'
@@ -8,7 +8,7 @@ import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
 import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
 const DynamicShirtsReport = dynamic(() => import('~/components/admin/ShirtsReport').then(({ ShirtsReport }) => ShirtsReport), {
-  loading: () => <CircleLoading />,
+  loading: () => <CircleLoading color="#f00" />,
   ssr: false
 })
 
@@ -31,7 +31,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async context => {
   const tournamentId = +context?.query?.tournamentId || 0
 
   const [authOptions] = await createOAuthOptions()
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+  const session = await getServerSession(context.req, context.res, authOptions)
 
   if (!tournamentId) {
     return {

@@ -22,10 +22,16 @@ export async function generatePayment(subscriptionId: number, payload?: PaymentP
   return response
 }
 
+/** @deprecated */
 export async function searchPayments(filter: SearchPaymentDto): Promise<IResponsePayments> {
   const params = new URLSearchParams(filter as any)
   const query = params ? `?${params}` : ''
   const response = await apiService.get(`/payment/search${query}`)
+  return response
+}
+
+export async function reportPayments(tournamentId: number): Promise<IResponsePayments> {
+  const response = await apiService.get(`/payment/report/${tournamentId}`)
   return response
 }
 
