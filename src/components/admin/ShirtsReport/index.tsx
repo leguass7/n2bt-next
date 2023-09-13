@@ -1,19 +1,18 @@
 import React, { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { ArrowBack, ContentCopy } from '@mui/icons-material'
-import { Button, Card, CardActions, CardContent, CardHeader, Divider, Grid, IconButton, Typography } from '@mui/material'
+import { ArrowBack } from '@mui/icons-material'
+import { Card, CardContent, Grid, Typography } from '@mui/material'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 
 import { TableReport } from '~/components/admin/TableReport'
 import { CircleLoading } from '~/components/CircleLoading'
-import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import type { ISubscription, ISubscriptionStatistics } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { getSubscriptionReport } from '~/services/api/subscriptions'
 
 import { CardPayment } from './CardPayment'
+import { CardShirtStats } from './CardShirtStats'
 
 type Props = {
   tournamentId: number
@@ -21,60 +20,26 @@ type Props = {
 
 export const ShirtsReport: React.FC<Props> = ({ tournamentId }) => {
   const [data, setData] = useState<ISubscription[]>([])
-
-  const [statistics, setStatistics] = useState<Partial<ISubscriptionStatistics>>({})
+  const [stats, setStats] = useState<ISubscriptionStatistics>()
   const [loading, setLoading] = useState(false)
-  const { push } = useRouter()
-  const isMounted = useIsMounted()
 
   const fetchData = useCallback(
     async (filter?: Record<string, any>) => {
-      if (!tournamentId) return
-      setLoading(true)
-
-      const { success, subscriptions = [], message, statistics } = await getSubscriptionReport(tournamentId, filter)
-
-      if (isMounted()) {
+      if (tournamentId) {
+        setLoading(true)
+        const { success, subscriptions = [], message, statistics } = await getSubscriptionReport(tournamentId, filter)
         setLoading(false)
-        if (!success) toast.error(message)
-        else {
+        if (success) {
           setData(subscriptions)
-          setStatistics(statistics)
-        }
+          setStats(statistics)
+        } else toast.error(message)
       }
+      if (!tournamentId) return
     },
-    [tournamentId, isMounted]
+    [tournamentId]
   )
 
   useOnceCall(fetchData)
-
-  const renderShirtStatistics = useCallback(() => {
-    if (!statistics?.sizes) return null
-    const sizes = Object.entries(statistics.sizes)
-
-    return sizes.map(([key, value]) => {
-      return (
-        <Typography key={key}>
-          <b>{key}:</b> {value}
-        </Typography>
-      )
-    })
-  }, [statistics])
-
-  const handleCopyShirtInfo = () => {
-    if (document) {
-      const containerInfo = document.getElementById('shirts-quantity')
-      const info = containerInfo?.innerText?.replace(/\n\n/g, '\n')
-      if (info) {
-        navigator.clipboard.writeText(info)
-        toast('Conteúdo copiado com sucesso!', { type: 'info', position: 'bottom-right' })
-      }
-    }
-  }
-
-  const handleClickPrint = () => {
-    push(`/admin/tournaments/print-report?tournamentId=${tournamentId}`)
-  }
 
   return (
     <>
@@ -94,27 +59,7 @@ export const ShirtsReport: React.FC<Props> = ({ tournamentId }) => {
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Card>
-            <CardHeader
-              title="Qtd de camisetas 1"
-              action={
-                <IconButton onClick={handleCopyShirtInfo}>
-                  <ContentCopy />
-                </IconButton>
-              }
-            />
-            <Divider />
-
-            <CardContent id="shirts-quantity">{renderShirtStatistics()}</CardContent>
-            <CardActions sx={{ gap: 1, justifyContent: 'space-between' }}>
-              <Typography variant="body1" fontWeight={700} align="right">
-                Total: {statistics?.total}
-              </Typography>
-              <Button variant="contained" onClick={handleClickPrint}>
-                IMPRIMIR
-              </Button>
-            </CardActions>
-          </Card>
+          <CardShirtStats tournamentId={tournamentId} statistics={stats} />
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <CardPayment tournamentId={tournamentId} />
