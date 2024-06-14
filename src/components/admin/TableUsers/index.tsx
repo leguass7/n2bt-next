@@ -9,7 +9,7 @@ import { paginateUsers } from '~/services/api/user'
 import { Actions } from './Actions'
 import { columns } from './columns'
 
-const pageSize = 12
+const pageSize = 24
 
 export const TableUsers: React.FC = () => {
   const [loading, setLoading] = useState(false)
