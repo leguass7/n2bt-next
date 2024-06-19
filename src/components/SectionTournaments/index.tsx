@@ -10,7 +10,6 @@ import { listTournaments } from '~/services/api/tournament'
 import { CircleLoading } from '../CircleLoading'
 import { TournamentCard } from './TournamentCard'
 
-// import { Container } from './styles';
 type Props = {
   tournaments?: ITournament[]
 }

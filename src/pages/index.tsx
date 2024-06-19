@@ -3,7 +3,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 
 import { Layout } from '~/components/app/Layout'
-import { SectionLogo } from '~/components/SectionLogo'
+// import { SectionLogo } from '~/components/SectionLogo'
 import { SectionTournaments } from '~/components/SectionTournaments'
 import { FlexContainer, Text } from '~/components/styled'
 import { siteName } from '~/config/constants'
@@ -22,7 +22,9 @@ const Home: NextPage<HomePageProps> = ({ tournaments }) => {
         <title>{siteName}</title>
         <meta name="description" content="Beach Tennis, Aulas, Torneios e muito mais" />
       </Head>
-      <SectionLogo />
+      <br />
+      <br />
+      {/* <SectionLogo /> */}
       <Divider sx={{ mt: 2 }} />
       <SectionTournaments tournaments={tournaments} />
       <Divider sx={{ mt: 3 }} />

@@ -2,6 +2,7 @@ import imgBt from '~/assets/bt.jpg'
 import imgCard from '~/assets/card.png'
 import imgDunas from '~/assets/dunas-out-large.jpg'
 import imgFute from '~/assets/fute.jpg'
+import imgNorth from '~/assets/north-09.jpg'
 import imgOriginal from '~/assets/original-1ano.jpg'
 import imgSpeed from '~/assets/primeira-speed.jpg'
 import imgRafinha from '~/assets/rafinha-10.jpg'
@@ -41,6 +42,7 @@ export const tournamentImages = [
   { id: 5, image: imgBt },
   { id: 6, image: imgVolei },
   { id: 7, image: imgFute },
+  { id: 9, image: imgNorth },
   { id: 10, image: imgRafinha }
   //
 ]
