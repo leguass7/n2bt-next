@@ -9,8 +9,8 @@ import TableContainer from '@mui/material/TableContainer'
 import Typography from '@mui/material/Typography'
 
 import { limitString } from '~/helpers/string'
-import { type IResponseSubscriptions } from '~/server-side/useCases/subscriptions/subscriptions.dto'
-import { adminReportSubscriptions } from '~/services/api/subscriptions'
+import type { IResponseSubscriptionsReport } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { getSubscriptionReport } from '~/services/api/subscriptions'
 
 import { Span } from '../styles'
 
@@ -40,10 +40,10 @@ type Props = {
 }
 
 export const PrintPresenceReport: React.FC<Props> = ({ tournamentId }) => {
-  const [data, setData] = useState<IResponseSubscriptions['subscriptions']>([])
+  const [data, setData] = useState<IResponseSubscriptionsReport['subscriptions']>([])
 
   const fetchData = useCallback(async () => {
-    const response = await adminReportSubscriptions(tournamentId)
+    const response = await getSubscriptionReport(tournamentId)
     if (response.success) {
       setData(response?.subscriptions || [])
     }
@@ -59,7 +59,7 @@ export const PrintPresenceReport: React.FC<Props> = ({ tournamentId }) => {
       if (!found) acc.push(item)
 
       return acc
-    }, [] as IResponseSubscriptions['subscriptions'])
+    }, [] as IResponseSubscriptionsReport['subscriptions'])
   }, [data])
 
   return (

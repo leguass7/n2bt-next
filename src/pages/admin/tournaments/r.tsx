@@ -13,7 +13,7 @@ import { CircleLoading } from '~/components/CircleLoading'
 import { useIsMounted } from '~/hooks/useIsMounted'
 import { useOnceCall } from '~/hooks/useOnceCall'
 import { createOAuthOptions } from '~/pages/api/auth/[...nextauth]'
-import type { ISubscription, ISubscriptionStatistics } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type { ISubscription, ISubscriptionStatistics, IResponseSubscriptionsReport } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { getSubscriptionReport } from '~/services/api/subscriptions'
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
 }
 
 const AdminTournamentReport: NextPage<Props> = ({ tournamentId }) => {
-  const [data, setData] = useState<ISubscription[]>([])
+  const [data, setData] = useState<IResponseSubscriptionsReport['subscriptions']>([])
   const [statistics, setStatistics] = useState<Partial<ISubscriptionStatistics>>({})
 
   const [loading, setLoading] = useState(false)
