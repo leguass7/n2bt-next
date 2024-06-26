@@ -31,7 +31,7 @@ import type { AuthorizedApiRequest } from '~/server-side/useCases/auth/auth.dto'
 import { JwtAuthGuard, IfAuth } from '~/server-side/useCases/auth/middleware'
 import { type GeneratePayment } from '~/server-side/useCases/payment/payment.dto'
 import { generatePaymentService, PaymentService } from '~/server-side/useCases/payment/payment.service'
-import { subscriptionToSheetDto } from '~/server-side/useCases/subscriptions/subscription.helper'
+import { subscriptionToSheetDto, subscriptionTShirtDto } from '~/server-side/useCases/subscriptions/subscription.helper'
 import { SubscriptionService } from '~/server-side/useCases/subscriptions/subscription.service'
 import type { RequestResendSubscription, IRequestSubscriptionTransfer } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { Subscription } from '~/server-side/useCases/subscriptions/subscriptions.entity'
@@ -498,26 +498,30 @@ class SubscriptionHandler {
       .createQueryBuilder('Subscription')
       .select([
         'Subscription.id',
-        'Subscription.categoryId',
         'Subscription.userId',
+        'Subscription.categoryId',
         'Subscription.paid',
         'Subscription.shirtDelivered',
+        'Subscription.paymentId',
         'Subscription.value'
       ])
       .innerJoin('Subscription.category', 'Category')
-      .innerJoin('Subscription.user', 'User')
-      .leftJoin('Subscription.payment', 'Payment')
-      .leftJoin('Payment.promoCode', 'PromoCode')
       .addSelect(['Category.id', 'Category.tournamentId', 'Category.limit', 'Category.title'])
-      .addSelect(['Payment.id', 'Payment.payday', 'Payment.actived', 'Payment.paid', 'Payment.value'])
-      .addSelect(['PromoCode.code', 'PromoCode.label'])
+      //
+      .innerJoin('Subscription.user', 'User')
       .addSelect(['User.id', 'User.name', 'User.gender', 'User.nick', 'User.shirtSize', 'User.email', 'User.phone'])
+      //
+      .leftJoin('Subscription.payment', 'Payment')
+      .addSelect(['Payment.id', 'Payment.payday', 'Payment.actived', 'Payment.paid', 'Payment.value'])
+      //
+      .leftJoin('Payment.promoCode', 'PromoCode')
+      .addSelect(['PromoCode.code', 'PromoCode.label'])
+      //
       .where('Subscription.actived = :actived', { actived: true })
-      .distinct()
+      // .distinct()
       .andWhere('Category.tournamentId = :tournamentId', { tournamentId })
       .orderBy('User.name', 'ASC')
       .addOrderBy('Subscription.paid', 'DESC')
-      .groupBy('Subscription.userId')
 
     if (search)
       repoQuery.andWhere(
@@ -532,7 +536,8 @@ class SubscriptionHandler {
       repoQuery.andWhere(`Subscription.paid = :paid`, { paid: filter?.paid === 'true' })
     }
 
-    const subscriptions = await repoQuery.getMany()
+    const data = await repoQuery.getMany()
+    const subscriptions = subscriptionTShirtDto(data)
 
     const statistics: any = { total: subscriptions.length }
 
@@ -542,11 +547,11 @@ class SubscriptionHandler {
       return ac
     }, {})
 
-    statistics.categories = subscriptions.reduce((ac, at) => {
-      const { title } = at.category
-      ac[title] = Object.hasOwn(ac, title) ? ac[title] + 1 : 1
-      return ac
-    }, {})
+    // statistics.categories = subscriptions.reduce((ac, at) => {
+    //   const { title } = at.category
+    //   ac[title] = Object.hasOwn(ac, title) ? ac[title] + 1 : 1
+    //   return ac
+    // }, {})
 
     return { success: true, subscriptions, statistics }
   }

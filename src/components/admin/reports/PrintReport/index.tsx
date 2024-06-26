@@ -10,10 +10,9 @@ import TableContainer from '@mui/material/TableContainer'
 import Typography from '@mui/material/Typography'
 
 import { formatPrice } from '~/helpers'
-import { splitDateTime, tryDate } from '~/helpers/dates'
 import { limitString } from '~/helpers/string'
-import { type IResponseSubscriptions } from '~/server-side/useCases/subscriptions/subscriptions.dto'
-import { adminReportSubscriptions } from '~/services/api/subscriptions'
+import type { IResponseSubscriptionsReport } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import { getSubscriptionReport } from '~/services/api/subscriptions'
 
 import { FlexBox, Span } from '../styles'
 
@@ -43,10 +42,10 @@ type Props = {
 }
 
 export const PrintReport: React.FC<Props> = ({ tournamentId }) => {
-  const [data, setData] = useState<IResponseSubscriptions['subscriptions']>([])
+  const [data, setData] = useState<IResponseSubscriptionsReport['subscriptions']>([])
 
   const fetchData = useCallback(async () => {
-    const response = await adminReportSubscriptions(tournamentId)
+    const response = await getSubscriptionReport(tournamentId)
     if (response.success) {
       setData(response?.subscriptions || [])
     }
@@ -59,10 +58,12 @@ export const PrintReport: React.FC<Props> = ({ tournamentId }) => {
   const [totalPaid, totalUnpaid, totalPromoPaid] = useMemo(() => {
     //
     return data.reduce(
-      ([a, b, c], { payment }) => {
-        a += !!payment?.paid ? payment?.value || 0 : 0
-        b += !payment?.paid ? payment?.value || 0 : 0
-        c += payment?.promoCode ? payment?.value || 0 : 0
+      ([a, b, c], { value }) => {
+        a += value || 0
+        // b += !payment?.paid ? payment?.value || 0 : 0
+        b = 0
+        // c += payment?.promoCode ? payment?.value || 0 : 0
+        c = 0
 
         return [a, b, c]
       },
@@ -105,8 +106,10 @@ export const PrintReport: React.FC<Props> = ({ tournamentId }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map(({ id, user, payment, category }, i) => {
-                const paiday = tryDate(payment?.payday as Date)
+              {data.map(({ id, user, payment, category, paid, value }, i) => {
+                const { code, label } = payment?.find?.(p => !!p.promoCode)?.promoCode || {}
+                const categories = category?.map?.(c => c.title).join(', ')
+                // const paiday = tryDate(payment?.payday as Date)
                 return (
                   <TableRow key={`sub-${id}`}>
                     <TableCell>
@@ -114,7 +117,7 @@ export const PrintReport: React.FC<Props> = ({ tournamentId }) => {
                         <Span textSize={10} textStyle="italic">
                           #{i + 1}
                         </Span>{' '}
-                        {limitString(user?.name, 32)} ({category?.title?.trim()})
+                        {limitString(user?.name, 32)} ({categories})
                       </Span>
                       <br />
                       <Span textSize={12}>{user?.email}</Span>
@@ -124,22 +127,22 @@ export const PrintReport: React.FC<Props> = ({ tournamentId }) => {
                     </TableCell>
                     <TableCell align="center">{user?.shirtSize}</TableCell>
                     <TableCell align="right">
-                      <Span textSize={10}>{formatPrice(payment?.value || 0)}</Span>
-                      {paiday ? (
+                      <Span textSize={10}>{formatPrice(value || 0)}</Span>
+                      {/* {paiday ? (
                         <>
                           <br />
                           <Span textSize={10}>{splitDateTime(paiday)?.[0]}</Span>
                         </>
-                      ) : null}
+                      ) : null} */}
                     </TableCell>
                     <TableCell align="center">
-                      <>{payment?.paid ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}</>
+                      <>{paid ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}</>
                     </TableCell>
                     <TableCell>
-                      <Span textSize={10}>{payment?.promoCode?.code}</Span>
+                      <Span textSize={10}>{code}</Span>
                       <br />
                       <Span textSize={10} textStyle="italic">
-                        {payment?.promoCode?.label}
+                        {label}
                       </Span>
                     </TableCell>
                   </TableRow>

@@ -1,12 +1,12 @@
 import { CustomTable } from '~/components/CustomTable'
 import { TableActionsProvider } from '~/components/tables/TableActionsProvider'
-import type { ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type { IResponseSubscriptionsReport } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
 import { ReportActions } from './Actions'
 import { reportColumns } from './columns'
 
 interface Props {
-  data: ISubscription[]
+  data: IResponseSubscriptionsReport['subscriptions']
   fetchData: () => void
 }
 

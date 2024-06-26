@@ -90,7 +90,7 @@ export async function getDownloadSubscriptions(tournamentId: number, params: Tab
 //   return response
 // }
 
-export async function adminReportSubscriptions(tournamentId: number): Promise<IResponseSubscriptions> {
-  const response = await apiService.get(`/subscription/report`, { params: { tournamentId } })
-  return response
-}
+// export async function adminReportSubscriptions(tournamentId: number): Promise<IResponseSubscriptions> {
+//   const response = await apiService.get(`/subscription/report`, { params: { tournamentId } })
+//   return response
+// }

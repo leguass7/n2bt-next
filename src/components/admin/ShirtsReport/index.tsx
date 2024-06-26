@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { TableReport } from '~/components/admin/TableReport'
 import { CircleLoading } from '~/components/CircleLoading'
 import { useOnceCall } from '~/hooks/useOnceCall'
-import type { ISubscription, ISubscriptionStatistics } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type { ISubscriptionStatistics, IResponseSubscriptionsReport } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { getSubscriptionReport } from '~/services/api/subscriptions'
 
 import { CardPayment } from './CardPayment'
@@ -19,7 +19,7 @@ type Props = {
 }
 
 export const ShirtsReport: React.FC<Props> = ({ tournamentId }) => {
-  const [data, setData] = useState<ISubscription[]>([])
+  const [data, setData] = useState<IResponseSubscriptionsReport['subscriptions']>([])
   const [stats, setStats] = useState<ISubscriptionStatistics>()
   const [loading, setLoading] = useState(false)
 

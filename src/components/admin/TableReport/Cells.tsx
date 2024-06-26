@@ -3,13 +3,13 @@ import { useCallback, useState } from 'react'
 import { DoneRounded, WarningRounded } from '@mui/icons-material'
 import { Box, Checkbox, Typography } from '@mui/material'
 
-import { type ICustomCellProps } from '~/components/CustomTable'
+import type { ICustomCellProps } from '~/components/CustomTable'
 import { formatPrice } from '~/helpers'
 import { useIsMounted } from '~/hooks/useIsMounted'
-import { type ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type { ISubscriptionReport } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 import { updateSubscription } from '~/services/api/subscriptions'
 
-type Props = ICustomCellProps<ISubscription>
+type Props = ICustomCellProps<ISubscriptionReport>
 
 export const ReportNameCell: React.FC<Props> = ({ record }) => {
   const { name, email, phone, nick } = record.user
@@ -36,11 +36,11 @@ export const ReportPriceCell: React.FC<Props> = ({ record }) => {
 }
 
 export const ReportPromoCodeCell: React.FC<Props> = ({ record }) => {
-  const code = record?.payment?.promoCode?.code || '#'
+  const code = record?.payment?.find?.(p => !!p.promoCode)?.promoCode?.code
 
   return (
     <div>
-      <Typography variant="body1">{code}</Typography>
+      <Typography variant="body1">{code || '--'}</Typography>
     </div>
   )
 }
@@ -73,15 +73,17 @@ export const ReportPaymentCell: React.FC<Props> = ({ record }) => {
       {paid ? (
         <Box dir="column">
           <DoneRounded />
-          <div>Pago</div>
+          <Typography variant="body2">Pago</Typography>
         </Box>
       ) : (
         <Box>
-          <Box dir="column" flexWrap="wrap" justifyContent="center" alignItems="center">
+          <Box dir="column" flexWrap="wrap" justifyContent="center" alignItems="center" color={'error'}>
             <div>
-              <WarningRounded />
+              <WarningRounded color="disabled" />
             </div>
-            <div>Não pago</div>
+            <Typography variant="body2" color="error">
+              Não pago
+            </Typography>
           </Box>
         </Box>
       )}

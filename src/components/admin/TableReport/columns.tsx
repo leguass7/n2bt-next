@@ -1,5 +1,5 @@
-import { type IColumnTable } from '~/components/CustomTable'
-import { type ISubscription } from '~/server-side/useCases/subscriptions/subscriptions.dto'
+import type { IColumnTable } from '~/components/CustomTable'
+import type { ISubscriptionReport } from '~/server-side/useCases/subscriptions/subscriptions.dto'
 
 import {
   ReportGenderCell,
@@ -11,7 +11,7 @@ import {
   ReportStatusCell
 } from './Cells'
 
-export const reportColumns: IColumnTable<ISubscription>[] = [
+export const reportColumns: IColumnTable<ISubscriptionReport>[] = [
   // { name: 'id', label: 'ID', align: 'center', width: 50 },
   { label: 'Nome', Cell: ReportNameCell },
   { name: 'paid', label: 'Pago', align: 'center', Cell: ReportPaymentCell },
